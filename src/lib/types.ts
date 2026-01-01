@@ -20,14 +20,14 @@ export type TransportRequest = {
   userName: string;
   contactNumber: string;
   departmentName: string;
-  vehicleType: 'two-wheeler' | 'four-wheeler';
+  vehicleType: 'two-wheeler' | 'four-wheeler' | 'tempo' | 'eicher' | 'bus';
   durationFrom: Date;
   durationTo: Date;
   status: 'pending' | 'allocated' | 'dispatched' | 'completed';
   createdAt: Date;
-  hodApprovalImage?: string; // Made optional
-  passengerCount?: number; // Made optional
-  destination?: string; // Made optional
+  hodApprovalImage?: string;
+  passengerCount: number;
+  destination?: string;
 };
 
 export type Dispatch = {
@@ -39,5 +39,3 @@ export type Dispatch = {
   conditionPhoto: string;
   dispatchedAt: Date;
 };
-
-    

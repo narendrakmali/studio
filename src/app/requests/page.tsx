@@ -45,6 +45,10 @@ export default function RequestsPage() {
                                 <Car className="h-4 w-4 text-muted-foreground" />
                                 <span className="capitalize">Vehicle: <strong>{req.vehicleType}</strong></span>
                             </div>
+                             <div className="flex items-center gap-2 text-sm">
+                                <Users className="h-4 w-4 text-muted-foreground" />
+                                <span>Passengers: <strong>{req.passengerCount}</strong></span>
+                            </div>
                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Calendar className="h-4 w-4" />
                                 <span>{new Date(req.durationFrom).toLocaleDateString()} - {new Date(req.durationTo).toLocaleDateString()}</span>
@@ -75,5 +79,3 @@ export default function RequestsPage() {
         </AuthLayout>
     )
 }
-
-    

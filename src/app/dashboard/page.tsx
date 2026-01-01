@@ -53,6 +53,7 @@ export default function DashboardPage() {
                         <TableRow>
                             <TableHead>Department</TableHead>
                             <TableHead>Requested by</TableHead>
+                             <TableHead>Passengers</TableHead>
                             <TableHead>Vehicle Type</TableHead>
                             <TableHead className="text-right">Status</TableHead>
                         </TableRow>
@@ -62,6 +63,7 @@ export default function DashboardPage() {
                             <TableRow key={req.id}>
                                 <TableCell className="font-medium">{req.departmentName}</TableCell>
                                 <TableCell>{req.userName}</TableCell>
+                                <TableCell>{req.passengerCount}</TableCell>
                                 <TableCell className="capitalize">{req.vehicleType}</TableCell>
                                 <TableCell className="text-right">
                                     <Badge variant={req.status === 'pending' ? 'default' : 'secondary'} className={req.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' : ''}>
@@ -78,5 +80,3 @@ export default function DashboardPage() {
     </AuthLayout>
   );
 }
-
-    

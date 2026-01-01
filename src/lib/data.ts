@@ -71,7 +71,7 @@ export const requests: TransportRequest[] = [
     userName: 'Bob',
     contactNumber: '9876543211',
     departmentName: 'Logistics',
-    vehicleType: 'four-wheeler',
+    vehicleType: 'bus',
     durationFrom: new Date('2024-08-01'),
     durationTo: new Date('2024-08-05'),
     status: 'pending',
@@ -108,5 +108,3 @@ export const dispatches: Dispatch[] = [
         dispatchedAt: new Date('2024-07-19T15:30:00Z'),
     }
 ];
-
-    

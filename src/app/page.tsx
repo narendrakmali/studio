@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CalendarIcon, Loader2, PartyPopper } from "lucide-react";
+import { CalendarIcon, Loader2, PartyPopper, Users } from "lucide-react";
 import Link from 'next/link';
 import { Logo } from "@/components/logo";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -35,9 +35,10 @@ const requestFormSchema = z.object({
   userName: z.string().min(2, "User name is required."),
   contactNumber: z.string().min(10, "A valid contact number is required."),
   departmentName: z.string().min(2, "Department name is too short"),
-  vehicleType: z.enum(["two-wheeler", "four-wheeler"], {
+  vehicleType: z.enum(["two-wheeler", "four-wheeler", "tempo", "eicher", "bus"], {
     required_error: "You need to select a vehicle type.",
   }),
+  passengerCount: z.coerce.number().min(1, 'Please enter the number of passengers.'),
   durationFrom: z.date({
     required_error: "A start date is required.",
   }),
@@ -62,6 +63,7 @@ export default function Home() {
       userName: "",
       contactNumber: "",
       departmentName: "",
+      passengerCount: 1,
     },
   });
 
@@ -178,7 +180,7 @@ export default function Home() {
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex space-x-4"
+                        className="flex flex-wrap gap-x-4 gap-y-2"
                       >
                         <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
@@ -192,12 +194,47 @@ export default function Home() {
                           </FormControl>
                           <FormLabel className="font-normal">Four-wheeler</FormLabel>
                         </FormItem>
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="tempo" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Tempo</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="eicher" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Eicher</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="bus" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Bus</FormLabel>
+                        </FormItem>
                       </RadioGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              
+              <FormField
+                  control={form.control}
+                  name="passengerCount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Number of Passengers</FormLabel>
+                      <FormControl>
+                         <div className="relative">
+                            <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input type="number" placeholder="e.g. 4" className="pl-9" {...field} />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
@@ -301,5 +338,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
