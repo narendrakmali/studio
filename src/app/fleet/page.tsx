@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, MoreHorizontal, FileImage, Car, Gauge, Camera } from "lucide-react";
+import { PlusCircle, MoreHorizontal } from "lucide-react";
 import { vehicles } from "@/lib/data";
 import {
   DropdownMenu,
@@ -15,17 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Image from "next/image";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import Link from "next/link";
 
 
 export default function FleetPage() {
@@ -50,59 +40,12 @@ export default function FleetPage() {
                 <CardTitle className="font-headline text-xl">Vehicle Fleet</CardTitle>
                 <CardDescription>Manage and view all registered vehicles.</CardDescription>
             </div>
-          <Dialog>
-            <DialogTrigger asChild>
-                <Button size="sm" className="gap-1">
+            <Button size="sm" className="gap-1" asChild>
+                <Link href="/fleet/register">
                     <PlusCircle className="h-4 w-4" />
                     Register Vehicle
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl">
-              <DialogHeader>
-                <DialogTitle className="font-headline">Register New Vehicle</DialogTitle>
-                <DialogDescription>
-                  Fill in the details below to add a new vehicle to the fleet.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="license" className="text-right">License Plate</Label>
-                  <Input id="license" placeholder="XX-00-XX-0000" className="col-span-3" />
-                </div>
-                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="make" className="text-right">Make & Model</Label>
-                  <Input id="make" placeholder="e.g. Toyota Innova" className="col-span-3" />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="capacity" className="text-right">Capacity</Label>
-                  <Input id="capacity" type="number" placeholder="e.g. 7" className="col-span-3" />
-                </div>
-                 <div className="grid grid-cols-4 items-start gap-4">
-                    <Label className="text-right pt-2">Images</Label>
-                    <div className="col-span-3 grid gap-4">
-                         <div className="flex items-center gap-2">
-                             <Car className="h-5 w-5 text-muted-foreground"/>
-                             <Label htmlFor="img-front" className="flex-1 text-sm font-normal">Front View</Label>
-                             <Input id="img-front" type="file" className="w-auto"/>
-                         </div>
-                         <div className="flex items-center gap-2">
-                             <FileImage className="h-5 w-5 text-muted-foreground"/>
-                             <Label htmlFor="img-side" className="flex-1 text-sm font-normal">Side View</Label>
-                             <Input id="img-side" type="file" className="w-auto"/>
-                         </div>
-                         <div className="flex items-center gap-2">
-                             <Gauge className="h-5 w-5 text-muted-foreground"/>
-                             <Label htmlFor="img-odo" className="flex-1 text-sm font-normal">Odometer</Label>
-                             <Input id="img-odo" type="file" className="w-auto"/>
-                         </div>
-                    </div>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save Vehicle</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                </Link>
+            </Button>
         </CardHeader>
         <CardContent>
           <Table>
