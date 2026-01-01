@@ -20,19 +20,35 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Camera, Loader2, PartyPopper } from "lucide-react";
+import { CalendarIcon, Loader2, PartyPopper } from "lucide-react";
 import Link from 'next/link';
 import { Logo } from "@/components/logo";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
 
 const requestFormSchema = z.object({
+  userName: z.string().min(2, "User name is required."),
+  contactNumber: z.string().min(10, "A valid contact number is required."),
   departmentName: z.string().min(2, "Department name is too short"),
-  passengerCount: z.coerce.number().min(1, "At least one passenger is required"),
-  destination: z.string().min(3, "Destination is required"),
-  hodApprovalImage: z.any().refine(file => file?.length == 1, "Approval image is required."),
+  vehicleType: z.enum(["two-wheeler", "four-wheeler"], {
+    required_error: "You need to select a vehicle type.",
+  }),
+  durationFrom: z.date({
+    required_error: "A start date is required.",
+  }),
+  durationTo: z.date({
+    required_error: "An end date is required.",
+  }),
+}).refine((data) => data.durationTo >= data.durationFrom, {
+  message: "End date cannot be before start date.",
+  path: ["durationTo"],
 });
+
 
 type RequestFormValues = z.infer<typeof requestFormSchema>;
 
@@ -43,14 +59,11 @@ export default function Home() {
   const form = useForm<RequestFormValues>({
     resolver: zodResolver(requestFormSchema),
     defaultValues: {
+      userName: "",
+      contactNumber: "",
       departmentName: "",
-      passengerCount: 1,
-      destination: "",
-      hodApprovalImage: undefined,
     },
   });
-
-  const fileRef = form.register("hodApprovalImage");
 
   async function onSubmit(data: RequestFormValues) {
     setIsSubmitting(true);
@@ -102,7 +115,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
       <PublicHeader />
-      <Card className="w-full max-w-md shadow-2xl animate-in fade-in-50 zoom-in-95">
+      <Card className="w-full max-w-lg shadow-2xl animate-in fade-in-50 zoom-in-95">
         <CardHeader>
           <CardTitle className="font-headline text-3xl">Request a Vehicle</CardTitle>
           <CardDescription>
@@ -112,7 +125,36 @@ export default function Home() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="userName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>User Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., John Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="contactNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Contact Number</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., 9876543210" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+               <FormField
                 control={form.control}
                 name="departmentName"
                 render={({ field }) => (
@@ -125,53 +167,123 @@ export default function Home() {
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-2 gap-4">
-                 <FormField
+
+              <FormField
+                control={form.control}
+                name="vehicleType"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Type of Vehicle Required</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex space-x-4"
+                      >
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="two-wheeler" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Two-wheeler</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="four-wheeler" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Four-wheeler</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
                   control={form.control}
-                  name="destination"
+                  name="durationFrom"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Destination</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., Airport" {...field} />
-                      </FormControl>
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Duration From</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date < new Date(new Date().setHours(0,0,0,0))
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
-                  name="passengerCount"
+                  name="durationTo"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Passengers</FormLabel>
-                      <FormControl>
-                        <Input type="number" min="1" {...field} />
-                      </FormControl>
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Duration To</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date < (form.getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              <FormField
-                control={form.control}
-                name="hodApprovalImage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>HOD Approval</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input type="file" accept="image/*" className="pl-10 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" {...fileRef} />
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <Camera className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                      </div>
-                    </FormControl>
-                    <FormDescription>Upload a photo of the HOD's signed approval.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
@@ -189,3 +301,5 @@ export default function Home() {
     </main>
   );
 }
+
+    

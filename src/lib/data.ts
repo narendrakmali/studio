@@ -54,32 +54,48 @@ export const vehicles: Vehicle[] = [
 export const requests: TransportRequest[] = [
   {
     id: 'R001',
+    userName: 'Alice',
+    contactNumber: '9876543210',
     departmentName: 'Guest Services',
-    passengerCount: 5,
-    destination: 'Airport',
-    hodApprovalImage: PlaceHolderImages.find(p => p.id === 'approval-1')?.imageUrl || '',
+    vehicleType: 'four-wheeler',
+    durationFrom: new Date('2024-07-25'),
+    durationTo: new Date('2024-07-27'),
     status: 'pending',
     createdAt: new Date('2024-07-20T10:00:00Z'),
+    destination: 'Airport',
+    passengerCount: 5,
+    hodApprovalImage: PlaceHolderImages.find(p => p.id === 'approval-1')?.imageUrl || '',
   },
   {
     id: 'R002',
+    userName: 'Bob',
+    contactNumber: '9876543211',
     departmentName: 'Logistics',
-    passengerCount: 10,
-    destination: 'Warehouse Complex',
-    hodApprovalImage: PlaceHolderImages.find(p => p.id === 'approval-2')?.imageUrl || '',
+    vehicleType: 'four-wheeler',
+    durationFrom: new Date('2024-08-01'),
+    durationTo: new Date('2024-08-05'),
     status: 'pending',
     createdAt: new Date('2024-07-20T11:30:00Z'),
+    destination: 'Warehouse Complex',
+    passengerCount: 10,
+    hodApprovalImage: PlaceHolderImages.find(p => p.id === 'approval-2')?.imageUrl || '',
   },
   {
     id: 'R003',
+    userName: 'Charlie',
+    contactNumber: '9876543212',
     departmentName: 'IT Department',
-    passengerCount: 2,
-    destination: 'Data Center',
-    hodApprovalImage: PlaceHolderImages.find(p => p.id === 'approval-3')?.imageUrl || '',
+    vehicleType: 'two-wheeler',
+    durationFrom: new Date('2024-07-22'),
+    durationTo: new Date('2024-07-22'),
     status: 'allocated',
     createdAt: new Date('2024-07-19T15:00:00Z'),
+    destination: 'Data Center',
+    passengerCount: 2,
+    hodApprovalImage: PlaceHolderImages.find(p => p.id === 'approval-3')?.imageUrl || '',
   },
 ];
+
 
 export const dispatches: Dispatch[] = [
     {
@@ -92,3 +108,5 @@ export const dispatches: Dispatch[] = [
         dispatchedAt: new Date('2024-07-19T15:30:00Z'),
     }
 ];
+
+    

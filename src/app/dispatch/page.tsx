@@ -7,7 +7,7 @@ import { requests, vehicles as allVehicles } from "@/lib/data";
 import { TransportRequest, Vehicle } from "@/lib/types";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Users, Route, Calendar, Sparkles, Car, User, Fingerprint, Camera, Loader2 } from "lucide-react";
+import { Users, Route, Calendar, Sparkles, Car, User, Fingerprint, Camera, Loader2, Phone } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,10 @@ export default function DispatchPage() {
     const availableVehicles = allVehicles.filter(v => v.status === 'available');
 
     const handleSuggestion = async () => {
-        if (!selectedRequest) return;
+        if (!selectedRequest || !selectedRequest.destination || !selectedRequest.passengerCount) {
+             toast({ variant: "destructive", title: "Cannot Suggest", description: "Request is missing destination or passenger count for AI suggestion." });
+            return;
+        };
         setIsSuggesting(true);
         setSuggestedVehicleId(null);
         try {
@@ -37,7 +40,7 @@ export default function DispatchPage() {
                     destination: selectedRequest.destination,
                     passengerCount: selectedRequest.passengerCount,
                     departmentName: selectedRequest.departmentName,
-                    hodApprovalImage: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", // Dummy data
+                    hodApprovalImage: selectedRequest.hodApprovalImage || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", 
                 },
                 vehicleAvailability: availableVehicles.map(v => ({
                     vehicleId: v.id,
@@ -83,10 +86,12 @@ export default function DispatchPage() {
                         >
                             <CardHeader className="p-4">
                                 <CardTitle className="text-base">{req.departmentName}</CardTitle>
-                                <CardDescription>{req.destination}</CardDescription>
+                                <CardDescription>
+                                  <div className="flex items-center gap-1"><User className="h-4 w-4" /> {req.userName}</div>
+                                </CardDescription>
                             </CardHeader>
                             <CardContent className="p-4 pt-0 flex justify-between text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1"><Users className="h-4 w-4" /> {req.passengerCount}</div>
+                                <div className="flex items-center gap-1 capitalize"><Car className="h-4 w-4" /> {req.vehicleType}</div>
                                 <div className="flex items-center gap-1"><Calendar className="h-4 w-4" /> {new Date(req.createdAt).toLocaleDateString()}</div>
                             </CardContent>
                         </Card>
@@ -131,7 +136,7 @@ export default function DispatchPage() {
                     </ScrollArea>
                 </CardContent>
                 <CardFooter>
-                    <Button onClick={handleSuggestion} disabled={!selectedRequest || isSuggesting} className="w-full">
+                    <Button onClick={handleSuggestion} disabled={!selectedRequest || isSuggesting || !selectedRequest.passengerCount} className="w-full">
                         {isSuggesting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Sparkles className="mr-2 h-4 w-4" />}
                         Get AI Suggestion
                     </Button>
@@ -176,3 +181,5 @@ export default function DispatchPage() {
     </AuthLayout>
   );
 }
+
+    

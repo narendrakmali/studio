@@ -17,12 +17,17 @@ export type Vehicle = {
 
 export type TransportRequest = {
   id: string;
+  userName: string;
+  contactNumber: string;
   departmentName: string;
-  passengerCount: number;
-  destination: string;
-  hodApprovalImage: string;
+  vehicleType: 'two-wheeler' | 'four-wheeler';
+  durationFrom: Date;
+  durationTo: Date;
   status: 'pending' | 'allocated' | 'dispatched' | 'completed';
   createdAt: Date;
+  hodApprovalImage?: string; // Made optional
+  passengerCount?: number; // Made optional
+  destination?: string; // Made optional
 };
 
 export type Dispatch = {
@@ -34,3 +39,5 @@ export type Dispatch = {
   conditionPhoto: string;
   dispatchedAt: Date;
 };
+
+    

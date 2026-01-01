@@ -52,8 +52,8 @@ export default function DashboardPage() {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Department</TableHead>
-                            <TableHead>Destination</TableHead>
-                            <TableHead className="text-center">Passengers</TableHead>
+                            <TableHead>Requested by</TableHead>
+                            <TableHead>Vehicle Type</TableHead>
                             <TableHead className="text-right">Status</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -61,13 +61,8 @@ export default function DashboardPage() {
                         {recentRequests.map(req => (
                             <TableRow key={req.id}>
                                 <TableCell className="font-medium">{req.departmentName}</TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        <Route className="h-4 w-4 text-muted-foreground" />
-                                        {req.destination}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-center">{req.passengerCount}</TableCell>
+                                <TableCell>{req.userName}</TableCell>
+                                <TableCell className="capitalize">{req.vehicleType}</TableCell>
                                 <TableCell className="text-right">
                                     <Badge variant={req.status === 'pending' ? 'default' : 'secondary'} className={req.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' : ''}>
                                         {req.status}
@@ -83,3 +78,5 @@ export default function DashboardPage() {
     </AuthLayout>
   );
 }
+
+    
