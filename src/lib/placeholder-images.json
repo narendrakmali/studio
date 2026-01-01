@@ -1,3 +1,94 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "logo",
+      "description": "Samagam FleetConnect Logo",
+      "imageUrl": "https://images.unsplash.com/photo-1747862712521-e4a37b12a039?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxsb2dvJTIwYWJzdHJhY3R8ZW58MHx8fHwxNzY3MjMwOTEzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "logo abstract"
+    },
+    {
+      "id": "vehicle-front-1",
+      "description": "Front view of Toyota Innova",
+      "imageUrl": "https://images.unsplash.com/photo-1762135995921-fedb142e7b96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3aGl0ZSUyMHZhbnxlbnwwfHx8fDE3NjcyMDYwODZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "white van"
+    },
+    {
+      "id": "vehicle-side-1",
+      "description": "Side view of Toyota Innova",
+      "imageUrl": "https://images.unsplash.com/photo-1704966698633-338a52929615?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3aGl0ZSUyMHZhbnxlbnwwfHx8fDE3NjcyMDYwODZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "white van"
+    },
+    {
+      "id": "odometer-1",
+      "description": "Odometer of Toyota Innova",
+      "imageUrl": "https://images.unsplash.com/photo-1611760357505-922600d8ffa6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjYXIlMjBkYXNoYm9hcmR8ZW58MHx8fHwxNzY3MjM4MDIwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car dashboard"
+    },
+    {
+      "id": "vehicle-front-2",
+      "description": "Front view of Maruti Suzuki Ertiga",
+      "imageUrl": "https://images.unsplash.com/photo-1614200179396-2bdb77ebf81b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxyZWQlMjBjYXJ8ZW58MHx8fHwxNzY3MTcxMzY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "red car"
+    },
+    {
+      "id": "vehicle-side-2",
+      "description": "Side view of Maruti Suzuki Ertiga",
+      "imageUrl": "https://images.unsplash.com/photo-1621349337086-f4187372d31c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxyZWQlMjBjYXJ8ZW58MHx8fHwxNzY3MTcxMzY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "red car"
+    },
+    {
+      "id": "odometer-2",
+      "description": "Odometer of Maruti Suzuki Ertiga",
+      "imageUrl": "https://images.unsplash.com/photo-1611760357505-922600d8ffa6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjYXIlMjBkYXNoYm9hcmR8ZW58MHx8fHwxNzY3MjM4MDIwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car dashboard"
+    },
+    {
+      "id": "vehicle-front-3",
+      "description": "Front view of Force Traveller",
+      "imageUrl": "https://images.unsplash.com/photo-1758620582433-53e2470df5c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3aGl0ZSUyMGJ1c3xlbnwwfHx8fDE3NjcyMzgwMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "white bus"
+    },
+    {
+      "id": "vehicle-side-3",
+      "description": "Side view of Force Traveller",
+      "imageUrl": "https://images.unsplash.com/photo-1703438250824-9e2105acd85f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx3aGl0ZSUyMGJ1c3xlbnwwfHx8fDE3NjcyMzgwMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "white bus"
+    },
+    {
+      "id": "odometer-3",
+      "description": "Odometer of Force Traveller",
+      "imageUrl": "https://images.unsplash.com/photo-1485463611174-f302f6a5c1c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjYXIlMjBkYXNoYm9hcmR8ZW58MHx8fHwxNzY3MjM4MDIwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car dashboard"
+    },
+    {
+      "id": "approval-1",
+      "description": "HOD approval document 1",
+      "imageUrl": "https://images.unsplash.com/photo-1715522594847-67c90b5b8667?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxkb2N1bWVudCUyMHBhcGVyfGVufDB8fHx8MTc2NzE4MTY2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "document paper"
+    },
+    {
+      "id": "approval-2",
+      "description": "HOD approval document 2",
+      "imageUrl": "https://images.unsplash.com/photo-1758519288480-1489c17b1519?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzaWduYXR1cmUlMjBkb2N1bWVudHxlbnwwfHx8fDE3NjcyMzgwMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "signature document"
+    },
+    {
+      "id": "approval-3",
+      "description": "HOD approval document 3",
+      "imageUrl": "https://images.unsplash.com/photo-1562564055-71e051d33c19?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkb2N1bWVudHxlbnwwfHx8fDE3NjcyMzgwMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "document"
+    },
+    {
+      "id": "vehicle-condition-1",
+      "description": "Pre-dispatch vehicle condition photo",
+      "imageUrl": "https://images.unsplash.com/photo-1565689876115-23f4019e888d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjbGVhbiUyMGNhcnxlbnwwfHx8fDE3NjcyMzgwMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "clean car"
+    },
+    {
+      "id": "avatar-1",
+      "description": "User avatar",
+      "imageUrl": "https://images.unsplash.com/photo-1531123414780-f74242c2b052?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGVyc29uJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzY3MTkxNDg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    }
+  ]
 }
