@@ -1,3 +1,6 @@
+
+"use client";
+
 import { AuthLayout } from "@/components/auth-layout";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { requests } from "@/lib/data";
@@ -13,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import Link from "next/link";
 
 
 export default function RequestsPage() {
@@ -71,7 +75,9 @@ export default function RequestsPage() {
                                     </div>
                                 </DialogContent>
                             </Dialog>}
-                            <Button size="sm">Allocate Vehicle</Button>
+                            <Button size="sm" asChild>
+                                <Link href="/dispatch">Allocate Vehicle</Link>
+                            </Button>
                         </CardFooter>
                     </Card>
                 ))}
