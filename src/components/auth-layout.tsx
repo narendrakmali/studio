@@ -11,6 +11,7 @@ import {
   Send,
   Shield,
   User,
+  Hand
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -46,6 +47,7 @@ const navItems = [
   { href: '/fleet', icon: Car, label: 'Fleet' },
   { href: '/requests', icon: ClipboardList, label: 'Requests' },
   { href: '/dispatch', icon: Send, label: 'Dispatch' },
+  { href: '/handover', icon: Hand, label: 'Handover' },
   { href: '/admin', icon: Shield, label: 'Admin Panel' },
 ];
 
@@ -53,7 +55,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
   const pathname = usePathname();
   const avatarUrl = PlaceHolderImages.find((img) => img.id === 'avatar-1')?.imageUrl;
   
-  const pageTitle = navItems.find(item => pathname === item.href)?.label || 'Samagam FleetConnect';
+  const pageTitle = navItems.find(item => pathname.startsWith(item.href))?.label || 'Samagam FleetConnect';
 
   return (
     <SidebarProvider>
@@ -70,7 +72,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
               <SidebarMenuItem key={item.href}>
                 <Link href={item.href} legacyBehavior passHref>
                   <SidebarMenuButton
-                    isActive={pathname === item.href}
+                    isActive={pathname.startsWith(item.href)}
                     tooltip={{ children: item.label, side: 'right' }}
                   >
                     <item.icon />
