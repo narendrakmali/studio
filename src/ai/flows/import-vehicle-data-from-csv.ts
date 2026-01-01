@@ -51,7 +51,6 @@ const prompt = ai.definePrompt({
   - capacity: The passenger capacity of the vehicle (number).
   - make: The make of the vehicle (e.g., Toyota).
   - model: The model of the vehicle (e.g. Camry).
-  - year: The year the vehicle was manufactured.
 
   Return a JSON array where each object represents a row in the CSV, and the keys are the vehicle fields listed above.
   Include a "mappingConfidence" score between 0 and 100 indicating the accuracy of the mapping.
