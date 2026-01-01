@@ -16,7 +16,7 @@ const OptimizeVehicleAllocationInputSchema = z.object({
     destination: z.string().describe('The destination of the transport request.'),
     passengerCount: z.number().describe('The number of passengers for the request.'),
     departmentName: z.string().describe('The name of the department making the request.'),
-    hodApprovalImage: z.string().describe("HOD approval image as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
+    hodApprovalImage: z.string().optional().describe("HOD approval image as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
   }).describe('Details of the transport request.'),
   vehicleAvailability: z.array(z.object({
     vehicleId: z.string().describe('The ID of the vehicle.'),
