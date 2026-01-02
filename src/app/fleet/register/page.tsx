@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Car, FileImage, Gauge, ArrowLeft } from "lucide-react";
+import { Car, FileImage, Gauge, ArrowLeft, User, Phone, Home } from "lucide-react";
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function RegisterVehiclePage() {
   return (
@@ -46,6 +48,37 @@ export default function RegisterVehiclePage() {
                     <Input id="capacity" type="number" placeholder="e.g. 7" />
                 </div>
                 
+                <Separator />
+                
+                <div className="space-y-4">
+                  <Label className="font-medium">Owner Details</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="ownerName">Owner Name</Label>
+                         <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input id="ownerName" placeholder="e.g. Samagam Services" className="pl-9" />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="ownerContact">Contact Number</Label>
+                         <div className="relative">
+                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input id="ownerContact" placeholder="e.g. 9988776655" className="pl-9" />
+                        </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                      <Label htmlFor="ownerAddress">Address</Label>
+                       <div className="relative">
+                          <Home className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Textarea id="ownerAddress" placeholder="Enter owner's full address" className="pl-9" />
+                      </div>
+                  </div>
+                </div>
+
+                <Separator />
+
                 <div className="grid grid-cols-1 gap-4">
                     <Label className="font-medium">Vehicle Images</Label>
                     <div className="grid gap-4 rounded-md border p-4">

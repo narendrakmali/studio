@@ -7,7 +7,6 @@ export const vehicles: Vehicle[] = [
     licensePlate: 'KA-01-AB-1234',
     make: 'Toyota',
     model: 'Innova',
-    year: 2022,
     capacity: 7,
     status: 'available',
     location: 'Main Campus',
@@ -16,14 +15,16 @@ export const vehicles: Vehicle[] = [
       side: PlaceHolderImages.find(p => p.id === 'vehicle-side-1')?.imageUrl || '',
       odometer: PlaceHolderImages.find(p => p.id === 'odometer-1')?.imageUrl || '',
     },
-    lastTripDestination: 'City Center'
+    lastTripDestination: 'City Center',
+    ownerName: 'Samagam Services',
+    ownerContact: '9988776655',
+    ownerAddress: '123, Main Road, Bangalore'
   },
   {
     id: 'V002',
     licensePlate: 'MH-12-CD-5678',
     make: 'Maruti Suzuki',
     model: 'Ertiga',
-    year: 2021,
     capacity: 7,
     status: 'in-use',
     location: 'Sector 5',
@@ -32,13 +33,15 @@ export const vehicles: Vehicle[] = [
       side: PlaceHolderImages.find(p => p.id === 'vehicle-side-2')?.imageUrl || '',
       odometer: PlaceHolderImages.find(p => p.id === 'odometer-2')?.imageUrl || '',
     },
+    ownerName: 'Samagam Services',
+    ownerContact: '9988776655',
+    ownerAddress: '123, Main Road, Bangalore'
   },
   {
     id: 'V003',
     licensePlate: 'DL-03-EF-9012',
     make: 'Force',
     model: 'Traveller',
-    year: 2020,
     capacity: 12,
     status: 'available',
     location: 'Main Campus',
@@ -47,7 +50,10 @@ export const vehicles: Vehicle[] = [
       side: PlaceHolderImages.find(p => p.id === 'vehicle-side-3')?.imageUrl || '',
       odometer: PlaceHolderImages.find(p => p.id === 'odometer-3')?.imageUrl || '',
     },
-    lastTripDestination: 'Airport'
+    lastTripDestination: 'Airport',
+    ownerName: 'Vendor ABC',
+    ownerContact: '9876543210',
+    ownerAddress: '456, Industrial Area, Delhi'
   },
 ];
 

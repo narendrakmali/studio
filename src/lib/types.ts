@@ -3,7 +3,6 @@ export type Vehicle = {
   licensePlate: string;
   make: string;
   model: string;
-  year: number;
   capacity: number;
   status: 'available' | 'in-use' | 'maintenance';
   location: string;
@@ -13,6 +12,9 @@ export type Vehicle = {
     odometer: string;
   };
   lastTripDestination?: string;
+  ownerName: string;
+  ownerContact: string;
+  ownerAddress: string;
 };
 
 export type TransportRequest = {
