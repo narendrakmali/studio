@@ -35,7 +35,10 @@ const loginSchema = z.object({
 const allowedUsers = [
     "admin@samagam.com",
     "narendrakmali@gmail.com",
-    "samagamtransport@gmail.com"
+    "samagamtransport@gmail.com",
+    "prasadshivajimore@gmail.com",
+    "akashmore1848@gmail.com",
+    "rajendranandikurle32@gmail.com"
 ];
 
 export default function LoginPage() {
