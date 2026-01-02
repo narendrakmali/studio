@@ -21,12 +21,12 @@ export type ImportVehicleDataFromCsvInput = z.infer<
 
 const VehicleDataSchema = z.object({
   licensePlate: z.string().describe("The license plate number of the vehicle."),
-  capacity: z.coerce.number().describe("The passenger capacity of the vehicle (number)."),
+  capacity: z.coerce.number().optional().describe("The passenger capacity of the vehicle (number)."),
   make: z.string().describe("The make of the vehicle (e.g., Toyota)."),
   model: z.string().describe("The model of the vehicle (e.g. Camry)."),
   ownerName: z.string().describe("The name of the vehicle's owner."),
   ownerContact: z.string().describe("The contact number of the owner."),
-  ownerAddress: z.string().describe("The address of the owner."),
+  ownerAddress: z.string().optional().describe("The address of the owner."),
 });
 
 const ImportVehicleDataFromCsvOutputSchema = z.object({
@@ -65,11 +65,36 @@ const prompt = ai.definePrompt({
   - ownerContact: The phone number for the vehicle owner.
   - ownerAddress: The mailing address of the vehicle owner.
 
-  The CSV column names may not exactly match these field names. Use your intelligence to find the best match. For example, 'Plate No.' should map to 'licensePlate', 'Seating' to 'capacity', and 'Manufacturer' to 'make'.
+  The CSV column names may not exactly match these field names. Use your intelligence to find the best match. 
+  For example:
+  - 'Vehicle No' or 'Vehicle Number' should map to 'licensePlate'.
+  - 'Vehicle Compar' or 'Company' should map to 'make'.
+  - 'Vehicle M' or 'Vehicle Model' should map to 'model'.
+  - 'Owner Name' should map to 'ownerName'.
+  - 'Owner Contact' should map to 'ownerContact'.
+  - 'Seating Capacity' or 'Cap.' should map to 'capacity'.
+  - 'Address' should map to 'ownerAddress'.
+
+  Some fields like 'capacity' and 'ownerAddress' may not be present in the CSV. In that case, you can leave them out. Do not hallucinate data.
 
   Return a JSON array where each object represents a row in the CSV, with the keys being the standardized vehicle fields listed above.
   If a column from the CSV cannot be reasonably mapped to any of the required fields, you can ignore it.
   Also, include a "mappingConfidence" score (0-100) representing how sure you are about the overall column mapping.
+  
+  Example Input CSV:
+  Sr no,Branch Name,Owner Name,Owner Contact,Vehicle No,Vehicle Compar,Vehicle M,Submitted Dat
+  1,Savalaj,Sachin Jadhav,9975377604,MH10DN2027,Hero,Splendor,13-Dec
+  
+  Expected Output for the example row:
+  {
+    "licensePlate": "MH10DN2027",
+    "make": "Hero",
+    "model": "Splendor",
+    "ownerName": "Sachin Jadhav",
+    "ownerContact": "9975377604"
+  }
+
+  Now, process the following CSV data:
   \nCSV Data: {{{csvData}}}
   `,
 });
