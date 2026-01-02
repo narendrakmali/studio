@@ -87,7 +87,7 @@ export default function AdminPage() {
     };
 
     const handleDownloadTemplate = () => {
-        const headers = "licensePlate,make,model,capacity,ownerName,ownerContact,ownerAddress";
+        const headers = "licensePlate,make,model,capacity,ownerName,ownerContact,ownerAddress,contractStartDate,contractEndDate";
         const csvContent = "data:text/csv;charset=utf-8," + headers;
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
@@ -137,7 +137,7 @@ export default function AdminPage() {
                                 <FileText className="mr-2 h-4 w-4" />
                                 Download Vehicle Template
                             </Button>
-                            {mappedData && (
+                            {mappedData && mappedData.mappedData.length > 0 && (
                                 <div>
                                     <h3 className="font-semibold mb-2 flex items-center justify-between">
                                         <span>Data Preview</span>
@@ -153,7 +153,7 @@ export default function AdminPage() {
                                         <TableBody>
                                             {mappedData.mappedData.slice(0, 5).map((row, index) => (
                                                 <TableRow key={index}>
-                                                    {Object.values(row).map((val, i) => <TableCell key={i}>{val}</TableCell>)}
+                                                    {Object.entries(row).map(([key, val]) => <TableCell key={key}>{String(val)}</TableCell>)}
                                                 </TableRow>
                                             ))}
                                         </TableBody>
@@ -183,7 +183,7 @@ export default function AdminPage() {
                                 <Send className="mr-2 h-4 w-4" />
                                 Download Dispatch Template
                             </Button>
-                            {mappedDispatchData && (
+                            {mappedDispatchData && mappedDispatchData.mappedData.length > 0 && (
                                 <div>
                                     <h3 className="font-semibold mb-2 flex items-center justify-between">
                                         <span>Data Preview</span>
@@ -199,7 +199,7 @@ export default function AdminPage() {
                                         <TableBody>
                                             {mappedDispatchData.mappedData.slice(0, 5).map((row, index) => (
                                                 <TableRow key={index}>
-                                                    {Object.values(row).map((val, i) => <TableCell key={i}>{val}</TableCell>)}
+                                                    {Object.entries(row).map(([key, val]) => <TableCell key={key}>{String(val)}</TableCell>)}
                                                 </TableRow>
                                             ))}
                                         </TableBody>

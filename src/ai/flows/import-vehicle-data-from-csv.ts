@@ -27,6 +27,8 @@ const VehicleDataSchema = z.object({
   ownerName: z.string().describe("The name of the vehicle's owner."),
   ownerContact: z.string().describe("The contact number of the owner."),
   ownerAddress: z.string().optional().describe("The address of the owner."),
+  contractStartDate: z.string().optional().describe("The start date of the vehicle's contract (ISO 8601 format)."),
+  contractEndDate: z.string().optional().describe("The end date of the vehicle's contract (ISO 8601 format)."),
 });
 
 const ImportVehicleDataFromCsvOutputSchema = z.object({
@@ -64,6 +66,8 @@ const prompt = ai.definePrompt({
   - ownerName: The name of the person or company that owns the vehicle.
   - ownerContact: The phone number for the vehicle owner.
   - ownerAddress: The mailing address of the vehicle owner.
+  - contractStartDate: The start date of the vehicle's contract.
+  - contractEndDate: The end date of the vehicle's contract.
 
   The CSV column names may not exactly match these field names. Use your intelligence to find the best match. 
   For example:
@@ -74,8 +78,10 @@ const prompt = ai.definePrompt({
   - 'Owner Contact' should map to 'ownerContact'.
   - 'Seating Capacity' or 'Cap.' should map to 'capacity'.
   - 'Address' should map to 'ownerAddress'.
+  - 'Submitted Dat' or 'Start Date' should map to 'contractStartDate'.
+  - 'End Date' should map to 'contractEndDate'.
 
-  Some fields like 'capacity' and 'ownerAddress' may not be present in the CSV. In that case, you can leave them out. Do not hallucinate data.
+  Some fields like 'capacity', 'ownerAddress', 'contractStartDate' and 'contractEndDate' may not be present in the CSV. In that case, you can leave them out. Do not hallucinate data.
 
   Return a JSON array where each object represents a row in the CSV, with the keys being the standardized vehicle fields listed above.
   If a column from the CSV cannot be reasonably mapped to any of the required fields, you can ignore it.
@@ -91,7 +97,8 @@ const prompt = ai.definePrompt({
     "make": "Hero",
     "model": "Splendor",
     "ownerName": "Sachin Jadhav",
-    "ownerContact": "9975377604"
+    "ownerContact": "9975377604",
+    "contractStartDate": "2023-12-13" 
   }
 
   Now, process the following CSV data:
