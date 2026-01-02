@@ -11,17 +11,17 @@ export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
       <header className="absolute top-0 left-0 right-0 p-4 bg-transparent">
-        <div className="container mx-auto flex justify-between items-center">
+        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <Link href="/" className="flex items-center gap-3">
-              <Logo className="w-8 h-8" />
-              <h1 className="text-xl font-headline font-bold text-primary">Transport Coordination Portal</h1>
+              <Logo className="w-8 h-8 hidden sm:flex" />
+              <h1 className="text-xl text-center sm:text-left font-headline font-bold text-primary">Transport Coordination Portal</h1>
             </Link>
-            <Button asChild variant="outline" className="bg-background/80 backdrop-blur-sm">
+            <Button asChild variant="outline" className="bg-background/80 backdrop-blur-sm w-full sm:w-auto">
                 <Link href="/login">Team Login</Link>
             </Button>
         </div>
     </header>
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-4xl pt-24 sm:pt-0">
         <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4 text-spiritual-purple">Transport Request Portal</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Please select the appropriate form to register your vehicle or request transport for the Samagam.</p>
@@ -78,5 +78,3 @@ export default function HomePage() {
     </main>
   );
 }
-
-    
