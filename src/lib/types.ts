@@ -51,6 +51,8 @@ export type TransportRequest = {
   trainArrivalDate?: Date;
   trainDevoteeCount?: number;
   pickupRequired?: boolean;
+  returnTrainNumber?: string;
+  returnTrainDepartureDate?: Date;
 };
 
 export type Dispatch = {

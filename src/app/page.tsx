@@ -33,6 +33,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
 
 
 const requestFormSchema = z.object({
@@ -41,25 +42,27 @@ const requestFormSchema = z.object({
   contactNumber: z.string().min(10, "A valid contact number is required."),
   departmentName: z.string().min(2, "Branch/Zone name is required."),
   
-  // Private Vehicle Fields (optional)
+  // Private Vehicle Fields
   vehicleType: z.enum(["two-wheeler", "car", "suv", "winger", "innova"]).optional(),
   registrationNumber: z.string().optional(),
   passengerCount: z.coerce.number().optional(),
   driverName: z.string().optional(),
   driverContact: z.string().optional(),
   
-  // Bus Fields (optional)
+  // Bus Fields
   busType: z.enum(["private", "msrtc"]).optional(),
   busQuantity: z.coerce.number().optional(),
   busRoute: z.string().optional(),
   
-  // Train Fields (optional)
+  // Train Fields
   trainNumber: z.string().optional(),
   trainArrivalDate: z.date().optional(),
   trainDevoteeCount: z.coerce.number().optional(),
   pickupRequired: z.boolean().optional().default(false),
-  
-  // Common Date Fields (optional for train)
+  returnTrainNumber: z.string().optional(),
+  returnTrainDepartureDate: z.date().optional(),
+
+  // Common Date Fields
   durationFrom: z.date().optional(),
   durationTo: z.date().optional(),
 
@@ -67,21 +70,31 @@ const requestFormSchema = z.object({
   if (data.requestType === "private") {
     if (!data.vehicleType) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Vehicle type is required.", path: ["vehicleType"] });
     if (!data.registrationNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Registration number is required.", path: ["registrationNumber"] });
-    if (data.passengerCount === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Occupancy is required.", path: ["passengerCount"] });
+    if (data.passengerCount === undefined || data.passengerCount < 1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Occupancy is required.", path: ["passengerCount"] });
     if (!data.driverName) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Driver name is required.", path: ["driverName"] });
     if (!data.driverContact) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Driver contact is required.", path: ["driverContact"] });
     if (!data.durationFrom) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["durationFrom"] });
     if (!data.durationTo) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Departure date is required.", path: ["durationTo"] });
   } else if (data.requestType === "bus") {
     if (!data.busType) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Bus type is required.", path: ["busType"] });
-    if (data.busQuantity === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please enter the number of buses.", path: ["busQuantity"] });
+    if (data.busQuantity === undefined || data.busQuantity < 1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please enter the number of buses.", path: ["busQuantity"] });
     if (!data.busRoute) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Route is required.", path: ["busRoute"] });
     if (!data.durationFrom) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["durationFrom"] });
     if (!data.durationTo) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Departure date is required.", path: ["durationTo"] });
   } else if (data.requestType === "train") {
     if (!data.trainNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Train number is required.", path: ["trainNumber"] });
     if (!data.trainArrivalDate) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["trainArrivalDate"] });
-    if (data.trainDevoteeCount === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Number of devotees is required.", path: ["trainDevoteeCount"] });
+    if (data.trainDevoteeCount === undefined || data.trainDevoteeCount < 1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Number of devotees is required.", path: ["trainDevoteeCount"] });
+    if (data.returnTrainNumber && !data.returnTrainDepartureDate) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Return departure date is required if return train number is provided.", path: ["returnTrainDepartureDate"] });
+    }
+    if (data.returnTrainDepartureDate && data.trainArrivalDate && data.returnTrainDepartureDate < data.trainArrivalDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Return departure date cannot be before arrival date.",
+        path: ["returnTrainDepartureDate"],
+      });
+    }
   }
 
   if (data.durationFrom && data.durationTo && data.durationTo < data.durationFrom) {
@@ -483,63 +496,116 @@ export default function Home() {
                 </TabsContent>
 
                 <TabsContent value="train" className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <FormLabel>Arrival Journey Details</FormLabel>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                          control={form.control}
+                          name="trainNumber"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Train Number</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    <Input placeholder="e.g., 12903" className="pl-9" {...field} />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="trainArrivalDate"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                              <FormLabel>Arrival Date</FormLabel>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <FormControl>
+                                    <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                      {field.value ? (format(field.value, "PPP")) : (<span>Pick a date</span>)}
+                                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                    </Button>
+                                  </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                  <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
+                                </PopoverContent>
+                              </Popover>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                    </div>
                     <FormField
                         control={form.control}
-                        name="trainNumber"
+                        name="trainDevoteeCount"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Train Number</FormLabel>
+                          <FormItem className="pt-4">
+                            <FormLabel>Number of Devotees</FormLabel>
                             <FormControl>
-                              <div className="relative">
-                                  <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                  <Input placeholder="e.g., 12903" className="pl-9" {...field} />
-                              </div>
+                                <div className="relative">
+                                    <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    <Input type="number" placeholder="Total count for this train" className="pl-9" {...field} />
+                                </div>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={form.control}
-                        name="trainArrivalDate"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>Arrival Date</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                                    {field.value ? (format(field.value, "PPP")) : (<span>Pick a date</span>)}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
                   </div>
-                  <FormField
-                      control={form.control}
-                      name="trainDevoteeCount"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Number of Devotees</FormLabel>
-                          <FormControl>
-                              <div className="relative">
-                                  <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                  <Input type="number" placeholder="Total count for this train" className="pl-9" {...field} />
-                              </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+
+                  <Separator />
+
+                  <div className="space-y-2">
+                    <FormLabel>Return Journey Details (Optional)</FormLabel>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                       <FormField
+                          control={form.control}
+                          name="returnTrainNumber"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Return Train Number</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    <Input placeholder="e.g., 12904" className="pl-9" {...field} />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="returnTrainDepartureDate"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                              <FormLabel>Departure Date</FormLabel>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <FormControl>
+                                    <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                      {field.value ? (format(field.value, "PPP")) : (<span>Pick a date</span>)}
+                                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                    </Button>
+                                  </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                  <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("trainArrivalDate") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                                </PopoverContent>
+                              </Popover>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                    </div>
+                  </div>
+                  
+                  <Separator />
+
                     <FormField
                       control={form.control}
                       name="pickupRequired"
@@ -556,7 +622,7 @@ export default function Home() {
                               Pick-up Required
                             </FormLabel>
                              <CardDescription>
-                              Check this if you need shuttle service from Bhodwal Majri station.
+                              Check this if you need shuttle service from Bhodwal Majri station to Sangli or miraj station
                             </CardDescription>
                           </div>
                         </FormItem>
@@ -583,5 +649,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
