@@ -61,11 +61,18 @@
         },
         "frontImage": {
           "type": "string",
-          "description": "URI of the front image of the vehicle."
+          "description": "URI of the front image of the vehicle.",
+          "format": "uri"
         },
         "sideImage": {
           "type": "string",
-          "description": "URI of the side image of the vehicle."
+          "description": "URI of the side image of the vehicle.",
+           "format": "uri"
+        },
+        "odometerImage": {
+          "type": "string",
+          "description": "URI of the odometer image of the vehicle.",
+          "format": "uri"
         },
         "odometerReading": {
           "type": "number",
@@ -78,6 +85,7 @@
         "vehicleType",
         "frontImage",
         "sideImage",
+        "odometerImage",
         "odometerReading"
       ]
     },
@@ -187,7 +195,7 @@
         "definition": {
           "entityName": "Vehicle",
           "schema": {
-            "$ref": "#/backend/entities/Vehicle"
+            "$ref": "#/entities/Vehicle"
           },
           "description": "Stores vehicle information. Includes 'vehicleId' as the document ID.",
           "params": [
@@ -203,7 +211,7 @@
         "definition": {
           "entityName": "TransportRequest",
           "schema": {
-            "$ref": "#/backend/entities/TransportRequest"
+            "$ref": "#/entities/TransportRequest"
           },
           "description": "Stores transport requests submitted by users. Includes 'transportRequestId' as the document ID.",
           "params": [
@@ -219,7 +227,7 @@
         "definition": {
           "entityName": "Dispatch",
           "schema": {
-            "$ref": "#/backend/entities/Dispatch"
+            "$ref": "#/entities/Dispatch"
           },
           "description": "Stores dispatch records. Includes 'dispatchId' as the document ID.",
           "params": [
@@ -235,7 +243,7 @@
         "definition": {
           "entityName": "ImageUpload",
           "schema": {
-            "$ref": "#/backend/entities/ImageUpload"
+            "$ref": "#/entities/ImageUpload"
           },
           "description": "Stores records of image uploads. Includes 'imageUploadId' as the document ID. 'entityType' and 'entityId' are used to associate the image with a specific vehicle or dispatch.",
           "params": [

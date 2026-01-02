@@ -11,7 +11,8 @@ import {
   Send,
   Shield,
   User,
-  Hand
+  Hand,
+  Camera
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -44,6 +45,7 @@ type AuthLayoutProps = {
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/reception', icon: Camera, label: 'Reception' },
   { href: '/fleet', icon: Car, label: 'Fleet' },
   { href: '/requests', icon: ClipboardList, label: 'Requests' },
   { href: '/dispatch', icon: Send, label: 'Dispatch' },
