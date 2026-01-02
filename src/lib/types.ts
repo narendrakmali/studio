@@ -32,7 +32,7 @@ export type TransportRequest = {
   requestType: 'private' | 'bus' | 'train';
 
   // Private Vehicle fields
-  vehicleType?: 'car' | 'suv' | 'winger' | 'innova';
+  vehicleType?: 'two-wheeler' | 'car' | 'suv' | 'winger' | 'innova';
   registrationNumber?: string;
   passengerCount?: number;
   driverName?: string;

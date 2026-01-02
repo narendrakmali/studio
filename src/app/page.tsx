@@ -34,67 +34,63 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 
+
 const requestFormSchema = z.object({
-  requestType: z.enum(['private', 'bus', 'train']),
+  requestType: z.enum(["private", "bus", "train"]),
   userName: z.string().min(2, "Sanyojak/In-charge name is required."),
   contactNumber: z.string().min(10, "A valid contact number is required."),
   departmentName: z.string().min(2, "Branch/Zone name is required."),
   
-  // Private vehicle fields (optional)
-  vehicleType: z.enum(["car", "suv", "winger", "innova"]).optional(),
+  // Private Vehicle Fields (optional)
+  vehicleType: z.enum(["two-wheeler", "car", "suv", "winger", "innova"]).optional(),
   registrationNumber: z.string().optional(),
   passengerCount: z.coerce.number().optional(),
   driverName: z.string().optional(),
   driverContact: z.string().optional(),
-  durationFrom: z.date().optional(),
-  durationTo: z.date().optional(),
-
-  // Bus fields (optional)
+  
+  // Bus Fields (optional)
   busType: z.enum(["private", "msrtc"]).optional(),
   busQuantity: z.coerce.number().optional(),
   busRoute: z.string().optional(),
   
-  // Train fields (optional)
+  // Train Fields (optional)
   trainNumber: z.string().optional(),
   trainArrivalDate: z.date().optional(),
   trainDevoteeCount: z.coerce.number().optional(),
-  pickupRequired: z.boolean().default(false).optional(),
+  pickupRequired: z.boolean().optional().default(false),
+  
+  // Common Date Fields (optional for train)
+  durationFrom: z.date().optional(),
+  durationTo: z.date().optional(),
+
 }).superRefine((data, ctx) => {
-    if (data.requestType === 'private') {
-        if (!data.vehicleType) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Vehicle type is required.", path: ["vehicleType"] });
-        if (!data.registrationNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Registration number is required.", path: ["registrationNumber"] });
-        if (data.passengerCount === undefined || data.passengerCount < 1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Occupancy is required.", path: ["passengerCount"] });
-        if (!data.driverName) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Driver name is required.", path: ["driverName"] });
-        if (!data.driverContact) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "A valid driver contact is required.", path: ["driverContact"] });
-        if (!data.durationFrom) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["durationFrom"] });
-        if (!data.durationTo) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Departure date is required.", path: ["durationTo"] });
-        if (data.durationFrom && data.durationTo && data.durationTo < data.durationFrom) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: "Departure date cannot be before arrival date.",
-                path: ["durationTo"],
-            });
-        }
-    }
-    if (data.requestType === 'bus') {
-        if (!data.busType) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please select bus type.", path: ["busType"] });
-        if (data.busQuantity === undefined || data.busQuantity < 1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please enter the number of buses.", path: ["busQuantity"] });
-        if (!data.busRoute) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Route is required.", path: ["busRoute"] });
-        if (!data.durationFrom) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["durationFrom"] });
-        if (!data.durationTo) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Departure date is required.", path: ["durationTo"] });
-        if (data.durationFrom && data.durationTo && data.durationTo < data.durationFrom) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: "Departure date cannot be before arrival date.",
-                path: ["durationTo"],
-            });
-        }
-    }
-    if (data.requestType === 'train') {
-        if (!data.trainNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Train number is required.", path: ["trainNumber"] });
-        if (!data.trainArrivalDate) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["trainArrivalDate"] });
-        if (data.trainDevoteeCount === undefined || data.trainDevoteeCount < 1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Number of devotees is required.", path: ["trainDevoteeCount"] });
-    }
+  if (data.requestType === "private") {
+    if (!data.vehicleType) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Vehicle type is required.", path: ["vehicleType"] });
+    if (!data.registrationNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Registration number is required.", path: ["registrationNumber"] });
+    if (data.passengerCount === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Occupancy is required.", path: ["passengerCount"] });
+    if (!data.driverName) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Driver name is required.", path: ["driverName"] });
+    if (!data.driverContact) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Driver contact is required.", path: ["driverContact"] });
+    if (!data.durationFrom) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["durationFrom"] });
+    if (!data.durationTo) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Departure date is required.", path: ["durationTo"] });
+  } else if (data.requestType === "bus") {
+    if (!data.busType) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Bus type is required.", path: ["busType"] });
+    if (data.busQuantity === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please enter the number of buses.", path: ["busQuantity"] });
+    if (!data.busRoute) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Route is required.", path: ["busRoute"] });
+    if (!data.durationFrom) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["durationFrom"] });
+    if (!data.durationTo) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Departure date is required.", path: ["durationTo"] });
+  } else if (data.requestType === "train") {
+    if (!data.trainNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Train number is required.", path: ["trainNumber"] });
+    if (!data.trainArrivalDate) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["trainArrivalDate"] });
+    if (data.trainDevoteeCount === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Number of devotees is required.", path: ["trainDevoteeCount"] });
+  }
+
+  if (data.durationFrom && data.durationTo && data.durationTo < data.durationFrom) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Departure date cannot be before arrival date.",
+      path: ["durationTo"],
+    });
+  }
 });
 
 
@@ -252,6 +248,7 @@ export default function Home() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
+                            <SelectItem value="two-wheeler">Two Wheeler</SelectItem>
                             <SelectItem value="car">Car</SelectItem>
                             <SelectItem value="suv">SUV</SelectItem>
                             <SelectItem value="winger">Winger</SelectItem>
@@ -586,3 +583,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
