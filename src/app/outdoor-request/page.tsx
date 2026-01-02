@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CalendarIcon, Loader2, PartyPopper, Users, Car, Train, Bus, Hash, Phone, User, MapPin } from "lucide-react";
+import { CalendarIcon, Loader2, PartyPopper, Users, Car, Train, Bus, Hash, Phone, User, MapPin, Upload } from "lucide-react";
 import Link from 'next/link';
 import { Logo } from "@/components/logo";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -58,6 +58,9 @@ const busSchema = baseSchema.extend({
   busType: z.enum(["private", "msrtc"]),
   busQuantity: z.coerce.number().optional(),
   busRoute: z.string().optional(),
+  busCoordinatorName: z.string().min(1, "Coordinator name is required."),
+  busCoordinatorContact: z.string().min(1, "Coordinator contact is required."),
+  busBookingReceipt: z.any().optional(),
   durationFrom: z.date(),
   durationTo: z.date(),
 });
@@ -92,6 +95,9 @@ const requestFormSchema = z.discriminatedUnion("requestType", [
         if (!data.busRoute) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Route is required.", path: ["busRoute"] });
         if (!data.durationFrom) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["durationFrom"] });
         if (!data.durationTo) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Departure date is required.", path: ["durationTo"] });
+        if (data.busType === 'msrtc' && !data.busBookingReceipt) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Booking receipt is required for MSRTC buses.", path: ["busBookingReceipt"] });
+        }
       } else if (data.requestType === "train") {
         if (!data.trainNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Train number is required.", path: ["trainNumber"] });
         if (!data.trainArrivalDate) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["trainArrivalDate"] });
@@ -208,6 +214,175 @@ export default function OutdoorRequestPage() {
       </div>
     </>
   );
+  
+  const BusTabContent = () => {
+    const { watch } = useFormContext();
+    const busType = watch('busType');
+
+    return (
+        <TabsContent value="bus" className="space-y-6 border-l-4 border-msrtc-orange pl-4 -ml-4">
+            <FormField
+            control={form.control}
+            name="busType"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Bus Type</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select bus type" />
+                    </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                    <SelectItem value="private">Private Bus</SelectItem>
+                    <SelectItem value="msrtc">Govt / MSRTC</SelectItem>
+                    </SelectContent>
+                </Select>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                control={form.control}
+                name="busCoordinatorName"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Bus Coordinator Name</FormLabel>
+                    <FormControl>
+                        <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input placeholder="Coordinator's full name" className="pl-9" {...field} />
+                        </div>
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+                <FormField
+                control={form.control}
+                name="busCoordinatorContact"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Coordinator Mobile</FormLabel>
+                    <FormControl>
+                        <div className="relative">
+                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input placeholder="Coordinator's mobile" className="pl-9" {...field} />
+                        </div>
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+                control={form.control}
+                name="busQuantity"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Quantity</FormLabel>
+                    <FormControl>
+                        <div className="relative">
+                        <Bus className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input type="number" placeholder="Number of buses" className="pl-9" {...field} />
+                    </div>
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="busRoute"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Route</FormLabel>
+                    <FormControl>
+                        <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input placeholder="Origin to Samalkha" className="pl-9" {...field} />
+                    </div>
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            </div>
+            
+            {busType === 'msrtc' && (
+                <FormField
+                    control={form.control}
+                    name="busBookingReceipt"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Upload Booking Receipt</FormLabel>
+                            <FormControl>
+                                <div className="relative">
+                                    <Upload className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    <Input type="file" className="pl-9" onChange={(e) => field.onChange(e.target.files)} />
+                                </div>
+                            </FormControl>
+                             <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+                control={form.control}
+                name="durationFrom"
+                render={({ field }) => (
+                <FormItem className="flex flex-col">
+                    <FormLabel>Arrival Date</FormLabel>
+                    <Popover>
+                    <PopoverTrigger asChild>
+                        <FormControl>
+                        <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                            {field.value ? (format(field.value, "PPP")) : (<span>Pick a date</span>)}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                        </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
+                    </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="durationTo"
+                render={({ field }) => (
+                <FormItem className="flex flex-col">
+                    <FormLabel>Departure Date</FormLabel>
+                    <Popover>
+                    <PopoverTrigger asChild>
+                        <FormControl>
+                        <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                            {field.value ? (format(field.value, "PPP")) : (<span>Pick a date</span>)}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                        </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                    </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            </div>
+        </TabsContent>
+    );
+  }
+
 
   if (isSuccess) {
     return (
@@ -404,111 +579,7 @@ export default function OutdoorRequestPage() {
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="bus" className="space-y-6 border-l-4 border-msrtc-orange pl-4 -ml-4">
-                   <FormField
-                    control={form.control}
-                    name="busType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Bus Type</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select bus type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="private">Private Bus</SelectItem>
-                            <SelectItem value="msrtc">Govt / MSRTC</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="busQuantity"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Quantity</FormLabel>
-                          <FormControl>
-                             <div className="relative">
-                                <Bus className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input type="number" placeholder="Number of buses" className="pl-9" {...field} />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="busRoute"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Route</FormLabel>
-                           <FormControl>
-                             <div className="relative">
-                                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input placeholder="Origin to Samalkha" className="pl-9" {...field} />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="durationFrom"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Arrival Date</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                                  {field.value ? (format(field.value, "PPP")) : (<span>Pick a date</span>)}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="durationTo"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Departure Date</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                                  {field.value ? (format(field.value, "PPP")) : (<span>Pick a date</span>)}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </TabsContent>
+                <BusTabContent />
 
                 <TabsContent value="train" className="space-y-6 border-l-4 border-trust-blue pl-4 -ml-4">
                   <div className="space-y-2">
@@ -665,5 +736,3 @@ export default function OutdoorRequestPage() {
     </div>
   );
 }
-
-    

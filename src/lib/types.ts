@@ -45,6 +45,9 @@ export type TransportRequest = {
   busType?: 'private' | 'msrtc';
   busQuantity?: number;
   busRoute?: string;
+  busCoordinatorName?: string;
+  busCoordinatorContact?: string;
+  busBookingReceipt?: any;
   
   // Train fields
   trainNumber?: string;
