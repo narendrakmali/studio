@@ -1,3 +1,4 @@
+
 "use client"
 
 import { AuthLayout } from "@/components/auth-layout";
@@ -7,7 +8,7 @@ import { requests, vehicles as allVehicles } from "@/lib/data";
 import { TransportRequest, Vehicle } from "@/lib/types";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Users, Route, Calendar, Sparkles, Car, User, Fingerprint, Camera, Loader2, Phone } from "lucide-react";
+import { Users, Route, Calendar, Sparkles, Car, User, Fingerprint, Camera, Loader2, Phone, Building } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,7 @@ import { format } from "date-fns";
 
 
 export default function DispatchPage() {
-    const [selectedRequest, setSelectedRequest] = useState<TransportRequest | null>(requests[0]);
+    const [selectedRequest, setSelectedRequest] = useState<TransportRequest | null>(requests.find(r => r.status === 'pending') || null);
     const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
     const [suggestedVehicleId, setSuggestedVehicleId] = useState<string | null>(null);
     const [isSuggesting, setIsSuggesting] = useState(false);
@@ -149,27 +150,52 @@ export default function DispatchPage() {
                     <CardDescription>Finalize and dispatch the vehicle.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow space-y-4">
-                    <div className="space-y-1">
-                        <Label htmlFor="driverName">Driver Name</Label>
-                        <div className="relative">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input id="driverName" placeholder="e.g. John Doe" className="pl-9" />
+                    {selectedRequest && selectedVehicle ? (
+                        <>
+                            <div className="space-y-4 rounded-lg border p-4">
+                                <h4 className="font-medium text-sm">Summary</h4>
+                                <div className="text-sm text-muted-foreground grid grid-cols-2 gap-2">
+                                    <div className="flex items-center gap-2"><Building className="h-4 w-4" /> <span>{selectedRequest.departmentName}</span></div>
+                                    <div className="flex items-center gap-2 capitalize"><Car className="h-4 w-4" /> <span>{selectedVehicle.make} {selectedVehicle.model}</span></div>
+                                    <div className="col-span-2 flex items-center gap-2"><Calendar className="h-4 w-4" /> <span>{format(selectedRequest.durationFrom, 'PPP')} to {format(selectedRequest.durationTo, 'PPP')}</span></div>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <div className="space-y-1">
+                                    <Label htmlFor="driverName">Driver Name</Label>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input id="driverName" placeholder="e.g. John Doe" className="pl-9" />
+                                    </div>
+                                </div>
+                                <div className="space-y-1">
+                                    <Label htmlFor="driverContact">Driver Contact Number</Label>
+                                    <div className="relative">
+                                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input id="driverContact" placeholder="e.g. 9988776655" className="pl-9" />
+                                    </div>
+                                </div>
+                                <div className="space-y-1">
+                                    <Label htmlFor="driverLicense">Driver License</Label>
+                                     <div className="relative">
+                                        <Fingerprint className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input id="driverLicense" placeholder="e.g. DL123456789" className="pl-9" />
+                                    </div>
+                                </div>
+                                 <div className="space-y-1">
+                                    <Label htmlFor="conditionPhoto">Vehicle Condition Photo</Label>
+                                     <div className="relative">
+                                        <Camera className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input id="conditionPhoto" type="file" accept="image/*" className="pl-9" />
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex items-center justify-center h-full text-muted-foreground">
+                            <p>Select a request and vehicle to see details.</p>
                         </div>
-                    </div>
-                     <div className="space-y-1">
-                        <Label htmlFor="driverLicense">Driver License</Label>
-                         <div className="relative">
-                            <Fingerprint className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input id="driverLicense" placeholder="e.g. DL123456789" className="pl-9" />
-                        </div>
-                    </div>
-                     <div className="space-y-1">
-                        <Label htmlFor="conditionPhoto">Vehicle Condition Photo</Label>
-                         <div className="relative">
-                            <Camera className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input id="conditionPhoto" type="file" accept="image/*" className="pl-9" />
-                        </div>
-                    </div>
+                    )}
                 </CardContent>
                 <CardFooter>
                     <Button disabled={!selectedRequest || !selectedVehicle} className="w-full" variant="default">Dispatch Vehicle</Button>
@@ -181,7 +207,3 @@ export default function DispatchPage() {
     </AuthLayout>
   );
 }
-
-    
-
-    
