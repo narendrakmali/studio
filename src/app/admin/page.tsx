@@ -6,7 +6,7 @@ import { AuthLayout } from "@/components/auth-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload, Download, KeyRound, Loader2, Car, Wrench, CircleCheck, FileText, Send } from "lucide-react";
+import { Upload, Download, KeyRound, Loader2, Car, Wrench, CircleCheck, FileText, Send, Users, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { importVehicleDataFromCsv, ImportVehicleDataFromCsvOutput } from "@/ai/flows/import-vehicle-data-from-csv";
 import { importDispatchDataFromCsv, ImportDispatchDataFromCsvOutput } from "@/ai/flows/import-dispatch-data-from-csv";
@@ -14,6 +14,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { vehicles, dispatches, requests } from "@/lib/data";
 import type { Vehicle, Dispatch } from "@/lib/types";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import Link from "next/link";
+import { format } from "date-fns";
 
 export default function AdminPage() {
     const { toast } = useToast();
@@ -179,8 +182,53 @@ export default function AdminPage() {
 
     return (
         <AuthLayout>
-            <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-                <div className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="lg:col-span-2 space-y-6">
+                    <Card className="shadow-md">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-xl">Branch Requirements</CardTitle>
+                            <CardDescription>View and manage all incoming transport requests from branches.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                           <ScrollArea className="h-96">
+                                <div className="space-y-4">
+                                {requests.map(req => (
+                                    <Card key={req.id} className="p-4">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="font-semibold">{req.departmentName}</p>
+                                                <p className="text-sm text-muted-foreground">Request ID: {req.id}</p>
+                                            </div>
+                                             <Badge variant={req.status === 'pending' ? 'default' : 'secondary'} className={req.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' : ''}>
+                                                {req.status}
+                                            </Badge>
+                                        </div>
+                                        <div className="mt-2 text-sm space-y-2">
+                                            <div className="flex items-center gap-2">
+                                                <Car className="h-4 w-4 text-muted-foreground" />
+                                                <span className="capitalize">Vehicle: <strong>{req.vehicleType}</strong></span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Users className="h-4 w-4 text-muted-foreground" />
+                                                <span>Passengers: <strong>{req.passengerCount}</strong></span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-muted-foreground">
+                                                <Calendar className="h-4 w-4" />
+                                                <span>{req.durationFrom && format(new Date(req.durationFrom), 'dd/MM/yy')} - {req.durationTo && format(new Date(req.durationTo), 'dd/MM/yy')}</span>
+                                            </div>
+                                        </div>
+                                        {req.status === 'pending' && <div className="mt-4 flex justify-end">
+                                            <Button size="sm" asChild>
+                                                <Link href="/dispatch">Allocate Vehicle</Link>
+                                            </Button>
+                                        </div>}
+                                    </Card>
+                                ))}
+                                </div>
+                           </ScrollArea>
+                        </CardContent>
+                    </Card>
+
                     <Card className="shadow-md">
                         <CardHeader>
                             <CardTitle className="font-headline text-xl">Import Vehicle Data</CardTitle>
@@ -275,7 +323,7 @@ export default function AdminPage() {
 
                 </div>
 
-                <div className="space-y-6">
+                <div className="lg:col-span-1 space-y-6">
                     <Card className="shadow-md">
                         <CardHeader>
                             <CardTitle className="font-headline text-xl">Fleet Summary</CardTitle>
