@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { optimizeVehicleAllocation, OptimizeVehicleAllocationInput } from "@/ai/flows/optimize-vehicle-allocation";
 import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
 
 
 export default function DispatchPage() {
@@ -40,7 +41,6 @@ export default function DispatchPage() {
                     destination: selectedRequest.destination,
                     passengerCount: selectedRequest.passengerCount,
                     departmentName: selectedRequest.departmentName,
-                    hodApprovalImage: selectedRequest.hodApprovalImage || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", 
                 },
                 vehicleAvailability: availableVehicles.map(v => ({
                     vehicleId: v.id,
@@ -92,7 +92,7 @@ export default function DispatchPage() {
                             </CardHeader>
                             <CardContent className="p-4 pt-0 flex justify-between text-sm text-muted-foreground">
                                 <div className="flex items-center gap-1 capitalize"><Car className="h-4 w-4" /> {req.vehicleType}</div>
-                                <div className="flex items-center gap-1"><Calendar className="h-4 w-4" /> {new Date(req.createdAt).toLocaleDateString()}</div>
+                                <div className="flex items-center gap-1"><Calendar className="h-4 w-4" /> {format(new Date(req.createdAt), 'dd/MM/yyyy')}</div>
                             </CardContent>
                         </Card>
                     ))}
@@ -181,5 +181,7 @@ export default function DispatchPage() {
     </AuthLayout>
   );
 }
+
+    
 
     

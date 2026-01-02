@@ -17,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import Link from "next/link";
+import { format } from "date-fns";
 
 
 export default function RequestsPage() {
@@ -55,7 +56,7 @@ export default function RequestsPage() {
                             </div>
                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Calendar className="h-4 w-4" />
-                                <span>{new Date(req.durationFrom).toLocaleDateString()} - {new Date(req.durationTo).toLocaleDateString()}</span>
+                                <span>{format(new Date(req.durationFrom), 'dd/MM/yyyy')} - {format(new Date(req.durationTo), 'dd/MM/yyyy')}</span>
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-between">
@@ -85,3 +86,5 @@ export default function RequestsPage() {
         </AuthLayout>
     )
 }
+
+    
