@@ -1,0 +1,261 @@
+
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { CalendarIcon, Loader2, Users, MapPin, FileImage, ArrowLeft } from "lucide-react";
+import Link from 'next/link';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AuthLayout } from "@/components/auth-layout";
+import { useToast } from "@/hooks/use-toast";
+import { Textarea } from "@/components/ui/textarea";
+
+const newRequestFormSchema = z.object({
+  departmentName: z.string().min(2, "Department name is required."),
+  passengerCount: z.coerce.number().min(1, "At least one passenger is required."),
+  destination: z.string().min(3, "Destination is required."),
+  vehicleType: z.enum(['two-wheeler', 'four-wheeler', 'tempo', 'eicher', 'bus']),
+  durationFrom: z.date({
+    required_error: "A start date is required.",
+  }),
+  durationTo: z.date({
+    required_error: "An end date is required.",
+  }),
+  hodApprovalImage: z.any().optional(),
+  purpose: z.string().min(10, "Purpose of travel is required."),
+}).refine((data) => data.durationTo >= data.durationFrom, {
+  message: "End date cannot be before start date.",
+  path: ["durationTo"],
+});
+
+
+export default function NewRequestPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const form = useForm<z.infer<typeof newRequestFormSchema>>({
+    resolver: zodResolver(newRequestFormSchema),
+  });
+
+  async function onSubmit(data: z.infer<typeof newRequestFormSchema>) {
+    setIsSubmitting(true);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    console.log("Form submitted:", data);
+    toast({
+        title: "Request Submitted!",
+        description: "Your transport request has been logged.",
+    });
+    form.reset();
+    setIsSubmitting(false);
+  }
+
+  return (
+    <AuthLayout>
+        <div className="flex justify-center">
+            <Card className="w-full max-w-3xl shadow-xl">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <CardTitle className="font-headline text-3xl">New Transport Request</CardTitle>
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href="/requests">
+                                    <ArrowLeft className="mr-2 h-4 w-4" />
+                                    Back to Requests
+                                </Link>
+                            </Button>
+                        </div>
+                        <CardDescription>
+                            Fill in the details below to request a vehicle for departmental use.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <FormField
+                            control={form.control}
+                            name="departmentName"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Department Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.g., Guest Services" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={form.control}
+                            name="vehicleType"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Vehicle Type</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                    <SelectValue placeholder="Select a vehicle type" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="two-wheeler">Two-wheeler</SelectItem>
+                                    <SelectItem value="four-wheeler">Four-wheeler</SelectItem>
+                                    <SelectItem value="tempo">Tempo</SelectItem>
+                                    <SelectItem value="eicher">Eicher</SelectItem>
+                                    <SelectItem value="bus">Bus</SelectItem>
+                                </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormField
+                                control={form.control}
+                                name="passengerCount"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Number of Passengers</FormLabel>
+                                    <FormControl>
+                                        <div className="relative">
+                                            <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <Input type="number" placeholder="e.g. 4" className="pl-9" {...field} />
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="destination"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Destination</FormLabel>
+                                    <FormControl>
+                                        <div className="relative">
+                                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <Input placeholder="e.g., Pune Airport" className="pl-9" {...field} />
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <FormField
+                            control={form.control}
+                            name="purpose"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Purpose of Travel</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="Briefly describe why the transport is needed..." {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormField
+                                control={form.control}
+                                name="durationFrom"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                    <FormLabel>From Date</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="durationTo"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                    <FormLabel>To Date</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                         <FormField
+                            control={form.control}
+                            name="hodApprovalImage"
+                            render={({ field: { onChange, value, ...rest }}) => (
+                                <FormItem>
+                                    <FormLabel>HOD Approval Letter</FormLabel>
+                                    <FormControl>
+                                        <div className="relative">
+                                            <FileImage className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <Input type="file" className="pl-9" onChange={e => onChange(e.target.files)} {...rest} />
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </CardContent>
+                    <CardFooter>
+                        <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        Submit Request
+                        </Button>
+                    </CardFooter>
+                </form>
+            </Form>
+            </Card>
+        </div>
+    </AuthLayout>
+  );
+}

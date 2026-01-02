@@ -5,7 +5,7 @@ import { AuthLayout } from "@/components/auth-layout";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { requests } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
-import { Users, Route, Calendar, Hash, User, Phone, Car } from "lucide-react";
+import { Users, Route, Calendar, Hash, User, Phone, Car, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -23,6 +23,14 @@ import { format } from "date-fns";
 export default function RequestsPage() {
     return (
         <AuthLayout>
+             <div className="flex justify-end mb-4">
+                <Button asChild>
+                    <Link href="/requests/new">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        New Request
+                    </Link>
+                </Button>
+            </div>
              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {requests.map((req) => (
                     <Card key={req.id} className="shadow-md hover:shadow-lg transition-shadow flex flex-col">
