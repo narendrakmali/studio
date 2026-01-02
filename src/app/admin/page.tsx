@@ -5,11 +5,12 @@ import { AuthLayout } from "@/components/auth-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload, Download, KeyRound, Loader2 } from "lucide-react";
+import { Upload, Download, KeyRound, Loader2, Car, Wrench, CircleCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { importVehicleDataFromCsv, ImportVehicleDataFromCsvOutput } from "@/ai/flows/import-vehicle-data-from-csv";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { vehicles } from "@/lib/data";
 
 export default function AdminPage() {
     const { toast } = useToast();
@@ -49,6 +50,11 @@ export default function AdminPage() {
         };
     };
 
+    const totalVehicles = vehicles.length;
+    const availableVehicles = vehicles.filter(v => v.status === 'available').length;
+    const inUseVehicles = vehicles.filter(v => v.status === 'in-use').length;
+    const maintenanceVehicles = vehicles.filter(v => v.status === 'maintenance').length;
+
     return (
         <AuthLayout>
             <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
@@ -68,7 +74,7 @@ export default function AdminPage() {
                             <div>
                                 <h3 className="font-semibold mb-2 flex items-center justify-between">
                                     <span>Data Preview</span>
-                                    <Badge>Confidence: {mappedData.mappingConfidence}%</Badge>
+                                    {mappedData.mappingConfidence && <Badge>Confidence: {mappedData.mappingConfidence}%</Badge>}
                                 </h3>
                                 <div className="max-h-60 overflow-auto border rounded-md">
                                 <Table>
@@ -95,6 +101,38 @@ export default function AdminPage() {
                 </Card>
 
                 <div className="space-y-6">
+
+                    <Card className="shadow-md">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-xl">Fleet Summary</CardTitle>
+                            <CardDescription>An overview of the current vehicle fleet status.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-2 gap-4 text-center">
+                                <div className="p-4 rounded-lg bg-secondary">
+                                    <Car className="mx-auto h-8 w-8 text-primary" />
+                                    <p className="text-2xl font-bold mt-2">{totalVehicles}</p>
+                                    <p className="text-sm text-muted-foreground">Total Vehicles</p>
+                                </div>
+                                <div className="p-4 rounded-lg bg-green-100 dark:bg-green-900/30">
+                                    <CircleCheck className="mx-auto h-8 w-8 text-green-600 dark:text-green-400" />
+                                    <p className="text-2xl font-bold mt-2">{availableVehicles}</p>
+                                    <p className="text-sm text-green-700 dark:text-green-300">Available</p>
+                                </div>
+                                <div className="p-4 rounded-lg bg-yellow-100 dark:bg-yellow-900/30">
+                                    <Car className="mx-auto h-8 w-8 text-yellow-600 dark:text-yellow-400" />
+                                    <p className="text-2xl font-bold mt-2">{inUseVehicles}</p>
+                                    <p className="text-sm text-yellow-700 dark:text-yellow-300">In Use</p>
+                                </div>
+                                <div className="p-4 rounded-lg bg-red-100 dark:bg-red-900/30">
+                                    <Wrench className="mx-auto h-8 w-8 text-red-600 dark:text-red-400" />
+                                    <p className="text-2xl font-bold mt-2">{maintenanceVehicles}</p>
+                                    <p className="text-sm text-red-700 dark:text-red-300">Maintenance</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
                     <Card className="shadow-md">
                         <CardHeader>
                             <CardTitle className="font-headline text-xl">Export Data</CardTitle>
