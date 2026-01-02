@@ -19,14 +19,24 @@ export type ImportVehicleDataFromCsvInput = z.infer<
   typeof ImportVehicleDataFromCsvInputSchema
 >;
 
+const VehicleDataSchema = z.object({
+  licensePlate: z.string().describe("The license plate number of the vehicle."),
+  capacity: z.coerce.number().describe("The passenger capacity of the vehicle (number)."),
+  make: z.string().describe("The make of the vehicle (e.g., Toyota)."),
+  model: z.string().describe("The model of the vehicle (e.g. Camry)."),
+  ownerName: z.string().describe("The name of the vehicle's owner."),
+  ownerContact: z.string().describe("The contact number of the owner."),
+  ownerAddress: z.string().describe("The address of the owner."),
+});
+
 const ImportVehicleDataFromCsvOutputSchema = z.object({
   mappedData: z
-    .array(z.record(z.string()))
+    .array(VehicleDataSchema)
     .describe('The vehicle data, with columns mapped to vehicle fields.'),
   mappingConfidence: z
     .number()
     .describe(
-      'A score indicating the confidence of the column mapping (0-100).' // Corrected typo here
+      'A score indicating the confidence of the column mapping (0-100).'
     )
     .optional(),
 });

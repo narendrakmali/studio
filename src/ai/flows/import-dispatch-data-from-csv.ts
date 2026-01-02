@@ -19,9 +19,17 @@ export type ImportDispatchDataFromCsvInput = z.infer<
   typeof ImportDispatchDataFromCsvInputSchema
 >;
 
+const DispatchDataSchema = z.object({
+  requestId: z.string().describe("The ID of the transport request."),
+  vehicleId: z.string().describe("The ID of the allocated vehicle."),
+  driverName: z.string().describe("The name of the driver."),
+  driverLicense: z.string().describe("The driver's license number."),
+  dispatchedAt: z.string().describe("The date and time the vehicle was dispatched (ISO 8601 format)."),
+});
+
 const ImportDispatchDataFromCsvOutputSchema = z.object({
   mappedData: z
-    .array(z.record(z.string()))
+    .array(DispatchDataSchema)
     .describe('The dispatch data, with columns mapped to dispatch fields.'),
   mappingConfidence: z
     .number()
