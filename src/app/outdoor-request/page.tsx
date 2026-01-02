@@ -42,8 +42,11 @@ const baseSchema = z.object({
   departmentName: z.string().min(2, "Branch/Zone name is required."),
 });
 
-const privateVehicleSchema = baseSchema.extend({
+const privateVehicleSchema = z.object({
   requestType: z.literal("private"),
+  userName: z.string().min(2, "Sanyojak/In-charge name is required."),
+  contactNumber: z.string().min(10, "A valid contact number is required."),
+  departmentName: z.string().min(2, "Branch/Zone name is required."),
   vehicleType: z.enum(["two-wheeler", "car", "suv", "winger", "innova"]),
   registrationNumber: z.string(),
   passengerCount: z.coerce.number().optional(),
@@ -53,8 +56,11 @@ const privateVehicleSchema = baseSchema.extend({
   durationTo: z.date(),
 });
 
-const busSchema = baseSchema.extend({
+const busSchema = z.object({
   requestType: z.literal("bus"),
+  userName: z.string().min(2, "Sanyojak/In-charge name is required."),
+  contactNumber: z.string().min(10, "A valid contact number is required."),
+  departmentName: z.string().min(2, "Branch/Zone name is required."),
   busType: z.enum(["private", "msrtc"]),
   busQuantity: z.coerce.number().optional(),
   busRoute: z.string().optional(),
@@ -65,8 +71,13 @@ const busSchema = baseSchema.extend({
   durationTo: z.date(),
 });
 
-const trainSchema = baseSchema.extend({
+const trainSchema = z.object({
   requestType: z.literal("train"),
+  userName: z.string().min(2, "Sanyojak/In-charge name is required."),
+  contactNumber: z.string().min(10, "A valid contact number is required."),
+  departmentName: z.string().min(2, "Branch/Zone name is required."),
+  trainTeamLeaderName: z.string().min(1, "Team Leader name is required."),
+  trainTeamLeaderContact: z.string().min(1, "Team Leader contact is required."),
   trainNumber: z.string().optional(),
   trainArrivalDate: z.date().optional(),
   trainDevoteeCount: z.coerce.number().optional(),
@@ -582,6 +593,43 @@ export default function OutdoorRequestPage() {
                 <BusTabContent />
 
                 <TabsContent value="train" className="space-y-6 border-l-4 border-trust-blue pl-4 -ml-4">
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                          control={form.control}
+                          name="trainTeamLeaderName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Team Leader Name</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    <Input placeholder="e.g., Jane Doe" className="pl-9" {...field} />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                         <FormField
+                          control={form.control}
+                          name="trainTeamLeaderContact"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Team Leader Contact</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    <Input placeholder="e.g., 9876543210" className="pl-9" {...field} />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                   </div>
+
+                  <Separator />
+
                   <div className="space-y-2">
                     <FormLabel>Arrival Journey Details</FormLabel>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -708,7 +756,7 @@ export default function OutdoorRequestPage() {
                               Pick-up Required
                             </FormLabel>
                              <CardDescription>
-                              Check this if you need shuttle service from Bhodwal Majri station to Sangli or miraj station
+                              Check this if you need shuttle service from Bhodwal Majri station to Sangli or Miraj station.
                             </CardDescription>
                           </div>
                         </FormItem>
@@ -736,3 +784,5 @@ export default function OutdoorRequestPage() {
     </div>
   );
 }
+
+    

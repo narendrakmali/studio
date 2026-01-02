@@ -1,3 +1,4 @@
+
 export type Vehicle = {
   id: string;
   licensePlate: string;
@@ -50,6 +51,8 @@ export type TransportRequest = {
   busBookingReceipt?: any;
   
   // Train fields
+  trainTeamLeaderName?: string;
+  trainTeamLeaderContact?: string;
   trainNumber?: string;
   trainArrivalDate?: Date;
   trainDevoteeCount?: number;
@@ -67,3 +70,5 @@ export type Dispatch = {
   conditionPhoto: string;
   dispatchedAt: Date;
 };
+
+    
