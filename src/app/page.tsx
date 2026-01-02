@@ -14,7 +14,7 @@ export default function HomePage() {
         <div className="container mx-auto flex justify-between items-center">
             <Link href="/" className="flex items-center gap-3">
               <Logo className="w-8 h-8" />
-              <h1 className="text-xl font-headline font-bold text-primary">Samagam FleetConnect</h1>
+              <h1 className="text-xl font-headline font-bold text-primary">Transport Coordination Portal</h1>
             </Link>
             <Button asChild variant="outline" className="bg-background/80 backdrop-blur-sm">
                 <Link href="/login">Team Login</Link>
@@ -23,12 +23,12 @@ export default function HomePage() {
     </header>
       <div className="w-full max-w-4xl">
         <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4">Transport Request Portal</h1>
+            <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4 text-spiritual-purple">Transport Request Portal</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Please select the appropriate form to register your vehicle or request transport for the Samagam.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Link href="/indoor-request" className="group">
-            <Card className="shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-transform duration-300 h-full flex flex-col">
+            <Card className="shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-transform duration-300 h-full flex flex-col rounded-2xl">
               <CardHeader>
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-primary/10 rounded-lg text-primary">
@@ -51,7 +51,7 @@ export default function HomePage() {
             </Card>
           </Link>
           <Link href="/outdoor-request" className="group">
-            <Card className="shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-transform duration-300 h-full flex flex-col">
+            <Card className="shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-transform duration-300 h-full flex flex-col rounded-2xl">
                <CardHeader>
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-accent/10 rounded-lg text-accent">

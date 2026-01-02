@@ -72,7 +72,8 @@ const trainSchema = baseSchema.extend({
   returnTrainDepartureDate: z.date().optional(),
 });
 
-const requestFormSchema = z.union([
+
+const requestFormSchema = z.discriminatedUnion("requestType", [
   privateVehicleSchema,
   busSchema,
   trainSchema,
@@ -146,15 +147,18 @@ export default function OutdoorRequestPage() {
   }
   
   const PublicHeader = () => (
-    <header className="absolute top-0 left-0 right-0 p-4 bg-transparent">
+    <header className="sticky top-0 left-0 right-0 p-4 z-20 bg-background/80 backdrop-blur-sm border-b">
         <div className="container mx-auto flex justify-between items-center">
             <Link href="/" className="flex items-center gap-3">
               <Logo className="w-8 h-8" />
-              <h1 className="text-xl font-headline font-bold text-primary">Samagam FleetConnect</h1>
+              <h1 className="text-xl font-headline font-bold text-primary">Transport Coordination Portal</h1>
             </Link>
-            <Button asChild variant="outline" className="bg-background/80 backdrop-blur-sm">
-                <Link href="/login">Team Login</Link>
-            </Button>
+            <div className="flex items-center gap-2">
+                <p className="hidden sm:block text-sm text-muted-foreground font-medium">Branch: Pune-1</p>
+                <Button asChild variant="outline" className="bg-background/80 backdrop-blur-sm">
+                    <Link href="/login">Team Login</Link>
+                </Button>
+            </div>
         </div>
     </header>
   );
@@ -220,7 +224,7 @@ export default function OutdoorRequestPage() {
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <Button className="w-full" onClick={() => { setIsSuccess(false); form.reset(); }}>
+            <Button className="w-full btn-submit" onClick={() => { setIsSuccess(false); form.reset(); }}>
               Submit Another Request
             </Button>
           </CardFooter>
@@ -230,9 +234,10 @@ export default function OutdoorRequestPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
+    <div className="min-h-screen bg-background">
       <PublicHeader />
-      <Card className="w-full max-w-2xl shadow-2xl animate-in fade-in-50 zoom-in-95">
+      <main className="flex flex-col items-center justify-center p-4 sm:p-8">
+      <Card className="w-full max-w-3xl shadow-2xl animate-in fade-in-50 zoom-in-95">
         <CardHeader>
           <CardTitle className="font-headline text-3xl">Outdoor Vehicle Registration</CardTitle>
           <CardDescription>
@@ -248,16 +253,16 @@ export default function OutdoorRequestPage() {
                 setActiveTab(value);
               }} className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="private"><Car className="mr-2 h-4 w-4"/>Private Vehicle</TabsTrigger>
-                  <TabsTrigger value="bus"><Bus className="mr-2 h-4 w-4"/>Bus</TabsTrigger>
-                  <TabsTrigger value="train"><Train className="mr-2 h-4 w-4"/>Train</TabsTrigger>
+                  <TabsTrigger value="private" className="data-[state=active]:border-b-2 data-[state=active]:border-eco-green data-[state=active]:text-eco-green"><Car className="mr-2 h-4 w-4"/>Private Vehicle</TabsTrigger>
+                  <TabsTrigger value="bus" className="data-[state=active]:border-b-2 data-[state=active]:border-msrtc-orange data-[state=active]:text-msrtc-orange"><Bus className="mr-2 h-4 w-4"/>Bus</TabsTrigger>
+                  <TabsTrigger value="train" className="data-[state=active]:border-b-2 data-[state=active]:border-trust-blue data-[state=active]:text-trust-blue"><Train className="mr-2 h-4 w-4"/>Train</TabsTrigger>
                 </TabsList>
                 
                 <div className="space-y-6 pt-4">
                   <CommonFields />
                 </div>
 
-                <TabsContent value="private" className="space-y-6">
+                <TabsContent value="private" className="space-y-6 border-l-4 border-eco-green pl-4 -ml-4">
                   <FormField
                     control={form.control}
                     name="vehicleType"
@@ -399,7 +404,7 @@ export default function OutdoorRequestPage() {
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="bus" className="space-y-6">
+                <TabsContent value="bus" className="space-y-6 border-l-4 border-msrtc-orange pl-4 -ml-4">
                    <FormField
                     control={form.control}
                     name="busType"
@@ -505,7 +510,7 @@ export default function OutdoorRequestPage() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="train" className="space-y-6">
+                <TabsContent value="train" className="space-y-6 border-l-4 border-trust-blue pl-4 -ml-4">
                   <div className="space-y-2">
                     <FormLabel>Arrival Journey Details</FormLabel>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -641,7 +646,7 @@ export default function OutdoorRequestPage() {
                 </TabsContent>
 
               </Tabs>
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button type="submit" className="w-full btn-submit" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -656,6 +661,7 @@ export default function OutdoorRequestPage() {
           </FormProvider>
         </CardContent>
       </Card>
-    </main>
+      </main>
+    </div>
   );
 }
