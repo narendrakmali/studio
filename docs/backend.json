@@ -1,0 +1,252 @@
+{
+  "entities": {
+    "TransportRequest": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "TransportRequest",
+      "type": "object",
+      "description": "Represents a transport request submitted by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the transport request."
+        },
+        "departmentName": {
+          "type": "string",
+          "description": "Name of the department making the transport request."
+        },
+        "passengerCount": {
+          "type": "number",
+          "description": "Number of passengers for the transport request."
+        },
+        "destination": {
+          "type": "string",
+          "description": "Destination for the transport request."
+        },
+        "hodApprovalImage": {
+          "type": "string",
+          "description": "URI of the HOD approval image captured for the request."
+        },
+        "requestSubmissionTime": {
+          "type": "string",
+          "description": "Timestamp indicating when the request was submitted.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "departmentName",
+        "passengerCount",
+        "destination",
+        "hodApprovalImage",
+        "requestSubmissionTime"
+      ]
+    },
+    "Vehicle": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Vehicle",
+      "type": "object",
+      "description": "Represents a vehicle in the fleet.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the vehicle."
+        },
+        "registrationNumber": {
+          "type": "string",
+          "description": "Vehicle registration number."
+        },
+        "vehicleType": {
+          "type": "string",
+          "description": "Type of vehicle (e.g., car, van, bus)."
+        },
+        "frontImage": {
+          "type": "string",
+          "description": "URI of the front image of the vehicle."
+        },
+        "sideImage": {
+          "type": "string",
+          "description": "URI of the side image of the vehicle."
+        },
+        "odometerReading": {
+          "type": "number",
+          "description": "Odometer reading of the vehicle."
+        }
+      },
+      "required": [
+        "id",
+        "registrationNumber",
+        "vehicleType",
+        "frontImage",
+        "sideImage",
+        "odometerReading"
+      ]
+    },
+    "Dispatch": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Dispatch",
+      "type": "object",
+      "description": "Represents the dispatch of a vehicle for a transport request.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the dispatch record."
+        },
+        "transportRequestId": {
+          "type": "string",
+          "description": "Reference to TransportRequest. (Relationship: TransportRequest 1:N Dispatch)"
+        },
+        "vehicleId": {
+          "type": "string",
+          "description": "Reference to Vehicle. (Relationship: Vehicle 1:N Dispatch)"
+        },
+        "driverName": {
+          "type": "string",
+          "description": "Name of the driver assigned to the dispatch."
+        },
+        "driverLicense": {
+          "type": "string",
+          "description": "Driver's license number."
+        },
+        "vehicleConditionPhoto": {
+          "type": "string",
+          "description": "URI of the vehicle condition photo taken at dispatch."
+        },
+        "dispatchTime": {
+          "type": "string",
+          "description": "Timestamp indicating when the vehicle was dispatched.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "transportRequestId",
+        "vehicleId",
+        "driverName",
+        "driverLicense",
+        "vehicleConditionPhoto",
+        "dispatchTime"
+      ]
+    },
+    "ImageUpload": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ImageUpload",
+      "type": "object",
+      "description": "Represents an image upload related to a specific entity (Vehicle or Dispatch).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the image upload record."
+        },
+        "entityType": {
+          "type": "string",
+          "description": "The type of entity this image is associated with (e.g., 'Vehicle', 'Dispatch')."
+        },
+        "entityId": {
+          "type": "string",
+          "description": "The ID of the entity this image is associated with (Vehicle.id or Dispatch.id)."
+        },
+        "localPath": {
+          "type": "string",
+          "description": "The local file path of the image on the device."
+        },
+        "firebaseStorageUrl": {
+          "type": "string",
+          "description": "The URL of the image stored in Firebase Storage (initially null, updated after upload).",
+          "format": "uri"
+        },
+        "uploadTimestamp": {
+          "type": "string",
+          "description": "Timestamp indicating when the image upload was initiated.",
+          "format": "date-time"
+        },
+        "uploadStatus": {
+          "type": "string",
+          "description": "Status of the image upload (e.g., 'pending', 'uploaded', 'failed')."
+        }
+      },
+      "required": [
+        "id",
+        "entityType",
+        "entityId",
+        "localPath",
+        "uploadTimestamp",
+        "uploadStatus"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/vehicles/{vehicleId}",
+        "definition": {
+          "entityName": "Vehicle",
+          "schema": {
+            "$ref": "#/backend/entities/Vehicle"
+          },
+          "description": "Stores vehicle information. Includes 'vehicleId' as the document ID.",
+          "params": [
+            {
+              "name": "vehicleId",
+              "description": "Unique identifier for the vehicle."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/transport_requests/{transportRequestId}",
+        "definition": {
+          "entityName": "TransportRequest",
+          "schema": {
+            "$ref": "#/backend/entities/TransportRequest"
+          },
+          "description": "Stores transport requests submitted by users. Includes 'transportRequestId' as the document ID.",
+          "params": [
+            {
+              "name": "transportRequestId",
+              "description": "Unique identifier for the transport request."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/dispatches/{dispatchId}",
+        "definition": {
+          "entityName": "Dispatch",
+          "schema": {
+            "$ref": "#/backend/entities/Dispatch"
+          },
+          "description": "Stores dispatch records. Includes 'dispatchId' as the document ID.",
+          "params": [
+            {
+              "name": "dispatchId",
+              "description": "Unique identifier for the dispatch record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/image_uploads/{imageUploadId}",
+        "definition": {
+          "entityName": "ImageUpload",
+          "schema": {
+            "$ref": "#/backend/entities/ImageUpload"
+          },
+          "description": "Stores records of image uploads. Includes 'imageUploadId' as the document ID. 'entityType' and 'entityId' are used to associate the image with a specific vehicle or dispatch.",
+          "params": [
+            {
+              "name": "imageUploadId",
+              "description": "Unique identifier for the image upload record."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore data structure is designed to support the Samagam FleetConnect application, focusing on secure image uploads, fleet management, transport requests, and dispatches. The structure prioritizes authorization independence, clarity, and scalability, adhering to the core design principles outlined. Image uploads are handled generically to support both `Vehicle` and `Dispatch` entities. The key collections are: `vehicles`, `transport_requests`, `dispatches`, and `image_uploads`. The `image_uploads` collection stores all image upload records, associated with either vehicles or dispatches, indexed by entity type and ID. This design facilitates easy querying and management of image uploads related to specific vehicles or dispatches. This structure enables QAPs because all entities are stored in top-level collections with flat authorization, making listing operations simple and secure without complex filtering in rules."
+  }
+}

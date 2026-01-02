@@ -1,0 +1,138 @@
+/**
+ * This ruleset enforces a simple, authenticated-access security model for the Samagam FleetConnect application.
+ *
+ * Core Philosophy:
+ * The primary security goal is to ensure that only authenticated users can interact with the fleet management data.
+ * Anonymous access is strictly prohibited. This provides a baseline level of security suitable for an internal
+ * application during its prototyping phase, where all signed-in users are implicitly trusted.
+ *
+ * Data Structure:
+ * The data is organized into four top-level collections:
+ * - /vehicles: Stores information about each vehicle in the fleet.
+ * - /transport_requests: Contains all user-submitted requests for transport.
+ * - /dispatches: Records the assignment of vehicles to transport requests.
+ * - /image_uploads: A central log for all images uploaded, linked to specific vehicles or dispatches.
+ * This flat structure simplifies rule logic and queries.
+ *
+ * Key Security Decisions:
+ * - Authenticated Users Only: All read and write operations across all collections require the user to be signed in.
+ * - No Public Access: There are no publicly readable collections. This protects potentially sensitive operational data.
+ * - Flexible Data Writes: In line with prototyping, the rules do not enforce the specific shape or data types of documents.
+ *   However, they do enforce basic relational integrity by ensuring document IDs match the path parameters.
+ * - No User-Specific Ownership: The data model does not contain user ID fields (e.g., `creatorId`, `driverId`), so the rules
+ *   cannot enforce document ownership. Access is granted to any authenticated user.
+ *
+ * Denormalization for Authorization:
+ * This ruleset does not currently leverage denormalization for authorization because the provided data entities lack
+ * ownership or role-based fields (e.g., an `ownerId` on a vehicle or a `driverId` on a dispatch). If more granular
+ * control is needed in the future (e.g., only an assigned driver can update a dispatch), these fields must be added
+ * to the documents to enable performant and secure rules.
+ *
+ * Structural Segregation:
+ * Not applicable, as all data is considered private to authenticated users, with no distinction between
+ * public and private content.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --------------------------------
+    // Helper Functions
+    // --------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Verifies that a document exists before an update or delete operation.
+     * This prevents operations on non-existent data.
+     */
+    function docExists() {
+      return resource != null;
+    }
+
+    /**
+     * On create, validates that the document's internal `id` field matches the document ID in the path.
+     * This enforces basic data integrity and consistency.
+     */
+    function isIdMatching(docId) {
+      return request.resource.data.id == docId;
+    }
+    
+    /**
+     * On update, ensures that the document's internal `id` field cannot be changed.
+     * This protects the primary relational key of the document.
+     */
+    function isIdImmutable() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+    // --------------------------------
+    // Collection Rules
+    // --------------------------------
+
+    /**
+     * @description Manages vehicle information. Only authenticated users can read or write vehicle data.
+     * @path /vehicles/{vehicleId}
+     * @allow (get) An authenticated user can read a specific vehicle document.
+     * @deny  (get) An unauthenticated (anonymous) user cannot read vehicle data.
+     * @principle Enforces a baseline of authenticated access for all operations on core fleet data.
+     */
+    match /vehicles/{vehicleId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isIdMatching(vehicleId);
+      allow update: if isSignedIn() && docExists() && isIdImmutable();
+      allow delete: if isSignedIn() && docExists();
+    }
+
+    /**
+     * @description Manages transport requests. Only authenticated users can create, view, or manage requests.
+     * @path /transport_requests/{transportRequestId}
+     * @allow (create) An authenticated user can submit a new transport request.
+     * @deny  (create) An unauthenticated (anonymous) user cannot create a request.
+     * @principle Restricts access to internal operational data (transport requests) to authenticated users.
+     */
+    match /transport_requests/{transportRequestId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isIdMatching(transportRequestId);
+      allow update: if isSignedIn() && docExists() && isIdImmutable();
+      allow delete: if isSignedIn() && docExists();
+    }
+
+    /**
+     * @description Manages vehicle dispatches. Only authenticated users can manage dispatch records.
+     * @path /dispatches/{dispatchId}
+     * @allow (update) An authenticated user can update a dispatch record.
+     * @deny  (update) An unauthenticated (anonymous) user cannot modify a dispatch.
+     * @principle Ensures that all modifications to sensitive dispatch logs are made by authenticated personnel.
+     */
+    match /dispatches/{dispatchId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isIdMatching(dispatchId);
+      allow update: if isSignedIn() && docExists() && isIdImmutable();
+      allow delete: if isSignedIn() && docExists();
+    }
+
+    /**
+     * @description Manages image upload metadata. Only authenticated users can create or view image records.
+     * @path /image_uploads/{imageUploadId}
+     * @allow (create) An authenticated user can create a record for a new image upload.
+     * @deny  (list) An unauthenticated (anonymous) user cannot list all image upload records.
+     * @principle Protects image metadata by requiring authentication for any interaction.
+     */
+    match /image_uploads/{imageUploadId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isIdMatching(imageUploadId);
+      allow update: if isSignedIn() && docExists() && isIdImmutable();
+      allow delete: if isSignedIn() && docExists();
+    }
+  }
+}
