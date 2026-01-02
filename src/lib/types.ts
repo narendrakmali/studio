@@ -15,6 +15,8 @@ export type Vehicle = {
   ownerName: string;
   ownerContact: string;
   ownerAddress: string;
+  contractStartDate?: Date;
+  contractEndDate?: Date;
 };
 
 export type TransportRequest = {

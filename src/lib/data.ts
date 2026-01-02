@@ -53,7 +53,9 @@ export const vehicles: Vehicle[] = [
     lastTripDestination: 'Airport',
     ownerName: 'Vendor ABC',
     ownerContact: '9876543210',
-    ownerAddress: '456, Industrial Area, Delhi'
+    ownerAddress: '456, Industrial Area, Delhi',
+    contractStartDate: new Date('2024-01-01'),
+    contractEndDate: new Date('2024-12-31')
   },
 ];
 
