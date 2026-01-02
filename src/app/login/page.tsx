@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from "next/link";
@@ -49,8 +50,8 @@ export default function LoginPage() {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "admin@samagam.com",
-      password: "password",
+      email: "",
+      password: "",
     },
   });
 
