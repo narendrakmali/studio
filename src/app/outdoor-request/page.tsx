@@ -36,103 +36,78 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 
 
-const baseSchema = z.object({
-  userName: z.string().min(2, "Sanyojak/In-charge name is required."),
-  contactNumber: z.string().min(10, "A valid contact number is required."),
-  departmentName: z.string().min(2, "Branch/Zone name is required."),
-});
-
 const privateVehicleSchema = z.object({
-  requestType: z.literal("private"),
-  userName: z.string().min(2, "Sanyojak/In-charge name is required."),
-  contactNumber: z.string().min(10, "A valid contact number is required."),
-  departmentName: z.string().min(2, "Branch/Zone name is required."),
-  vehicleType: z.enum(["two-wheeler", "car", "suv", "winger", "innova"]),
-  registrationNumber: z.string(),
-  passengerCount: z.coerce.number().optional(),
-  driverName: z.string().optional(),
-  driverContact: z.string().optional(),
-  durationFrom: z.date(),
-  durationTo: z.date(),
+    requestType: z.literal("private"),
+    userName: z.string().min(2, "Sanyojak/In-charge name is required."),
+    contactNumber: z.string().min(10, "A valid contact number is required."),
+    departmentName: z.string().min(2, "Branch/Zone name is required."),
+    vehicleType: z.enum(["two-wheeler", "car", "suv", "winger", "innova"]),
+    registrationNumber: z.string().min(1, "Registration number is required."),
+    passengerCount: z.coerce.number().min(1, "Occupancy is required."),
+    driverName: z.string().min(1, "Driver name is required."),
+    driverContact: z.string().min(1, "Driver contact is required."),
+    durationFrom: z.date({ required_error: "Arrival date is required." }),
+    durationTo: z.date({ required_error: "Departure date is required." }),
 });
 
 const busSchema = z.object({
-  requestType: z.literal("bus"),
-  userName: z.string().min(2, "Sanyojak/In-charge name is required."),
-  contactNumber: z.string().min(10, "A valid contact number is required."),
-  departmentName: z.string().min(2, "Branch/Zone name is required."),
-  busType: z.enum(["private", "msrtc"]),
-  busQuantity: z.coerce.number().optional(),
-  busRoute: z.string().optional(),
-  busCoordinatorName: z.string().min(1, "Coordinator name is required."),
-  busCoordinatorContact: z.string().min(1, "Coordinator contact is required."),
-  busBookingReceipt: z.any().optional(),
-  durationFrom: z.date(),
-  durationTo: z.date(),
+    requestType: z.literal("bus"),
+    userName: z.string().min(2, "Sanyojak/In-charge name is required."),
+    contactNumber: z.string().min(10, "A valid contact number is required."),
+    departmentName: z.string().min(2, "Branch/Zone name is required."),
+    busType: z.enum(["private", "msrtc"], { required_error: "Bus type is required." }),
+    busQuantity: z.coerce.number().min(1, "Please enter the number of buses."),
+    busRoute: z.string().min(1, "Route is required."),
+    busCoordinatorName: z.string().min(1, "Coordinator name is required."),
+    busCoordinatorContact: z.string().min(1, "Coordinator contact is required."),
+    busBookingReceipt: z.any().optional(),
+    durationFrom: z.date({ required_error: "Arrival date is required." }),
+    durationTo: z.date({ required_error: "Departure date is required." }),
 });
 
 const trainSchema = z.object({
-  requestType: z.literal("train"),
-  userName: z.string().min(2, "Sanyojak/In-charge name is required."),
-  contactNumber: z.string().min(10, "A valid contact number is required."),
-  departmentName: z.string().min(2, "Branch/Zone name is required."),
-  trainTeamLeaderName: z.string().min(1, "Team Leader name is required."),
-  trainTeamLeaderContact: z.string().min(1, "Team Leader contact is required."),
-  trainNumber: z.string().optional(),
-  trainArrivalDate: z.date().optional(),
-  trainDevoteeCount: z.coerce.number().optional(),
-  pickupRequired: z.boolean().optional().default(false),
-  returnTrainNumber: z.string().optional(),
-  returnTrainDepartureDate: z.date().optional(),
+    requestType: z.literal("train"),
+    userName: z.string().min(2, "Sanyojak/In-charge name is required."),
+    contactNumber: z.string().min(10, "A valid contact number is required."),
+    departmentName: z.string().min(2, "Branch/Zone name is required."),
+    trainTeamLeaderName: z.string().min(1, "Team Leader name is required."),
+    trainTeamLeaderContact: z.string().min(1, "Team Leader contact is required."),
+    trainNumber: z.string().min(1, "Train number is required."),
+    trainArrivalDate: z.date({ required_error: "Arrival date is required." }),
+    trainDevoteeCount: z.coerce.number().min(1, "Number of devotees is required."),
+    pickupRequired: z.boolean().default(false),
+    returnTrainNumber: z.string().optional(),
+    returnTrainDepartureDate: z.date().optional(),
 });
 
-
 const requestFormSchema = z.discriminatedUnion("requestType", [
-  privateVehicleSchema,
-  busSchema,
-  trainSchema,
+    privateVehicleSchema,
+    busSchema,
+    trainSchema,
 ]).superRefine((data, ctx) => {
-    if (data.requestType === "private") {
-        if (!data.vehicleType) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Vehicle type is required.", path: ["vehicleType"] });
-        if (!data.registrationNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Registration number is required.", path: ["registrationNumber"] });
-        if (data.passengerCount === undefined || data.passengerCount < 1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Occupancy is required.", path: ["passengerCount"] });
-        if (!data.driverName) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Driver name is required.", path: ["driverName"] });
-        if (!data.driverContact) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Driver contact is required.", path: ["driverContact"] });
-        if (!data.durationFrom) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["durationFrom"] });
-        if (!data.durationTo) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Departure date is required.", path: ["durationTo"] });
-      } else if (data.requestType === "bus") {
-        if (!data.busType) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Bus type is required.", path: ["busType"] });
-        if (data.busQuantity === undefined || data.busQuantity < 1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please enter the number of buses.", path: ["busQuantity"] });
-        if (!data.busRoute) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Route is required.", path: ["busRoute"] });
-        if (!data.durationFrom) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["durationFrom"] });
-        if (!data.durationTo) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Departure date is required.", path: ["durationTo"] });
-        if (data.busType === 'msrtc' && !data.busBookingReceipt) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Booking receipt is required for MSRTC buses.", path: ["busBookingReceipt"] });
-        }
-      } else if (data.requestType === "train") {
-        if (!data.trainNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Train number is required.", path: ["trainNumber"] });
-        if (!data.trainArrivalDate) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Arrival date is required.", path: ["trainArrivalDate"] });
-        if (data.trainDevoteeCount === undefined || data.trainDevoteeCount < 1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Number of devotees is required.", path: ["trainDevoteeCount"] });
-        if (data.returnTrainNumber && !data.returnTrainDepartureDate) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Return departure date is required if return train number is provided.", path: ["returnTrainDepartureDate"] });
-        }
-        if (data.returnTrainDepartureDate && data.trainArrivalDate && data.returnTrainDepartureDate < data.trainArrivalDate) {
-          ctx.addIssue({
+    if (data.requestType === 'bus' && data.busType === 'msrtc' && !data.busBookingReceipt) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Booking receipt is required for MSRTC buses.",
+            path: ["busBookingReceipt"],
+        });
+    }
+    if (data.requestType !== 'train' && data.durationTo < data.durationFrom) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Departure date cannot be before arrival date.",
+            path: ["durationTo"],
+        });
+    }
+    if (data.requestType === 'train' && data.returnTrainDepartureDate && data.returnTrainDepartureDate < data.trainArrivalDate) {
+        ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Return departure date cannot be before arrival date.",
             path: ["returnTrainDepartureDate"],
-          });
-        }
-      }
-    
-      if (data.requestType !== 'train' && data.durationFrom && data.durationTo && data.durationTo < data.durationFrom) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Departure date cannot be before arrival date.",
-          path: ["durationTo"],
         });
-      }
+    }
 });
+
 
 
 export default function OutdoorRequestPage() {
@@ -756,7 +731,7 @@ export default function OutdoorRequestPage() {
                               Pick-up Required
                             </FormLabel>
                              <CardDescription>
-                              Check this if you need shuttle service from Bhodwal Majri station to Sangli or Miraj station.
+                              Check this if you need shuttle service from Sangli or Miraj station.
                             </CardDescription>
                           </div>
                         </FormItem>
