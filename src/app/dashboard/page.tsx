@@ -1,3 +1,6 @@
+
+'use client';
+
 import { AuthLayout } from "@/components/auth-layout";
 import {
   Card,
@@ -9,14 +12,20 @@ import {
 import { Car, ClipboardList, Send, Users, Route } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { requests } from "@/lib/data";
+import { requests, vehicles, dispatches } from "@/lib/data";
+import { isToday } from "date-fns";
 
 export default function DashboardPage() {
+  const availableVehicles = vehicles.filter(v => v.status === 'available').length;
+  const pendingRequests = requests.filter(r => r.status === 'pending').length;
+  const dispatchesToday = dispatches.filter(d => isToday(new Date(d.dispatchedAt))).length;
+  const totalPassengers = requests.filter(r => r.status === 'pending').reduce((acc, req) => acc + req.passengerCount, 0);
+
   const stats = [
-    { title: "Available Vehicles", value: "12", icon: Car, color: "text-green-500", change: "+2" },
-    { title: "Pending Requests", value: "8", icon: ClipboardList, color: "text-yellow-500", change: "+3" },
-    { title: "Dispatches Today", value: "5", icon: Send, color: "text-blue-500", change: "-1" },
-    { title: "Total Passengers", value: "48", icon: Users, color: "text-indigo-500", change: "+15" },
+    { title: "Available Vehicles", value: availableVehicles, icon: Car, color: "text-green-500", change: "" },
+    { title: "Pending Requests", value: pendingRequests, icon: ClipboardList, color: "text-yellow-500", change: "" },
+    { title: "Dispatches Today", value: dispatchesToday, icon: Send, color: "text-blue-500", change: "" },
+    { title: "Total Passengers", value: totalPassengers, icon: Users, color: "text-indigo-500", change: "" },
   ];
 
   const recentRequests = requests.slice(0, 5);
@@ -34,9 +43,9 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
+              {stat.change && <p className="text-xs text-muted-foreground">
                 {stat.change} from last hour
-              </p>
+              </p>}
             </CardContent>
           </Card>
         ))}
@@ -48,32 +57,38 @@ export default function DashboardPage() {
                 <CardDescription>A summary of the latest transport requests received.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Department</TableHead>
-                            <TableHead className="hidden sm:table-cell">Requested by</TableHead>
-                             <TableHead className="hidden sm:table-cell">Passengers</TableHead>
-                            <TableHead className="hidden md:table-cell">Vehicle</TableHead>
-                            <TableHead className="text-right">Status</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {recentRequests.map(req => (
-                            <TableRow key={req.id}>
-                                <TableCell className="font-medium">{req.departmentName}</TableCell>
-                                <TableCell className="hidden sm:table-cell">{req.userName}</TableCell>
-                                <TableCell className="hidden sm:table-cell">{req.passengerCount}</TableCell>
-                                <TableCell className="hidden md:table-cell capitalize">{req.vehicleType}</TableCell>
-                                <TableCell className="text-right">
-                                    <Badge variant={req.status === 'pending' ? 'default' : 'secondary'} className={req.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' : ''}>
-                                        {req.status}
-                                    </Badge>
-                                </TableCell>
+                {recentRequests.length > 0 ? (
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Department</TableHead>
+                                <TableHead className="hidden sm:table-cell">Requested by</TableHead>
+                                <TableHead className="hidden sm:table-cell">Passengers</TableHead>
+                                <TableHead className="hidden md:table-cell">Vehicle</TableHead>
+                                <TableHead className="text-right">Status</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {recentRequests.map(req => (
+                                <TableRow key={req.id}>
+                                    <TableCell className="font-medium">{req.departmentName}</TableCell>
+                                    <TableCell className="hidden sm:table-cell">{req.userName}</TableCell>
+                                    <TableCell className="hidden sm:table-cell">{req.passengerCount}</TableCell>
+                                    <TableCell className="hidden md:table-cell capitalize">{req.vehicleType}</TableCell>
+                                    <TableCell className="text-right">
+                                        <Badge variant={req.status === 'pending' ? 'default' : 'secondary'} className={req.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' : ''}>
+                                            {req.status}
+                                        </Badge>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                ) : (
+                    <div className="text-center text-muted-foreground py-12">
+                        <p>No recent requests found.</p>
+                    </div>
+                )}
             </CardContent>
         </Card>
       </div>
