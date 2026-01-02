@@ -81,6 +81,8 @@ const prompt = ai.definePrompt({
   - 'Submitted Dat' or 'Start Date' should map to 'contractStartDate'.
   - 'End Date' should map to 'contractEndDate'.
 
+  IMPORTANT: The date format in the CSV might be 'DD-Mon' (e.g., '13-Dec'). You must convert this to a full ISO 8601 date string (YYYY-MM-DD). Assume the current year if the year is not provided. For example, if the current year is 2024, '13-Dec' should be converted to '2024-12-13'.
+
   Some fields like 'capacity', 'ownerAddress', 'contractStartDate' and 'contractEndDate' may not be present in the CSV. In that case, you can leave them out. Do not hallucinate data.
 
   Return a JSON array where each object represents a row in the CSV, with the keys being the standardized vehicle fields listed above.
@@ -91,14 +93,14 @@ const prompt = ai.definePrompt({
   Sr no,Branch Name,Owner Name,Owner Contact,Vehicle No,Vehicle Compar,Vehicle M,Submitted Dat
   1,Savalaj,Sachin Jadhav,9975377604,MH10DN2027,Hero,Splendor,13-Dec
   
-  Expected Output for the example row:
+  Expected Output for the example row (assuming current year is 2024):
   {
     "licensePlate": "MH10DN2027",
     "make": "Hero",
     "model": "Splendor",
     "ownerName": "Sachin Jadhav",
     "ownerContact": "9975377604",
-    "contractStartDate": "2023-12-13" 
+    "contractStartDate": "2024-12-13" 
   }
 
   Now, process the following CSV data:
