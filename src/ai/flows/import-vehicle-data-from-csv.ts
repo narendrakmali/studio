@@ -55,20 +55,22 @@ const prompt = ai.definePrompt({
   input: {schema: ImportVehicleDataFromCsvInputSchema},
   output: {schema: ImportVehicleDataFromCsvOutputSchema},
   prompt: `You are an expert data analyst specializing in extracting vehicle information from CSV data.
-  The user will provide CSV data, and your task is to map the columns in the CSV to the following vehicle fields:
+  The user will provide CSV data, and your task is to intelligently map the columns in the CSV to the following required vehicle fields:
 
-  - licensePlate: The license plate number of the vehicle.
-  - capacity: The passenger capacity of the vehicle (number).
-  - make: The make of the vehicle (e.g., Toyota).
-  - model: The model of the vehicle (e.g. Camry).
-  - ownerName: The name of the vehicle's owner.
-  - ownerContact: The contact number of the owner.
-  - ownerAddress: The address of the owner.
+  - licensePlate: The vehicle's registration number.
+  - capacity: The number of passengers the vehicle can carry.
+  - make: The manufacturer of the vehicle (e.g., Toyota, Maruti).
+  - model: The specific model of the vehicle (e.g., Innova, Ertiga).
+  - ownerName: The name of the person or company that owns the vehicle.
+  - ownerContact: The phone number for the vehicle owner.
+  - ownerAddress: The mailing address of the vehicle owner.
 
+  The CSV column names may not exactly match these field names. Use your intelligence to find the best match. For example, 'Plate No.' should map to 'licensePlate', 'Seating' to 'capacity', and 'Manufacturer' to 'make'.
 
-  Return a JSON array where each object represents a row in the CSV, and the keys are the vehicle fields listed above.
-  Include a "mappingConfidence" score between 0 and 100 indicating the accuracy of the mapping.
-  \n  CSV Data: {{{csvData}}}
+  Return a JSON array where each object represents a row in the CSV, with the keys being the standardized vehicle fields listed above.
+  If a column from the CSV cannot be reasonably mapped to any of the required fields, you can ignore it.
+  Also, include a "mappingConfidence" score (0-100) representing how sure you are about the overall column mapping.
+  \nCSV Data: {{{csvData}}}
   `,
 });
 

@@ -53,17 +53,20 @@ const prompt = ai.definePrompt({
   input: {schema: ImportDispatchDataFromCsvInputSchema},
   output: {schema: ImportDispatchDataFromCsvOutputSchema},
   prompt: `You are an expert data analyst specializing in extracting vehicle dispatch information from CSV data.
-  The user will provide CSV data, and your task is to map the columns in the CSV to the following dispatch fields:
+  The user will provide CSV data, and your task is to intelligently map the columns in the CSV to the following required dispatch fields:
 
-  - requestId: The ID of the transport request.
-  - vehicleId: The ID of the allocated vehicle.
-  - driverName: The name of the driver.
-  - driverLicense: The driver's license number.
-  - dispatchedAt: The date and time the vehicle was dispatched (ISO 8601 format).
+  - requestId: The unique identifier for the transport request.
+  - vehicleId: The unique identifier for the allocated vehicle.
+  - driverName: The full name of the assigned driver.
+  - driverLicense: The driver's official license number.
+  - dispatchedAt: The timestamp when the vehicle was dispatched. It should be a valid date format.
 
-  Return a JSON array where each object represents a row in the CSV, and the keys are the dispatch fields listed above.
-  Include a "mappingConfidence" score between 0 and 100 indicating the accuracy of the mapping.
-  \n  CSV Data: {{{csvData}}}
+  The CSV column names may not exactly match these field names. Use your intelligence to find the best match. For example, 'Request ID' or 'req_id' should map to 'requestId'. 'Vehicle Plate' or 'Car No.' should map to 'vehicleId'.
+
+  Return a JSON array where each object represents a row in the CSV, with the keys being the standardized dispatch fields listed above.
+  If a column from the CSV cannot be reasonably mapped to any of the required fields, you can ignore it.
+  Also, include a "mappingConfidence" score (0-100) representing how sure you are about the overall column mapping.
+  \nCSV Data: {{{csvData}}}
   `,
 });
 
