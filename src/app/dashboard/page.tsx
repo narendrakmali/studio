@@ -23,7 +23,7 @@ export default function DashboardPage() {
 
   return (
     <AuthLayout>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, index) => (
           <Card key={index} className="shadow-md hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -52,9 +52,9 @@ export default function DashboardPage() {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Department</TableHead>
-                            <TableHead>Requested by</TableHead>
-                             <TableHead>Passengers</TableHead>
-                            <TableHead>Vehicle Type</TableHead>
+                            <TableHead className="hidden sm:table-cell">Requested by</TableHead>
+                             <TableHead className="hidden sm:table-cell">Passengers</TableHead>
+                            <TableHead className="hidden md:table-cell">Vehicle</TableHead>
                             <TableHead className="text-right">Status</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -62,9 +62,9 @@ export default function DashboardPage() {
                         {recentRequests.map(req => (
                             <TableRow key={req.id}>
                                 <TableCell className="font-medium">{req.departmentName}</TableCell>
-                                <TableCell>{req.userName}</TableCell>
-                                <TableCell>{req.passengerCount}</TableCell>
-                                <TableCell className="capitalize">{req.vehicleType}</TableCell>
+                                <TableCell className="hidden sm:table-cell">{req.userName}</TableCell>
+                                <TableCell className="hidden sm:table-cell">{req.passengerCount}</TableCell>
+                                <TableCell className="hidden md:table-cell capitalize">{req.vehicleType}</TableCell>
                                 <TableCell className="text-right">
                                     <Badge variant={req.status === 'pending' ? 'default' : 'secondary'} className={req.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' : ''}>
                                         {req.status}

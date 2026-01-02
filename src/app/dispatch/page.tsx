@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 
 
 export default function DispatchPage() {
@@ -87,8 +88,8 @@ export default function DispatchPage() {
     
   return (
     <AuthLayout>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-10rem)]">
-        <Card className="lg:col-span-1 shadow-md flex flex-col">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-full md:h-[calc(100vh-8rem)]">
+        <Card className="lg:col-span-1 shadow-md flex flex-col h-[50vh] md:h-full">
             <CardHeader>
                 <CardTitle className="font-headline text-xl">Pending Requests</CardTitle>
             </CardHeader>
@@ -113,7 +114,7 @@ export default function DispatchPage() {
                             </CardHeader>
                             <CardContent className="p-4 pt-0 flex justify-between text-sm text-muted-foreground">
                                 <div className="flex items-center gap-1 capitalize"><Car className="h-4 w-4" /> {req.vehicleType}</div>
-                                <div className="flex items-center gap-1"><Calendar className="h-4 w-4" /> {format(new Date(req.createdAt), 'dd/MM/yyyy')}</div>
+                                <div className="flex items-center gap-1"><Calendar className="h-4 w-4" /> {format(new Date(req.createdAt), 'dd/MM/yy')}</div>
                             </CardContent>
                         </Card>
                     ))}
@@ -122,8 +123,8 @@ export default function DispatchPage() {
             </CardContent>
         </Card>
 
-        <div className="lg:col-span-2 grid grid-cols-1 xl:grid-cols-2 gap-6">
-            <Card className="shadow-md flex flex-col">
+        <div className="md:col-span-1 lg:col-span-2 grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <Card className="shadow-md flex flex-col h-[50vh] md:h-full">
                 <CardHeader>
                     <CardTitle className="font-headline text-xl">Allocation</CardTitle>
                     <CardDescription>Match request to an available vehicle.</CardDescription>
@@ -164,12 +165,12 @@ export default function DispatchPage() {
                 </CardFooter>
             </Card>
 
-            <Card className="shadow-md flex flex-col">
+            <Card className="shadow-md flex flex-col h-full">
                  <CardHeader>
                     <CardTitle className="font-headline text-xl">Dispatch Details</CardTitle>
                     <CardDescription>Finalize and dispatch the vehicle.</CardDescription>
                 </CardHeader>
-                <CardContent className="flex-grow space-y-4">
+                <CardContent className="flex-grow space-y-4 overflow-y-auto">
                     {selectedRequest && selectedVehicle ? (
                         <div className="space-y-4">
                             <div className="space-y-3">
@@ -196,7 +197,7 @@ export default function DispatchPage() {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                      <div className="space-y-1">
                                         <Label>Allocation Date</Label>
                                         <Popover>
@@ -207,7 +208,7 @@ export default function DispatchPage() {
                                                 </Button>
                                             </PopoverTrigger>
                                             <PopoverContent className="w-auto p-0">
-                                                <Calendar mode="single" selected={allocationDate} onSelect={setAllocationDate} initialFocus />
+                                                <CalendarComponent mode="single" selected={allocationDate} onSelect={setAllocationDate} initialFocus />
                                             </PopoverContent>
                                         </Popover>
                                     </div>
@@ -221,7 +222,7 @@ export default function DispatchPage() {
                                                 </Button>
                                             </PopoverTrigger>
                                             <PopoverContent className="w-auto p-0">
-                                                <Calendar mode="single" selected={returnDate} onSelect={setReturnDate} disabled={(date) => date < (allocationDate || new Date(0))} initialFocus />
+                                                <CalendarComponent mode="single" selected={returnDate} onSelect={setReturnDate} disabled={(date) => date < (allocationDate || new Date(0))} initialFocus />
                                             </PopoverContent>
                                         </Popover>
                                     </div>

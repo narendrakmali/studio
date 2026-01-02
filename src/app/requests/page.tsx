@@ -23,7 +23,7 @@ import { format } from "date-fns";
 export default function RequestsPage() {
     return (
         <AuthLayout>
-             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {requests.map((req) => (
                     <Card key={req.id} className="shadow-md hover:shadow-lg transition-shadow flex flex-col">
                         <CardHeader>
@@ -56,7 +56,7 @@ export default function RequestsPage() {
                             </div>
                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Calendar className="h-4 w-4" />
-                                <span>{format(new Date(req.durationFrom), 'dd/MM/yyyy')} - {format(new Date(req.durationTo), 'dd/MM/yyyy')}</span>
+                                <span>{format(new Date(req.durationFrom), 'dd/MM/yy')} - {format(new Date(req.durationTo), 'dd/MM/yy')}</span>
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-between">
@@ -86,5 +86,3 @@ export default function RequestsPage() {
         </AuthLayout>
     )
 }
-
-    

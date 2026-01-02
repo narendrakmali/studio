@@ -127,9 +127,9 @@ export default function AdminPage() {
                             <CardDescription>Upload a CSV with pre-registered vehicles. The AI will map columns automatically.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center gap-2">
+                            <div className="flex flex-col sm:flex-row items-center gap-2">
                                 <Input type="file" accept=".csv" onChange={handleFileChange} className="flex-grow" />
-                                <Button onClick={handleImport} disabled={isImporting || !csvFile} size="icon">
+                                <Button onClick={handleImport} disabled={isImporting || !csvFile} className="w-full sm:w-auto" size="icon">
                                     {isImporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                                 </Button>
                             </div>
@@ -173,9 +173,9 @@ export default function AdminPage() {
                             <CardDescription>Upload a CSV with allocated or dispatched vehicle records.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center gap-2">
+                            <div className="flex flex-col sm:flex-row items-center gap-2">
                                 <Input type="file" accept=".csv" onChange={handleDispatchFileChange} className="flex-grow" />
-                                <Button onClick={handleDispatchImport} disabled={isDispatchImporting || !dispatchCsvFile} size="icon">
+                                <Button onClick={handleDispatchImport} disabled={isDispatchImporting || !dispatchCsvFile} className="w-full sm:w-auto" size="icon">
                                     {isDispatchImporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                                 </Button>
                             </div>
@@ -265,9 +265,9 @@ export default function AdminPage() {
                             <CardTitle className="font-headline text-xl">OTP Verification Tool</CardTitle>
                             <CardDescription>Verify staff without managed email accounts.</CardDescription>
                         </CardHeader>
-                        <CardContent className="flex items-center gap-2">
+                        <CardContent className="flex flex-col sm:flex-row items-center gap-2">
                             <Input placeholder="Enter Staff ID or Phone Number" />
-                            <Button variant="outline">
+                            <Button variant="outline" className="w-full sm:w-auto">
                                 <KeyRound className="mr-2 h-4 w-4" />
                                 Send OTP
                             </Button>
