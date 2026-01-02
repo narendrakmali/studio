@@ -34,14 +34,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const baseSchema = z.object({
+const privateVehicleSchema = z.object({
+  requestType: z.literal('private'),
   userName: z.string().min(2, "Sanyojak/In-charge name is required."),
   contactNumber: z.string().min(10, "A valid contact number is required."),
   departmentName: z.string().min(2, "Branch/Zone name is required."),
-});
-
-const privateVehicleSchema = z.object({
-  requestType: z.literal('private'),
   vehicleType: z.enum(["car", "suv", "winger", "innova"], { required_error: "Vehicle type is required." }),
   registrationNumber: z.string().min(1, "Registration number is required."),
   passengerCount: z.coerce.number().min(1, 'Occupancy is required.'),
@@ -49,36 +46,41 @@ const privateVehicleSchema = z.object({
   driverContact: z.string().min(10, "A valid driver contact is required."),
   durationFrom: z.date({ required_error: "Arrival date is required." }),
   durationTo: z.date({ required_error: "Departure date is required." }),
-}).merge(baseSchema).refine((data) => data.durationTo >= data.durationFrom, {
+}).refine((data) => data.durationTo >= data.durationFrom, {
   message: "Departure date cannot be before arrival date.",
   path: ["durationTo"],
 });
 
 const busSchema = z.object({
   requestType: z.literal('bus'),
+  userName: z.string().min(2, "Sanyojak/In-charge name is required."),
+  contactNumber: z.string().min(10, "A valid contact number is required."),
+  departmentName: z.string().min(2, "Branch/Zone name is required."),
   busType: z.enum(["private", "msrtc"], { required_error: "Please select bus type." }),
   busQuantity: z.coerce.number().min(1, 'Please enter the number of buses.'),
   busRoute: z.string().min(3, "Route is required."),
   durationFrom: z.date({ required_error: "Arrival date is required." }),
   durationTo: z.date({ required_error: "Departure date is required." }),
-}).merge(baseSchema).refine((data) => data.durationTo >= data.durationFrom, {
+}).refine((data) => data.durationTo >= data.durationFrom, {
   message: "Departure date cannot be before arrival date.",
   path: ["durationTo"],
 });
 
 const trainSchema = z.object({
   requestType: z.literal('train'),
+  userName: z.string().min(2, "Sanyojak/In-charge name is required."),
+  contactNumber: z.string().min(10, "A valid contact number is required."),
+  departmentName: z.string().min(2, "Branch/Zone name is required."),
   trainNumber: z.string().min(1, "Train number is required."),
   trainArrivalDate: z.date({ required_error: "Arrival date is required." }),
   trainDevoteeCount: z.coerce.number().min(1, "Number of devotees is required."),
   pickupRequired: z.boolean().default(false),
-}).merge(baseSchema);
-
+});
 
 const requestFormSchema = z.discriminatedUnion("requestType", [
     privateVehicleSchema,
     busSchema,
-    trainSchema
+    trainSchema,
 ]);
 
 export default function Home() {
@@ -89,10 +91,10 @@ export default function Home() {
   const form = useForm<z.infer<typeof requestFormSchema>>({
     resolver: zodResolver(requestFormSchema),
     defaultValues: {
+      requestType: "private",
       userName: "",
       contactNumber: "",
       departmentName: "",
-      requestType: "private",
       passengerCount: 1,
     },
   });
@@ -515,7 +517,7 @@ export default function Home() {
                           <FormLabel>Number of Devotees</FormLabel>
                           <FormControl>
                               <div className="relative">
-                                  <Users className="absolute left-3 top-1/2 -translate-y-1-2 h-4 w-4 text-muted-foreground" />
+                                  <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                   <Input type="number" placeholder="Total count for this train" className="pl-9" {...field} />
                               </div>
                           </FormControl>
@@ -566,6 +568,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
-    
