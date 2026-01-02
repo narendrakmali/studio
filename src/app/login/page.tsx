@@ -79,7 +79,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-6">
-          <Link href="/outdoor-request" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
              <Logo className="w-12 h-12" />
              <h1 className="text-3xl font-headline font-bold text-primary">Samagam FleetConnect</h1>
           </Link>
@@ -129,12 +129,12 @@ export default function LoginPage() {
           </CardContent>
         </Card>
         <p className="px-8 text-center text-sm text-muted-foreground mt-4">
-          Not part of the team?{" "}
+          Go back to the {" "}
           <Link
-            href="/outdoor-request"
+            href="/"
             className="underline underline-offset-4 hover:text-primary"
           >
-            Request a vehicle
+            main selection page
           </Link>
           .
         </p>

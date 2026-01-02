@@ -25,7 +25,7 @@ export default function RequestsPage() {
         <AuthLayout>
              <div className="flex justify-end mb-4">
                 <Button asChild>
-                    <Link href="/">
+                    <Link href="/indoor-request">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         New Request
                     </Link>
