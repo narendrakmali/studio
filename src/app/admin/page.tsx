@@ -5,7 +5,7 @@ import { AuthLayout } from "@/components/auth-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload, Download, KeyRound, Loader2, Car, Wrench, CircleCheck } from "lucide-react";
+import { Upload, Download, KeyRound, Loader2, Car, Wrench, CircleCheck, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { importVehicleDataFromCsv, ImportVehicleDataFromCsvOutput } from "@/ai/flows/import-vehicle-data-from-csv";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -50,6 +50,19 @@ export default function AdminPage() {
         };
     };
 
+    const handleDownloadTemplate = () => {
+        const headers = "licensePlate,make,model,capacity,ownerName,ownerContact,ownerAddress";
+        const csvContent = "data:text/csv;charset=utf-8," + headers;
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "vehicle_template.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast({ title: "Template Downloaded", description: "vehicle_template.csv has been downloaded." });
+    }
+
     const totalVehicles = vehicles.length;
     const availableVehicles = vehicles.filter(v => v.status === 'available').length;
     const inUseVehicles = vehicles.filter(v => v.status === 'in-use').length;
@@ -65,11 +78,15 @@ export default function AdminPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex items-center gap-2">
-                            <Input type="file" accept=".csv" onChange={handleFileChange} />
-                            <Button onClick={handleImport} disabled={isImporting || !csvFile}>
+                            <Input type="file" accept=".csv" onChange={handleFileChange} className="flex-grow" />
+                            <Button onClick={handleImport} disabled={isImporting || !csvFile} size="icon">
                                 {isImporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                             </Button>
                         </div>
+                        <Button variant="outline" onClick={handleDownloadTemplate} className="w-full">
+                            <FileText className="mr-2 h-4 w-4" />
+                            Download CSV Template
+                        </Button>
                         {mappedData && (
                             <div>
                                 <h3 className="font-semibold mb-2 flex items-center justify-between">
