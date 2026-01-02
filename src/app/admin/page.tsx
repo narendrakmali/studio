@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -11,7 +12,8 @@ import { importVehicleDataFromCsv, ImportVehicleDataFromCsvOutput } from "@/ai/f
 import { importDispatchDataFromCsv, ImportDispatchDataFromCsvOutput } from "@/ai/flows/import-dispatch-data-from-csv";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { vehicles } from "@/lib/data";
+import { vehicles, dispatches, requests } from "@/lib/data";
+import type { Vehicle, Dispatch } from "@/lib/types";
 
 export default function AdminPage() {
     const { toast } = useToast();
@@ -84,6 +86,64 @@ export default function AdminPage() {
                 setIsDispatchImporting(false);
             }
         };
+    };
+
+    const handleConfirmAndSaveVehicles = () => {
+        if (!mappedData) return;
+
+        const newVehicles: Vehicle[] = mappedData.mappedData.map((v, index) => ({
+            id: `V${String(vehicles.length + index + 1).padStart(3, '0')}`,
+            licensePlate: v.licensePlate,
+            make: v.make,
+            model: v.model,
+            capacity: v.capacity || 0,
+            status: 'available',
+            location: 'Main Parking',
+            images: {
+                front: '',
+                side: '',
+                odometer: '',
+            },
+            ownerName: v.ownerName,
+            ownerContact: v.ownerContact,
+            ownerAddress: v.ownerAddress || '',
+            contractStartDate: v.contractStartDate ? new Date(v.contractStartDate) : undefined,
+            contractEndDate: v.contractEndDate ? new Date(v.contractEndDate) : undefined,
+        }));
+
+        vehicles.push(...newVehicles);
+
+        toast({
+            title: "Vehicles Saved!",
+            description: `${newVehicles.length} new vehicles have been added to the fleet.`,
+        });
+
+        setMappedData(null);
+        setCsvFile(null);
+    };
+
+    const handleConfirmAndSaveDispatches = () => {
+        if (!mappedDispatchData) return;
+
+        const newDispatches: Dispatch[] = mappedDispatchData.mappedData.map((d, index) => ({
+            id: `D${String(dispatches.length + index + 1).padStart(3, '0')}`,
+            requestId: d.requestId,
+            vehicleId: d.vehicleId,
+            driverName: d.driverName,
+            driverLicense: d.driverLicense,
+            dispatchedAt: new Date(d.dispatchedAt),
+            conditionPhoto: '',
+        }));
+
+        dispatches.push(...newDispatches);
+
+        toast({
+            title: "Dispatches Saved!",
+            description: `${newDispatches.length} new dispatch records have been added.`,
+        });
+
+        setMappedDispatchData(null);
+        setDispatchCsvFile(null);
     };
 
     const handleDownloadTemplate = () => {
@@ -163,7 +223,7 @@ export default function AdminPage() {
                             )}
                         </CardContent>
                         <CardFooter>
-                            <Button className="w-full" disabled={!mappedData}>Confirm & Save {mappedData?.mappedData.length} Vehicles</Button>
+                            <Button className="w-full" disabled={!mappedData} onClick={handleConfirmAndSaveVehicles}>Confirm & Save {mappedData?.mappedData.length} Vehicles</Button>
                         </CardFooter>
                     </Card>
 
@@ -209,7 +269,7 @@ export default function AdminPage() {
                             )}
                         </CardContent>
                         <CardFooter>
-                            <Button className="w-full" disabled={!mappedDispatchData}>Confirm & Save {mappedDispatchData?.mappedData.length} Dispatches</Button>
+                            <Button className="w-full" disabled={!mappedDispatchData} onClick={handleConfirmAndSaveDispatches}>Confirm & Save {mappedDispatchData?.mappedData.length} Dispatches</Button>
                         </CardFooter>
                     </Card>
 
@@ -278,3 +338,5 @@ export default function AdminPage() {
         </AuthLayout>
     );
 }
+
+    
