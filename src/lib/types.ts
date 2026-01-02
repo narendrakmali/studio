@@ -24,14 +24,33 @@ export type TransportRequest = {
   userName: string;
   contactNumber: string;
   departmentName: string;
-  vehicleType: 'two-wheeler' | 'four-wheeler' | 'tempo' | 'eicher' | 'bus';
-  durationFrom: Date;
-  durationTo: Date;
   status: 'pending' | 'allocated' | 'dispatched' | 'completed';
   createdAt: Date;
   hodApprovalImage?: string;
-  passengerCount: number;
+  
+  // Fields for different request types
+  requestType: 'private' | 'bus' | 'train';
+
+  // Private Vehicle fields
+  vehicleType?: 'car' | 'suv' | 'winger' | 'innova';
+  registrationNumber?: string;
+  passengerCount?: number;
+  driverName?: string;
+  driverContact?: string;
+  durationFrom?: Date;
+  durationTo?: Date;
   destination?: string;
+
+  // Bus fields
+  busType?: 'private' | 'msrtc';
+  busQuantity?: number;
+  busRoute?: string;
+  
+  // Train fields
+  trainNumber?: string;
+  trainArrivalDate?: Date;
+  trainDevoteeCount?: number;
+  pickupRequired?: boolean;
 };
 
 export type Dispatch = {
