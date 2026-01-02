@@ -58,7 +58,7 @@ export default function HomePage() {
                     <Car className="w-8 h-8" />
                   </div>
                   <div>
-                    <CardTitle className="font-headline text-2xl">Outdoor Vehicle Registration</CardTitle>
+                    <CardTitle className="font-headline text-2xl">Outdoor Vehicle Request</CardTitle>
                     <CardDescription>For Branch/Zone vehicles.</CardDescription>
                   </div>
                 </div>
@@ -78,3 +78,5 @@ export default function HomePage() {
     </main>
   );
 }
+
+    

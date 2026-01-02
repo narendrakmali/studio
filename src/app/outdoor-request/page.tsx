@@ -239,7 +239,7 @@ export default function OutdoorRequestPage() {
       <main className="flex flex-col items-center justify-center p-4 sm:p-8">
       <Card className="w-full max-w-3xl shadow-2xl animate-in fade-in-50 zoom-in-95">
         <CardHeader>
-          <CardTitle className="font-headline text-3xl">Outdoor Vehicle Registration</CardTitle>
+          <CardTitle className="font-headline text-3xl">Outdoor Vehicle Request</CardTitle>
           <CardDescription>
             Register your branch/zone's vehicle and travel details for Samagam.
           </CardDescription>
@@ -665,3 +665,5 @@ export default function OutdoorRequestPage() {
     </div>
   );
 }
+
+    
