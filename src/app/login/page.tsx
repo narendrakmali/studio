@@ -32,6 +32,12 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password or OTP is required."),
 });
 
+const allowedUsers = [
+    "admin@samagam.com",
+    "narendrakmali@gmail.com",
+    "samagamtransport@gmail.com"
+];
+
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -49,7 +55,7 @@ export default function LoginPage() {
     setIsLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    if (values.email === "admin@samagam.com" && values.password === "password") {
+    if (allowedUsers.includes(values.email) && values.password === "password") {
       toast({
         title: "Login Successful",
         description: "Redirecting to your dashboard...",
