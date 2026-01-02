@@ -6,10 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { requests, vehicles as allVehicles } from "@/lib/data";
 import { TransportRequest, Vehicle } from "@/lib/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Users, Route, Calendar, Sparkles, Car, User, Fingerprint, Camera, Loader2, Phone, Building } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Users, Route, Calendar, Sparkles, Car, User, Fingerprint, Camera, Loader2, Phone, Building, CalendarIcon } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +17,8 @@ import { Label } from "@/components/ui/label";
 import { optimizeVehicleAllocation, OptimizeVehicleAllocationInput } from "@/ai/flows/optimize-vehicle-allocation";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 export default function DispatchPage() {
@@ -26,6 +27,25 @@ export default function DispatchPage() {
     const [suggestedVehicleId, setSuggestedVehicleId] = useState<string | null>(null);
     const [isSuggesting, setIsSuggesting] = useState(false);
     const { toast } = useToast();
+
+    // State for editable dispatch details
+    const [department, setDepartment] = useState('');
+    const [vehicleModel, setVehicleModel] = useState('');
+    const [vehicleType, setVehicleType] = useState<TransportRequest['vehicleType'] | ''>('');
+    const [allocationDate, setAllocationDate] = useState<Date | undefined>(undefined);
+    const [returnDate, setReturnDate] = useState<Date | undefined>(undefined);
+
+
+    useEffect(() => {
+        if (selectedRequest && selectedVehicle) {
+            setDepartment(selectedRequest.departmentName);
+            setVehicleModel(`${selectedVehicle.make} ${selectedVehicle.model}`);
+            setVehicleType(selectedRequest.vehicleType);
+            setAllocationDate(new Date(selectedRequest.durationFrom));
+            setReturnDate(new Date(selectedRequest.durationTo));
+        }
+    }, [selectedRequest, selectedVehicle]);
+
 
     const availableVehicles = allVehicles.filter(v => v.status === 'available');
 
@@ -151,15 +171,63 @@ export default function DispatchPage() {
                 </CardHeader>
                 <CardContent className="flex-grow space-y-4">
                     {selectedRequest && selectedVehicle ? (
-                        <>
-                            <div className="space-y-4 rounded-lg border p-4">
-                                <h4 className="font-medium text-sm">Summary</h4>
-                                <div className="text-sm text-muted-foreground grid grid-cols-2 gap-2">
-                                    <div className="flex items-center gap-2"><Building className="h-4 w-4" /> <span>{selectedRequest.departmentName}</span></div>
-                                    <div className="flex items-center gap-2 capitalize"><Car className="h-4 w-4" /> <span>{selectedVehicle.make} {selectedVehicle.model}</span></div>
-                                    <div className="col-span-2 flex items-center gap-2"><Calendar className="h-4 w-4" /> <span>{format(selectedRequest.durationFrom, 'PPP')} to {format(selectedRequest.durationTo, 'PPP')}</span></div>
+                        <div className="space-y-4">
+                            <div className="space-y-3">
+                                <div className="space-y-1">
+                                    <Label htmlFor="departmentName">Department</Label>
+                                    <Input id="departmentName" value={department} onChange={e => setDepartment(e.target.value)} />
+                                </div>
+                                 <div className="space-y-1">
+                                    <Label htmlFor="vehicleModel">Vehicle Model</Label>
+                                    <Input id="vehicleModel" value={vehicleModel} onChange={e => setVehicleModel(e.target.value)} />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label htmlFor="vehicleType">Vehicle Type</Label>
+                                    <Select value={vehicleType} onValueChange={(value: TransportRequest['vehicleType']) => setVehicleType(value)}>
+                                        <SelectTrigger id="vehicleType">
+                                            <SelectValue placeholder="Select vehicle type" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="two-wheeler">Two-wheeler</SelectItem>
+                                            <SelectItem value="four-wheeler">Four-wheeler</SelectItem>
+                                            <SelectItem value="tempo">Tempo</SelectItem>
+                                            <SelectItem value="eicher">Eicher</SelectItem>
+                                            <SelectItem value="bus">Bus</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                     <div className="space-y-1">
+                                        <Label>Allocation Date</Label>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !allocationDate && "text-muted-foreground")}>
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {allocationDate ? format(allocationDate, "PPP") : <span>Pick a date</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar mode="single" selected={allocationDate} onSelect={setAllocationDate} initialFocus />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <Label>Expected Return Date</Label>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !returnDate && "text-muted-foreground")}>
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {returnDate ? format(returnDate, "PPP") : <span>Pick a date</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar mode="single" selected={returnDate} onSelect={setReturnDate} disabled={(date) => date < (allocationDate || new Date(0))} initialFocus />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
                                 </div>
                             </div>
+
                             <div className="space-y-3">
                                 <div className="space-y-1">
                                     <Label htmlFor="driverName">Driver Name</Label>
@@ -190,7 +258,7 @@ export default function DispatchPage() {
                                     </div>
                                 </div>
                             </div>
-                        </>
+                        </div>
                     ) : (
                         <div className="flex items-center justify-center h-full text-muted-foreground">
                             <p>Select a request and vehicle to see details.</p>
