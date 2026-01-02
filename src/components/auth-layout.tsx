@@ -70,7 +70,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href} legacyBehavior passHref>
+                <Link href={item.href}>
                   <SidebarMenuButton
                     isActive={pathname.startsWith(item.href)}
                     tooltip={{ children: item.label, side: 'right' }}
@@ -84,7 +84,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="p-4">
-            <Link href="/login" legacyBehavior passHref>
+            <Link href="/login">
               <SidebarMenuButton tooltip={{ children: 'Logout', side: 'right' }}>
                 <LogOut />
                 <span className='group-data-[collapsible=icon]:hidden'>Logout</span>
