@@ -1,4 +1,5 @@
 
+
 export type Vehicle = {
   id: string;
   licensePlate: string;
@@ -33,7 +34,7 @@ export type TransportRequest = {
   requestType: 'private' | 'bus' | 'train';
 
   // Private Vehicle fields
-  vehicleType?: 'two-wheeler' | 'car' | 'suv' | 'winger' | 'innova';
+  vehicleType?: 'two-wheeler' | 'car' | 'suv' | 'winger' | 'innova' | 'four-wheeler' | 'tempo' | 'eicher' | 'bus';
   registrationNumber?: string;
   passengerCount?: number;
   driverName?: string;
@@ -71,4 +72,5 @@ export type Dispatch = {
   dispatchedAt: Date;
 };
 
+    
     

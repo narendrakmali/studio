@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CalendarIcon, Loader2, Users, Radio } from "lucide-react";
+import { CalendarIcon, Loader2, Users, Radio, Route, Upload } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -41,13 +41,14 @@ const indoorRequestSchema = z.object({
     required_error: "You need to select a vehicle type.",
   }),
   passengerCount: z.coerce.number().min(1, "At least one passenger is required."),
-  destination: z.string().min(1, "Destination is required"),
+  destination: z.string().min(1, "Destination is required."),
   durationFrom: z.date({
     required_error: "A start date is required.",
   }),
   durationTo: z.date({
     required_error: "An end date is required.",
   }),
+   hodApprovalImage: z.any().optional(),
 }).refine((data) => data.durationTo >= data.durationFrom, {
   message: "End date cannot be before start date.",
   path: ["durationTo"],
@@ -75,12 +76,10 @@ export default function IndoorRequestPage() {
       id: `R${String(requests.length + 1).padStart(3, '0')}`,
       status: 'pending' as const,
       createdAt: new Date(),
-      requestType: 'private' as const, // Assuming indoor requests are a type of private request
+      requestType: 'private' as const, 
     };
 
     requests.unshift(newRequest);
-    
-    console.log("Form submitted and new request added:", newRequest);
     
     toast({
         title: "Request Submitted!",
@@ -97,7 +96,7 @@ export default function IndoorRequestPage() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <CardHeader>
-                        <CardTitle className="font-headline text-3xl">Request a Vehicle</CardTitle>
+                        <CardTitle className="font-headline text-3xl">Department Vehicle Request</CardTitle>
                         <CardDescription>
                             Fill out the form below to request transport for your department.
                         </CardDescription>
@@ -192,15 +191,18 @@ export default function IndoorRequestPage() {
                                 </FormItem>
                             )}
                         />
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <FormField
                                 control={form.control}
                                 name="destination"
                                 render={({ field }) => (
                                     <FormItem>
                                     <FormLabel>Destination</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="e.g., Pune Airport" {...field} />
+                                         <div className="relative">
+                                            <Route className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <Input placeholder="e.g., Pune Airport" className="pl-9" {...field} />
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -271,6 +273,22 @@ export default function IndoorRequestPage() {
                                 )}
                             />
                         </div>
+                         <FormField
+                            control={form.control}
+                            name="hodApprovalImage"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>HOD Approval (Image)</FormLabel>
+                                    <FormControl>
+                                        <div className="relative">
+                                            <Upload className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <Input type="file" className="pl-9" onChange={(e) => field.onChange(e.target.files)} />
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </CardContent>
                     <CardFooter>
                         <Button type="submit" disabled={isSubmitting}>

@@ -23,11 +23,12 @@ import { format } from "date-fns";
 export default function RequestsPage() {
     return (
         <AuthLayout>
-             <div className="flex justify-end mb-4">
+             <div className="flex justify-between items-center mb-4">
+                <h1 className="text-2xl font-bold font-headline">All Requests</h1>
                 <Button asChild>
                     <Link href="/indoor-request">
                         <PlusCircle className="mr-2 h-4 w-4" />
-                        New Request
+                        New Indoor Request
                     </Link>
                 </Button>
             </div>
@@ -62,10 +63,12 @@ export default function RequestsPage() {
                                 <Users className="h-4 w-4 text-muted-foreground" />
                                 <span>Passengers: <strong>{req.passengerCount}</strong></span>
                             </div>
-                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <Calendar className="h-4 w-4" />
-                                <span>{format(new Date(req.durationFrom), 'dd/MM/yy')} - {format(new Date(req.durationTo), 'dd/MM/yy')}</span>
-                            </div>
+                             {req.durationFrom && req.durationTo && (
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>{format(new Date(req.durationFrom), 'dd/MM/yy')} - {format(new Date(req.durationTo), 'dd/MM/yy')}</span>
+                                </div>
+                             )}
                         </CardContent>
                         <CardFooter className="flex justify-between">
                             {req.hodApprovalImage && <Dialog>
@@ -84,9 +87,9 @@ export default function RequestsPage() {
                                     </div>
                                 </DialogContent>
                             </Dialog>}
-                            <Button size="sm" asChild>
+                             {req.status === 'pending' && <Button size="sm" asChild>
                                 <Link href="/dispatch">Allocate Vehicle</Link>
-                            </Button>
+                            </Button>}
                         </CardFooter>
                     </Card>
                 ))}
@@ -94,3 +97,5 @@ export default function RequestsPage() {
         </AuthLayout>
     )
 }
+
+    

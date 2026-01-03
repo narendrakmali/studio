@@ -34,6 +34,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
+import { requests } from "@/lib/data";
 
 
 const privateVehicleSchema = z.object({
@@ -131,9 +132,18 @@ export default function OutdoorRequestPage() {
 
   async function onSubmit(data: z.infer<typeof requestFormSchema>) {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Form submitted:", data);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const newRequest = {
+        ...data,
+        id: `R${String(requests.length + 1).padStart(3, '0')}`,
+        status: 'pending' as const,
+        createdAt: new Date(),
+    };
+
+    requests.unshift(newRequest);
+
+    console.log("Form submitted and new request added:", newRequest);
     setIsSubmitting(false);
     setIsSuccess(true);
   }
@@ -385,7 +395,7 @@ export default function OutdoorRequestPage() {
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <Button className="w-full btn-submit" onClick={() => { setIsSuccess(false); form.reset(); }}>
+            <Button className="w-full btn-submit" onClick={() => { setIsSuccess(false); form.reset({ requestType: activeTab as any }); }}>
               Submit Another Request
             </Button>
           </CardFooter>
@@ -759,5 +769,7 @@ export default function OutdoorRequestPage() {
     </div>
   );
 }
+
+    
 
     
