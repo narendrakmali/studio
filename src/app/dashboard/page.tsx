@@ -12,19 +12,15 @@ import {
 import { Car, ClipboardList, Send, Users, Route } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { requests, vehicles, dispatches } from "@/lib/data";
+import { requests, dispatches } from "@/lib/data";
 import { isToday } from "date-fns";
 import { useEffect, useState } from "react";
 import { TransportRequest } from "@/lib/types";
 
 export default function DashboardPage() {
-  // We need to use state to make the component re-render when data changes.
   const [currentRequests, setCurrentRequests] = useState(requests);
 
   useEffect(() => {
-    // This is a bit of a hack for the prototype. In a real app,
-    // this would be handled by a state management library or data fetching library.
-    // We're just polling to see if the underlying data has changed.
     const interval = setInterval(() => {
       if(requests.length !== currentRequests.length) {
         setCurrentRequests([...requests]);
