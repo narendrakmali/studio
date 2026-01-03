@@ -70,7 +70,14 @@ export default function IndoorRequestPage() {
   const form = useForm<z.infer<typeof indoorRequestSchema>>({
     resolver: zodResolver(indoorRequestSchema),
     defaultValues: {
+      userName: "",
+      contactNumber: "",
+      departmentName: "",
+      destination: "",
       passengerCount: 1,
+      vehicleType: undefined,
+      durationFrom: undefined,
+      durationTo: undefined,
     },
   });
 
@@ -305,5 +312,3 @@ export default function IndoorRequestPage() {
     </AuthLayout>
   );
 }
-
-    
