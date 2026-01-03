@@ -29,10 +29,18 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { AuthLayout } from "@/components/auth-layout";
-import { useToast } from "@/hooks/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { addRequest } from "@/lib/data";
 import { TransportRequest } from "@/lib/types";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 const indoorRequestSchema = z.object({
   userName: z.string().min(2, "User name is required."),
@@ -57,7 +65,7 @@ const indoorRequestSchema = z.object({
 
 export default function IndoorRequestPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   const form = useForm<z.infer<typeof indoorRequestSchema>>({
     resolver: zodResolver(indoorRequestSchema),
@@ -80,12 +88,9 @@ export default function IndoorRequestPage() {
     
     console.log("Form submitted and new request added:", newRequest);
     
-    toast({
-        title: "Request Submitted!",
-        description: `Your transport request (ID: ${newRequest.id}) has been logged.`,
-    });
     form.reset();
     setIsSubmitting(false);
+    setShowSuccessAlert(true);
   }
 
   return (
@@ -280,6 +285,25 @@ export default function IndoorRequestPage() {
             </Form>
             </Card>
         </div>
+        <AlertDialog open={showSuccessAlert} onOpenChange={setShowSuccessAlert}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Request Submitted Successfully!</AlertDialogTitle>
+                <AlertDialogDescription>
+                    Please get in touch with our team members with the approval copy from your Department Head:
+                    <br/><br/>
+                    <strong>Sh. Prasad More ji:</strong> 9960703710
+                    <br/>
+                    <strong>Sh. Akash More ji:</strong> 9503707518
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogAction onClick={() => setShowSuccessAlert(false)}>OK</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     </AuthLayout>
   );
 }
+
+    
