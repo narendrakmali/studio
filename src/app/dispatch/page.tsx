@@ -23,7 +23,8 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 
 
 export default function DispatchPage() {
-    const [selectedRequest, setSelectedRequest] = useState<TransportRequest | null>(requests.find(r => r.status === 'pending') || null);
+    const [pendingRequests, setPendingRequests] = useState(requests.filter(r => r.status === 'pending' && r.source === 'indoor'));
+    const [selectedRequest, setSelectedRequest] = useState<TransportRequest | null>(pendingRequests[0] || null);
     const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
     const [suggestedVehicleId, setSuggestedVehicleId] = useState<string | null>(null);
     const [isSuggesting, setIsSuggesting] = useState(false);
@@ -36,14 +37,27 @@ export default function DispatchPage() {
     const [allocationDate, setAllocationDate] = useState<Date | undefined>(undefined);
     const [returnDate, setReturnDate] = useState<Date | undefined>(undefined);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const updatedPending = requests.filter(r => r.status === 'pending' && r.source === 'indoor');
+            if (updatedPending.length !== pendingRequests.length) {
+                setPendingRequests(updatedPending);
+                if (!selectedRequest && updatedPending.length > 0) {
+                    setSelectedRequest(updatedPending[0]);
+                }
+            }
+        }, 500);
+        return () => clearInterval(interval);
+    }, [pendingRequests.length, selectedRequest]);
+
 
     useEffect(() => {
         if (selectedRequest && selectedVehicle) {
             setDepartment(selectedRequest.departmentName);
             setVehicleModel(`${selectedVehicle.make} ${selectedVehicle.model}`);
             setVehicleType(selectedRequest.vehicleType);
-            setAllocationDate(new Date(selectedRequest.durationFrom));
-            setReturnDate(new Date(selectedRequest.durationTo));
+            if (selectedRequest.durationFrom) setAllocationDate(new Date(selectedRequest.durationFrom));
+            if (selectedRequest.durationTo) setReturnDate(new Date(selectedRequest.durationTo));
         }
     }, [selectedRequest, selectedVehicle]);
 
@@ -91,12 +105,12 @@ export default function DispatchPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-full md:h-[calc(100vh-8rem)]">
         <Card className="lg:col-span-1 shadow-md flex flex-col h-[50vh] md:h-full">
             <CardHeader>
-                <CardTitle className="font-headline text-xl">Pending Requests</CardTitle>
+                <CardTitle className="font-headline text-xl">Pending Indoor Requests</CardTitle>
             </CardHeader>
             <CardContent className="p-0 flex-grow">
                 <ScrollArea className="h-full">
                     <div className="p-4 space-y-4">
-                    {requests.filter(r => r.status === 'pending').map(req => (
+                    {pendingRequests.map(req => (
                         <Card 
                             key={req.id} 
                             className={cn("cursor-pointer hover:border-primary transition-colors", selectedRequest?.id === req.id && "border-primary ring-2 ring-primary")}
