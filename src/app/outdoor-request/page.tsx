@@ -126,9 +126,26 @@ export default function OutdoorRequestPage() {
       contactNumber: "",
       departmentName: "",
       passengerCount: 1,
+      registrationNumber: "",
+      driverName: "",
+      driverContact: "",
+      vehicleType: undefined,
+      busType: undefined,
       busQuantity: 1,
+      busRoute: "",
+      busCoordinatorName: "",
+      busCoordinatorContact: "",
+      trainTeamLeaderName: "",
+      trainTeamLeaderContact: "",
+      trainNumber: "",
       trainDevoteeCount: 1,
       pickupRequired: false,
+      returnTrainNumber: "",
+      busBookingReceipt: undefined,
+      durationFrom: undefined,
+      durationTo: undefined,
+      trainArrivalDate: undefined,
+      returnTrainDepartureDate: undefined,
     },
   });
 
@@ -136,9 +153,9 @@ export default function OutdoorRequestPage() {
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const newRequest = addRequest(data);
+    addRequest(data);
 
-    console.log("Form submitted and new request added:", newRequest);
+    console.log("Form submitted and new request added:", data);
 
     setIsSubmitting(false);
     setIsSuccess(true);
@@ -378,26 +395,28 @@ export default function OutdoorRequestPage() {
 
   if (isSuccess) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
+      <div className="min-h-screen bg-background flex flex-col">
         <PublicHeader />
-        <Card className="w-full max-w-lg text-center shadow-2xl animate-in fade-in-50 zoom-in-95">
-          <CardHeader>
-            <div className="mx-auto text-primary rounded-full p-4 w-fit">
-              <h2 className="text-2xl font-bold">Dhan Nirankar Ji</h2>
-            </div>
-            <CardTitle className="font-headline text-2xl mt-2">Request Submitted!</CardTitle>
-            <CardDescription className="space-y-2 pt-2">
-                <p>Transport department will contact you for further details.</p>
-                <p className="font-medium">धन निरंकार जी अधिक माहितीसाठी वाहतूक विभाग तुमच्याशी संपर्क साधेल.</p>
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Button className="w-full btn-submit" onClick={() => { setIsSuccess(false); form.reset({ requestType: activeTab as any }); }}>
-              Submit Another Request
-            </Button>
-          </CardFooter>
-        </Card>
-      </main>
+        <main className="flex flex-grow flex-col items-center justify-center p-4 sm:p-8">
+            <Card className="w-full max-w-lg text-center shadow-2xl animate-in fade-in-50 zoom-in-95">
+            <CardHeader>
+                <div className="mx-auto text-primary rounded-full p-4 w-fit">
+                <h2 className="text-2xl font-bold">Dhan Nirankar Ji</h2>
+                </div>
+                <CardTitle className="font-headline text-2xl mt-2">Request Submitted!</CardTitle>
+                <CardDescription className="space-y-2 pt-2">
+                    <p>Transport department will contact you for further details.</p>
+                    <p className="font-medium">धन निरंकार जी अधिक माहितीसाठी वाहतूक विभाग तुमच्याशी संपर्क साधेल.</p>
+                </CardDescription>
+            </CardHeader>
+            <CardFooter>
+                <Button className="w-full btn-submit" onClick={() => { setIsSuccess(false); form.reset({ requestType: activeTab as any }); }}>
+                Submit Another Request
+                </Button>
+            </CardFooter>
+            </Card>
+        </main>
+      </div>
     );
   }
 
