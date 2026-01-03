@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardDescription
 } from "@/components/ui/card";
-import { Car, ClipboardList, Send, Users, Route } from "lucide-react";
+import { Car, ClipboardList, Send, Users, Route, Building, Globe } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { requests, dispatches, vehicles } from "@/lib/data";
@@ -32,7 +32,7 @@ export default function DashboardPage() {
   const availableVehicles = vehicles.filter(v => v.status === 'available').length;
   const pendingRequests = currentRequests.filter(r => r.status === 'pending').length;
   const dispatchesToday = dispatches.filter(d => isToday(new Date(d.dispatchedAt))).length;
-  const totalPassengers = currentRequests.filter(r => r.status === 'pending').reduce((acc, req) => acc + (req.passengerCount || 0), 0);
+  const totalPassengers = currentRequests.filter(r => r.status === 'pending').reduce((acc, req) => acc + (req.passengerCount || req.trainDevoteeCount || 0), 0);
 
   const stats = [
     { title: "Available Vehicles", value: availableVehicles, icon: Car, color: "text-green-500", change: "" },
@@ -41,7 +41,49 @@ export default function DashboardPage() {
     { title: "Total Passengers", value: totalPassengers, icon: Users, color: "text-indigo-500", change: "" },
   ];
 
-  const recentRequests = currentRequests.slice(0, 5);
+  const indoorRequests = currentRequests.filter(r => r.source === 'indoor').slice(0, 5);
+  const outdoorRequests = currentRequests.filter(r => r.source === 'outdoor').slice(0, 5);
+  
+  const RequestTable = ({ title, requests, icon: Icon }: { title: string, requests: TransportRequest[], icon: React.ElementType }) => (
+    <Card className="shadow-md">
+        <CardHeader>
+            <CardTitle className="font-headline text-xl flex items-center gap-2"><Icon className="h-6 w-6"/>{title}</CardTitle>
+            <CardDescription>A summary of the latest requests received.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            {requests.length > 0 ? (
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Department / Branch</TableHead>
+                            <TableHead className="hidden sm:table-cell">Requested by</TableHead>
+                            <TableHead className="hidden md:table-cell">Vehicle/Mode</TableHead>
+                            <TableHead className="text-right">Status</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {requests.map(req => (
+                            <TableRow key={req.id}>
+                                <TableCell className="font-medium">{req.departmentName}</TableCell>
+                                <TableCell className="hidden sm:table-cell">{req.userName}</TableCell>
+                                <TableCell className="hidden md:table-cell capitalize">{req.requestType === 'private' ? req.vehicleType : req.requestType}</TableCell>
+                                <TableCell className="text-right">
+                                    <Badge variant={req.status === 'pending' ? 'default' : 'secondary'} className={req.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' : ''}>
+                                        {req.status}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            ) : (
+                <div className="text-center text-muted-foreground py-12">
+                    <p>No recent requests found.</p>
+                </div>
+            )}
+        </CardContent>
+    </Card>
+  );
 
   return (
     <AuthLayout>
@@ -63,47 +105,9 @@ export default function DashboardPage() {
           </Card>
         ))}
       </div>
-      <div className="mt-6">
-        <Card className="shadow-md">
-            <CardHeader>
-                <CardTitle className="font-headline text-xl">Recent Transport Requests</CardTitle>
-                <CardDescription>A summary of the latest transport requests received.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                {recentRequests.length > 0 ? (
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Department</TableHead>
-                                <TableHead className="hidden sm:table-cell">Requested by</TableHead>
-                                <TableHead className="hidden sm:table-cell">Passengers</TableHead>
-                                <TableHead className="hidden md:table-cell">Vehicle</TableHead>
-                                <TableHead className="text-right">Status</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {recentRequests.map(req => (
-                                <TableRow key={req.id}>
-                                    <TableCell className="font-medium">{req.departmentName}</TableCell>
-                                    <TableCell className="hidden sm:table-cell">{req.userName}</TableCell>
-                                    <TableCell className="hidden sm:table-cell">{req.passengerCount}</TableCell>
-                                    <TableCell className="hidden md:table-cell capitalize">{req.vehicleType}</TableCell>
-                                    <TableCell className="text-right">
-                                        <Badge variant={req.status === 'pending' ? 'default' : 'secondary'} className={req.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' : ''}>
-                                            {req.status}
-                                        </Badge>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                ) : (
-                    <div className="text-center text-muted-foreground py-12">
-                        <p>No recent requests found.</p>
-                    </div>
-                )}
-            </CardContent>
-        </Card>
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <RequestTable title="Recent Indoor Requests" requests={indoorRequests} icon={Building} />
+        <RequestTable title="Recent Outdoor Registrations" requests={outdoorRequests} icon={Globe} />
       </div>
     </AuthLayout>
   );

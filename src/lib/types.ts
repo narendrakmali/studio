@@ -23,9 +23,10 @@ export type Vehicle = {
 
 export type TransportRequest = {
   id: string;
+  source: 'indoor' | 'outdoor'; // To distinguish request origin
   userName: string;
   contactNumber: string;
-  departmentName: string;
+  departmentName: string; // This can be department or Branch/Zone
   status: 'pending' | 'allocated' | 'dispatched' | 'completed';
   createdAt: Date;
   hodApprovalImage?: string;
@@ -33,7 +34,7 @@ export type TransportRequest = {
   // Fields for different request types
   requestType: 'private' | 'bus' | 'train';
 
-  // Private Vehicle fields
+  // Private Vehicle fields (used by both indoor and outdoor)
   vehicleType?: 'two-wheeler' | 'car' | 'suv' | 'winger' | 'innova' | 'four-wheeler' | 'tempo' | 'eicher' | 'bus';
   registrationNumber?: string;
   passengerCount?: number;
@@ -43,7 +44,7 @@ export type TransportRequest = {
   durationTo?: Date;
   destination?: string;
 
-  // Bus fields
+  // Bus fields (outdoor only)
   busType?: 'private' | 'msrtc';
   busQuantity?: number;
   busRoute?: string;
@@ -51,7 +52,7 @@ export type TransportRequest = {
   busCoordinatorContact?: string;
   busBookingReceipt?: any;
   
-  // Train fields
+  // Train fields (outdoor only)
   trainTeamLeaderName?: string;
   trainTeamLeaderContact?: string;
   trainNumber?: string;

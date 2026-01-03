@@ -153,7 +153,7 @@ export default function OutdoorRequestPage() {
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    addRequest(data);
+    addRequest({ ...data, source: 'outdoor' });
 
     console.log("Form submitted and new request added:", data);
 
@@ -410,7 +410,7 @@ export default function OutdoorRequestPage() {
                 </CardDescription>
             </CardHeader>
             <CardFooter>
-                <Button className="w-full btn-submit" onClick={() => { setIsSuccess(false); form.reset({ requestType: activeTab as any }); }}>
+                <Button className="w-full btn-submit" onClick={() => { setIsSuccess(false); form.reset({ requestType: activeTab as any, source: 'outdoor' }); }}>
                 Submit Another Request
                 </Button>
             </CardFooter>

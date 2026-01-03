@@ -59,6 +59,7 @@ export const vehicles: Vehicle[] = [
 const initialRequests: TransportRequest[] = [
     {
     id: 'R001',
+    source: 'indoor',
     userName: 'Narendra Mali',
     contactNumber: '9876543210',
     departmentName: 'Guest Services',
@@ -74,6 +75,7 @@ const initialRequests: TransportRequest[] = [
   },
   {
     id: 'R002',
+    source: 'indoor',
     userName: 'Akash More',
     contactNumber: '9876543211',
     departmentName: 'Construction',
@@ -89,20 +91,24 @@ const initialRequests: TransportRequest[] = [
   },
   {
     id: 'R003',
-    userName: 'Prasad More',
+    source: 'outdoor',
+    userName: 'Outdoor Submitter',
     contactNumber: '9876543212',
-    departmentName: 'Management',
-    vehicleType: 'four-wheeler',
-    durationFrom: new Date('2024-07-27'),
-    durationTo: new Date('2024-07-27'),
+    departmentName: 'Pune-1 Branch',
     status: 'completed',
     createdAt: new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000),
-    passengerCount: 1,
-    destination: 'Local Vendor Meet',
     requestType: 'private',
+    vehicleType: 'car',
+    registrationNumber: 'MH-14-AZ-1111',
+    passengerCount: 1,
+    durationFrom: new Date('2024-07-27'),
+    durationTo: new Date('2024-07-27'),
+    driverName: 'Self',
+    driverContact: '9876543212'
   },
   {
     id: 'R004',
+    source: 'indoor',
     userName: 'Rajendra Nandikurle',
     contactNumber: '9876543213',
     departmentName: 'Electrical',

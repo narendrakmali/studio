@@ -88,6 +88,7 @@ export default function IndoorRequestPage() {
 
     const newRequestData: Omit<TransportRequest, 'id' | 'status' | 'createdAt'> = {
       ...data,
+      source: 'indoor',
       requestType: 'private', 
     };
 
