@@ -55,7 +55,7 @@ const navItems = [
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   const pathname = usePathname();
-  const avatarUrl = PlaceHolderImages.find((img) => img.id === 'avatar-1')?.imageUrl;
+  const avatarUrl = PlaceHolderImages.find((img) => img.id === 'user-avatar-new')?.imageUrl;
   
   const pageTitle = navItems.find(item => pathname.startsWith(item.href))?.label || 'Samagam FleetConnect';
 
