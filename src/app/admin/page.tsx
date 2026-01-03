@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AuthLayout } from "@/components/auth-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,18 @@ export default function AdminPage() {
     const [isDispatchImporting, setIsDispatchImporting] = useState(false);
     const [mappedData, setMappedData] = useState<ImportVehicleDataFromCsvOutput | null>(null);
     const [mappedDispatchData, setMappedDispatchData] = useState<ImportDispatchDataFromCsvOutput | null>(null);
+
+    const [currentRequests, setCurrentRequests] = useState(requests);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+        if(requests.length !== currentRequests.length) {
+            setCurrentRequests([...requests]);
+        }
+        }, 500);
+        return () => clearInterval(interval);
+    }, [currentRequests.length]);
+
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
@@ -192,7 +204,7 @@ export default function AdminPage() {
                         <CardContent>
                            <ScrollArea className="h-96">
                                 <div className="space-y-4">
-                                {requests.map(req => (
+                                {currentRequests.map(req => (
                                     <Card key={req.id} className="p-4">
                                         <div className="flex justify-between items-start">
                                             <div>
@@ -386,5 +398,3 @@ export default function AdminPage() {
         </AuthLayout>
     );
 }
-
-    

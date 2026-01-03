@@ -56,7 +56,7 @@ export const vehicles: Vehicle[] = [
   },
 ];
 
-export const requests: TransportRequest[] = [
+const initialRequests: TransportRequest[] = [
     {
     id: 'R001',
     userName: 'Narendra Mali',
@@ -70,6 +70,7 @@ export const requests: TransportRequest[] = [
     hodApprovalImage: PlaceHolderImages.find((img) => img.id === 'approval-1')?.imageUrl,
     passengerCount: 4,
     destination: 'Pune Airport',
+    requestType: 'private',
   },
   {
     id: 'R002',
@@ -84,6 +85,7 @@ export const requests: TransportRequest[] = [
     hodApprovalImage: PlaceHolderImages.find((img) => img.id === 'approval-2')?.imageUrl,
     passengerCount: 2,
     destination: 'Mumbai Site',
+    requestType: 'private',
   },
   {
     id: 'R003',
@@ -97,6 +99,7 @@ export const requests: TransportRequest[] = [
     createdAt: new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000),
     passengerCount: 1,
     destination: 'Local Vendor Meet',
+    requestType: 'private',
   },
   {
     id: 'R004',
@@ -111,8 +114,31 @@ export const requests: TransportRequest[] = [
     hodApprovalImage: PlaceHolderImages.find((img) => img.id === 'approval-3')?.imageUrl,
     passengerCount: 1,
     destination: 'City Power Office',
+    requestType: 'private',
   },
 ];
+
+
+const requestManager = {
+    _requests: [...initialRequests],
+    get all() {
+        return this._requests;
+    },
+    add(request: Omit<TransportRequest, 'id' | 'status' | 'createdAt'>) {
+        const newRequest: TransportRequest = {
+            ...request,
+            id: `R${String(this._requests.length + 1).padStart(3, '0')}`,
+            status: 'pending',
+            createdAt: new Date(),
+        };
+        this._requests.unshift(newRequest);
+        return newRequest;
+    }
+}
+
+
+export const requests = requestManager.all;
+export const addRequest = (req: Omit<TransportRequest, 'id' | 'status' | 'createdAt'>) => requestManager.add(req);
 
 
 export const dispatches: Dispatch[] = [

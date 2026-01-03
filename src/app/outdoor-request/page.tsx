@@ -34,7 +34,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { requests } from "@/lib/data";
+import { addRequest } from "@/lib/data";
+import { useToast } from "@/hooks/use-toast";
 
 
 const privateVehicleSchema = z.object({
@@ -100,7 +101,7 @@ const requestFormSchema = z.discriminatedUnion("requestType", [
             path: ["durationTo"],
         });
     }
-    if (data.requestType === 'train' && data.returnTrainDepartureDate && data.returnTrainDepartureDate < data.trainArrivalDate) {
+    if (data.requestType === 'train' && data.returnTrainDepartureDate && data.trainArrivalDate && data.returnTrainDepartureDate < data.trainArrivalDate) {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Return departure date cannot be before arrival date.",
@@ -115,6 +116,7 @@ export default function OutdoorRequestPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState("private");
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof requestFormSchema>>({
     resolver: zodResolver(requestFormSchema),
@@ -134,16 +136,15 @@ export default function OutdoorRequestPage() {
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const newRequest = {
-        ...data,
-        id: `R${String(requests.length + 1).padStart(3, '0')}`,
-        status: 'pending' as const,
-        createdAt: new Date(),
-    };
-
-    requests.unshift(newRequest);
+    const newRequest = addRequest(data);
 
     console.log("Form submitted and new request added:", newRequest);
+    
+    toast({
+        title: "Request Submitted!",
+        description: `Your transport request (ID: ${newRequest.id}) has been logged.`,
+    });
+
     setIsSubmitting(false);
     setIsSuccess(true);
   }
@@ -769,7 +770,3 @@ export default function OutdoorRequestPage() {
     </div>
   );
 }
-
-    
-
-    

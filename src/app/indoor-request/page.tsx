@@ -31,7 +31,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { AuthLayout } from "@/components/auth-layout";
 import { useToast } from "@/hooks/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { requests } from "@/lib/data";
+import { addRequest } from "@/lib/data";
+import { TransportRequest } from "@/lib/types";
 
 const indoorRequestSchema = z.object({
   userName: z.string().min(2, "User name is required."),
@@ -70,15 +71,12 @@ export default function IndoorRequestPage() {
     
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const newRequest = {
+    const newRequestData: Omit<TransportRequest, 'id' | 'status' | 'createdAt'> = {
       ...data,
-      id: `R${String(requests.length + 1).padStart(3, '0')}`,
-      status: 'pending' as const,
-      createdAt: new Date(),
-      requestType: 'private' as const, // Assuming indoor requests are a type of private request
+      requestType: 'private', 
     };
 
-    requests.unshift(newRequest);
+    const newRequest = addRequest(newRequestData);
     
     console.log("Form submitted and new request added:", newRequest);
     
@@ -285,5 +283,3 @@ export default function IndoorRequestPage() {
     </AuthLayout>
   );
 }
-
-    
