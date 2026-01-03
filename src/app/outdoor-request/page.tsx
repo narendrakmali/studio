@@ -139,11 +139,6 @@ export default function OutdoorRequestPage() {
     const newRequest = addRequest(data);
 
     console.log("Form submitted and new request added:", newRequest);
-    
-    toast({
-        title: "Request Submitted!",
-        description: `Your transport request (ID: ${newRequest.id}) has been logged.`,
-    });
 
     setIsSubmitting(false);
     setIsSuccess(true);
@@ -385,14 +380,15 @@ export default function OutdoorRequestPage() {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
         <PublicHeader />
-        <Card className="w-full max-w-md text-center shadow-2xl animate-in fade-in-50 zoom-in-95">
+        <Card className="w-full max-w-lg text-center shadow-2xl animate-in fade-in-50 zoom-in-95">
           <CardHeader>
-            <div className="mx-auto bg-green-100 text-green-700 rounded-full p-4 w-fit">
-              <PartyPopper className="w-10 h-10" />
+            <div className="mx-auto text-primary rounded-full p-4 w-fit">
+              <h2 className="text-2xl font-bold">Dhan Nirankar Ji</h2>
             </div>
-            <CardTitle className="font-headline text-3xl mt-4">Request Submitted!</CardTitle>
-            <CardDescription>
-              Your request has been received. You will receive a Request ID shortly.
+            <CardTitle className="font-headline text-2xl mt-2">Request Submitted!</CardTitle>
+            <CardDescription className="space-y-2 pt-2">
+                <p>Transport department will contact you for further details.</p>
+                <p className="font-medium">धन निरंकार जी अधिक माहितीसाठी वाहतूक विभाग तुमच्याशी संपर्क साधेल.</p>
             </CardDescription>
           </CardHeader>
           <CardFooter>
