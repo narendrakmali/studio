@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -20,6 +19,7 @@ import { useFirebase } from "@/firebase";
 import Image from "next/image";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
+export const dynamic = 'force-dynamic';
 
 const receptionFormSchema = z.object({
     registrationNumber: z.string().min(1, "Registration number is required."),
@@ -30,10 +30,17 @@ const receptionFormSchema = z.object({
     odometerImage: z.any().refine(file => file.length == 1, "Odometer image is required."),
 });
 
-export default function ReceptionPage() {
+function ReceptionPageContent() {
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { firestore } = useFirebase();
+    
+    let firestore = null;
+    try {
+      const fb = useFirebase();
+      firestore = fb.firestore;
+    } catch (e) {
+      // Firebase not available during prerender
+    }
 
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -42,6 +49,8 @@ export default function ReceptionPage() {
     });
 
     useEffect(() => {
+      if (typeof window === 'undefined') return;
+
       const getCameraPermission = async () => {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
            setHasCameraPermission(false);
@@ -288,3 +297,5 @@ export default function ReceptionPage() {
         </AuthLayout>
     );
 }
+
+export default ReceptionPageContent;
