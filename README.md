@@ -511,8 +511,4 @@ Now I have all the information I need. Let me create comprehensive technical doc
 
 ---
 
-This documentation provides a complete technical overview of all pages in the Transport Coordination Portal application.# Firebase Studio
-
-This is a NextJS starter in Firebase Studio.
-
-To get started, take a look at src/app/page.tsx.
+This documentation provides a complete technical overview of all pages in the Transport Coordination Portal application.

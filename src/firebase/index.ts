@@ -28,15 +28,18 @@ export function initializeFirebase(): Sdks {
       const firebaseApp = initializeApp();
       return getSdks(firebaseApp);
     } catch (e) {
-      if (process.env.NODE_ENV === 'production') {
-        console.warn('Automatic initialization failed. Falling back to firebase config object.', e);
-      }
-      const firebaseApp = initializeApp(firebaseConfig as any);
-      return getSdks(firebaseApp);
+      console.warn('Firebase initialization failed:', e);
+      // Return stubs on error (e.g., during prerender/build)
+      return createStubSdks();
     }
   }
 
-  return getSdks(getApp());
+  try {
+    return getSdks(getApp());
+  } catch (e) {
+    console.warn('Firebase getApp failed:', e);
+    return createStubSdks();
+  }
 }
 
 export function getSdks(firebaseApp: FirebaseApp | null) {
