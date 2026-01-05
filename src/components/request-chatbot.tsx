@@ -127,6 +127,7 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const messageCounterRef = useRef<number>(0);
 
   const INACTIVITY_WARNING = 3 * 60 * 1000; // 3 minutes in milliseconds
   const INACTIVITY_CLOSE = 4 * 60 * 1000; // 4 minutes total (1 minute after warning)
@@ -198,8 +199,9 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
   };
 
   const addMessage = (role: 'bot' | 'user', content: string) => {
+    messageCounterRef.current += 1;
     const newMessage: Message = {
-      id: Date.now().toString(),
+      id: `${Date.now()}-${messageCounterRef.current}`,
       role,
       content,
       timestamp: new Date(),
