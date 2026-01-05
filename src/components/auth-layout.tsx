@@ -2,7 +2,9 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useUser } from '@/firebase/provider';
 import {
   Car,
   ClipboardList,
@@ -43,19 +45,55 @@ type AuthLayoutProps = {
   children: React.ReactNode;
 };
 
-const navItems = [
+const ADMIN_EMAILS = [
+  "admin@samagam.com",
+  "narendrakmali@gmail.com"
+];
+
+const baseNavItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/reception', icon: Camera, label: 'Reception' },
   { href: '/fleet', icon: Car, label: 'Fleet' },
   { href: '/requests', icon: ClipboardList, label: 'Requests' },
   { href: '/dispatch', icon: Send, label: 'Dispatch' },
   { href: '/handover', icon: Hand, label: 'Handover' },
-  { href: '/admin', icon: Shield, label: 'Admin Panel' },
 ];
+
+const adminNavItem = { href: '/admin', icon: Shield, label: 'Admin Panel' };
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, isUserLoading } = useUser();
   const avatarUrl = PlaceHolderImages.find((img) => img.id === 'user-avatar-new')?.imageUrl;
+  
+  // Protect routes - redirect to login if not authenticated
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, isUserLoading, router]);
+
+  // Show loading state while checking authentication
+  if (isUserLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-xl font-semibold">Loading...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render layout if user is not authenticated
+  if (!user) {
+    return null;
+  }
+  
+  // Build navigation items based on user role
+  const navItems = ADMIN_EMAILS.includes(user.email || '') 
+    ? [...baseNavItems, adminNavItem]
+    : baseNavItems;
   
   const pageTitle = navItems.find(item => pathname.startsWith(item.href))?.label || 'Samagam FleetConnect';
 
@@ -96,7 +134,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-6">
-          <SidebarTrigger className="md:hidden"/>
+          <SidebarTrigger className="md:hidden text-foreground hover:bg-accent" />
           <h1 className="flex-1 text-xl font-semibold font-headline">{pageTitle}</h1>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

@@ -25,11 +25,10 @@ export function initializeFirebase(): Sdks {
 
   if (!getApps().length) {
     try {
-      const firebaseApp = initializeApp();
+      const firebaseApp = initializeApp(firebaseConfig);
       return getSdks(firebaseApp);
     } catch (e) {
       console.warn('Firebase initialization failed:', e);
-      // Return stubs on error (e.g., during prerender/build)
       return createStubSdks();
     }
   }
@@ -61,3 +60,4 @@ export * from './non-blocking-updates';
 export * from './non-blocking-login';
 export * from './errors';
 export * from './error-emitter';
+EOF

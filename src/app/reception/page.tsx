@@ -19,7 +19,6 @@ import { useFirebase } from "@/firebase";
 import Image from "next/image";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
-export const dynamic = 'force-dynamic';
 
 const receptionFormSchema = z.object({
     registrationNumber: z.string().min(1, "Registration number is required."),
