@@ -210,20 +210,22 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
   };
 
   const askLanguagePreference = () => {
-    addMessage('bot', TRANSLATIONS.english.languageSelect);
-    addMessage('bot', 'Type: 1 for English / 2 for हिंदी / 3 for मराठी');
+    addMessage('bot', 'Dhan Nirankar Ji, you are welcome to 59th Nirankari Sant Samagam transport sewa! 🙏');
+    setTimeout(() => {
+      addMessage('bot', TRANSLATIONS.english.languageSelect);
+    }, 800);
+    setTimeout(() => {
+      addMessage('bot', 'Type: 1 for English / 2 for हिंदी / 3 for मराठी');
+    }, 1200);
   };
 
   const startConversation = (selectedLang: Language) => {
     const trans = TRANSLATIONS[selectedLang];
-    addMessage('bot', trans.greeting);
-    setTimeout(() => {
-      addMessage('bot', trans.helpMessage.replace('{type}', requestType));
-    }, 800);
+    addMessage('bot', trans.helpMessage.replace('{type}', requestType));
     setTimeout(() => {
       addMessage('bot', trans.questions[0].question);
       setConversationState({ step: 0, data: {} });
-    }, 1600);
+    }, 800);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
