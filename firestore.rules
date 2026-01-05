@@ -106,6 +106,19 @@ service cloud.firestore {
     }
 
     /**
+     * @description Public transport requests collection. Allows public to submit requests.
+     * @path /transportRequests/{requestId}
+     * @allow (create) Anyone can submit a transport request (public form).
+     * @allow (read) Only authenticated users can read requests.
+     * @principle Enables public request submission while protecting data visibility.
+     */
+    match /transportRequests/{requestId} {
+      allow get, list: if isSignedIn();
+      allow create: if true; // Allow public creation
+      allow update, delete: if isSignedIn();
+    }
+
+    /**
      * @description Manages vehicle dispatches. Only authenticated users can manage dispatch records.
      * @path /dispatches/{dispatchId}
      * @allow (update) An authenticated user can update a dispatch record.
