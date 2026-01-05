@@ -105,12 +105,70 @@ const VALIDATION_RULES = [
   { field: 'userName', validate: (val: string) => val.length >= 2 },
   { field: 'contactNumber', validate: (val: string) => val.length >= 10 },
   { field: 'departmentName', validate: (val: string) => val.length >= 2 },
-  { field: 'vehicleType', validate: (val: string) => ['two-wheeler', 'four-wheeler', 'tempo', 'eicher', 'bus'].includes(val.toLowerCase()) },
+  { field: 'vehicleType', validate: (val: string) => ['two-wheeler', 'four-wheeler', 'tempo', 'eicher', 'bus', 'car', 'suv', 'winger', 'innova'].includes(val.toLowerCase()) },
   { field: 'destination', validate: (val: string) => val.length >= 1 },
   { field: 'passengerCount', validate: (val: string) => !isNaN(Number(val)) && Number(val) >= 1 },
   { field: 'durationFrom', validate: (val: string) => !isNaN(Date.parse(val)) },
   { field: 'durationTo', validate: (val: string) => !isNaN(Date.parse(val)) },
+  { field: 'registrationNumber', validate: (val: string) => val.length >= 1 },
+  { field: 'driverName', validate: (val: string) => val.length >= 1 },
+  { field: 'driverContact', validate: (val: string) => val.length >= 10 },
 ];
+
+// Helper to get questions based on request type
+function getQuestionsForType(requestType: RequestType, lang: Language) {
+  const trans = TRANSLATIONS[lang];
+  
+  if (requestType === 'indoor') {
+    return trans.questions;
+  }
+  
+  // Outdoor private vehicle questions
+  return [
+    trans.questions[0], // userName
+    trans.questions[1], // contactNumber
+    trans.questions[2], // departmentName
+    { 
+      field: 'vehicleType', 
+      question: lang === 'english' ? 'What type of vehicle? (Options: two-wheeler, car, suv, winger, innova)' 
+        : lang === 'hindi' ? 'किस प्रकार का वाहन? (विकल्प: two-wheeler, car, suv, winger, innova)'
+        : 'कोणत्या प्रकारचे वाहन? (पर्याय: two-wheeler, car, suv, winger, innova)',
+      invalidMsg: lang === 'english' ? 'Please choose from: two-wheeler, car, suv, winger, innova'
+        : lang === 'hindi' ? 'कृपया इनमें से चुनें: two-wheeler, car, suv, winger, innova'
+        : 'कृपया यापैकी निवडा: two-wheeler, car, suv, winger, innova'
+    },
+    {
+      field: 'registrationNumber',
+      question: lang === 'english' ? 'Vehicle registration number?'
+        : lang === 'hindi' ? 'वाहन पंजीकरण संख्या?'
+        : 'वाहन नोंदणी क्रमांक?',
+      invalidMsg: lang === 'english' ? 'Please enter a valid registration number.'
+        : lang === 'hindi' ? 'कृपया वैध पंजीकरण संख्या दर्ज करें।'
+        : 'कृपया वैध नोंदणी क्रमांक प्रविष्ट करा.'
+    },
+    trans.questions[5], // passengerCount
+    {
+      field: 'driverName',
+      question: lang === 'english' ? 'Driver name?'
+        : lang === 'hindi' ? 'ड्राइवर का नाम?'
+        : 'चालकाचे नाव?',
+      invalidMsg: lang === 'english' ? 'Please enter driver name.'
+        : lang === 'hindi' ? 'कृपया ड्राइवर का नाम दर्ज करें।'
+        : 'कृपया चालकाचे नाव प्रविष्ट करा.'
+    },
+    {
+      field: 'driverContact',
+      question: lang === 'english' ? 'Driver contact number?'
+        : lang === 'hindi' ? 'ड्राइवर का संपर्क नंबर?'
+        : 'चालकाचा संपर्क क्रमांक?',
+      invalidMsg: lang === 'english' ? 'Please enter a valid contact number.'
+        : lang === 'hindi' ? 'कृपया वैध संपर्क नंबर दर्ज करें।'
+        : 'कृपया वैध संपर्क क्रमांक प्रविष्ट करा.'
+    },
+    trans.questions[6], // durationFrom
+    trans.questions[7], // durationTo
+  ];
+}
 
 export function RequestChatbot({ requestType = 'indoor' }: { requestType?: RequestType }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -221,9 +279,10 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
 
   const startConversation = (selectedLang: Language) => {
     const trans = TRANSLATIONS[selectedLang];
+    const questions = getQuestionsForType(requestType, selectedLang);
     addMessage('bot', trans.helpMessage.replace('{type}', requestType));
     setTimeout(() => {
-      addMessage('bot', trans.questions[0].question);
+      addMessage('bot', questions[0].question);
       setConversationState({ step: 0, data: {} });
     }, 800);
   };
@@ -275,8 +334,16 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
     if (!language) return;
     
     const trans = TRANSLATIONS[language];
-    const currentValidation = VALIDATION_RULES[conversationState.step];
-    const currentQuestion = trans.questions[conversationState.step];
+    const questions = getQuestionsForType(requestType, language);
+    const currentQuestion = questions[conversationState.step];
+    
+    // Find the validation rule for this field
+    const currentValidation = VALIDATION_RULES.find(rule => rule.field === currentQuestion.field);
+    
+    if (!currentValidation) {
+      console.error('No validation rule found for field:', currentQuestion.field);
+      return;
+    }
     
     // Validate the answer
     if (!currentValidation.validate(answer)) {
@@ -301,7 +368,7 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
     // Move to next question or complete
     const nextStep = conversationState.step + 1;
     
-    if (nextStep >= VALIDATION_RULES.length) {
+    if (nextStep >= questions.length) {
       // All questions answered
       setConversationState({ step: nextStep, data: newData });
       completeRequest(newData);
@@ -309,7 +376,7 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
       // Ask next question
       setConversationState({ step: nextStep, data: newData });
       setTimeout(() => {
-        addMessage('bot', trans.questions[nextStep].question);
+        addMessage('bot', questions[nextStep].question);
       }, 500);
     }
   };
