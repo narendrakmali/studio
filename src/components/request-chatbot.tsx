@@ -86,12 +86,15 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
   };
 
   const startConversation = () => {
-    const greeting = `Hi! I'm here to help you request a ${requestType} vehicle. Let's get started!`;
+    const greeting = `Dhan Nirankar Ji, you are welcome to 59th Nirankari Sant Samagam transport sewa! 🙏`;
     addMessage('bot', greeting);
+    setTimeout(() => {
+      addMessage('bot', `I'm here to help you request a ${requestType} vehicle. Let's get started!`);
+    }, 800);
     setTimeout(() => {
       addMessage('bot', INDOOR_QUESTIONS[0].question);
       setConversationState({ step: 0, data: {} });
-    }, 500);
+    }, 1600);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
