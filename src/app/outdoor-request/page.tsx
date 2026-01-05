@@ -36,7 +36,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { addRequest } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
-
+import { RequestChatbot } from "@/components/request-chatbot";
 
 const privateVehicleSchema = z.object({
     requestType: z.literal("private"),
@@ -423,6 +423,7 @@ export default function OutdoorRequestPage() {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
+      <RequestChatbot requestType="outdoor" />
       <main className="flex flex-col items-center justify-center p-4 sm:p-8">
       <Card className="w-full max-w-3xl shadow-2xl animate-in fade-in-50 zoom-in-95">
         <CardHeader>

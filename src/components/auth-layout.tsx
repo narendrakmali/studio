@@ -66,13 +66,32 @@ export function AuthLayout({ children }: AuthLayoutProps) {
   const router = useRouter();
   const { user, isUserLoading } = useUser();
   const avatarUrl = PlaceHolderImages.find((img) => img.id === 'user-avatar-new')?.imageUrl;
+  const [mockEmail, setMockEmail] = React.useState<string | null | undefined>(undefined);
+
+  // Read any mock login (used when Firebase auth is not wired yet)
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const stored = window.localStorage.getItem('mockUserEmail');
+    setMockEmail(stored);
+  }, []);
   
   // Protect routes - redirect to login if not authenticated
   useEffect(() => {
-    if (!isUserLoading && !user) {
+    // Wait until we have read the stored mock email before deciding
+    if (mockEmail === undefined) return;
+
+    if (!isUserLoading && !user && !mockEmail) {
       router.push('/login');
     }
-  }, [user, isUserLoading, router]);
+  }, [user, mockEmail, isUserLoading, router]);
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('mockUserEmail');
+    }
+    setMockEmail(null);
+    router.push('/login');
+  };
 
   // Show loading state while checking authentication
   if (isUserLoading) {
@@ -86,12 +105,13 @@ export function AuthLayout({ children }: AuthLayoutProps) {
   }
 
   // Don't render layout if user is not authenticated
-  if (!user) {
+  if (!user && !mockEmail) {
     return null;
   }
   
   // Build navigation items based on user role
-  const navItems = ADMIN_EMAILS.includes(user.email || '') 
+  const effectiveEmail = user?.email || mockEmail || '';
+  const navItems = ADMIN_EMAILS.includes(effectiveEmail) 
     ? [...baseNavItems, adminNavItem]
     : baseNavItems;
   
@@ -124,12 +144,10 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="p-4">
-            <Link href="/login">
-              <SidebarMenuButton tooltip={{ children: 'Logout', side: 'right' }}>
-                <LogOut />
-                <span className='group-data-[collapsible=icon]:hidden'>Logout</span>
-              </SidebarMenuButton>
-            </Link>
+            <SidebarMenuButton tooltip={{ children: 'Logout', side: 'right' }} onClick={handleLogout}>
+              <LogOut />
+              <span className='group-data-[collapsible=icon]:hidden'>Logout</span>
+            </SidebarMenuButton>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>

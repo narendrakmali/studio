@@ -41,8 +41,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
-import { Logo } from "@/components/logo"
-
+import { Logo } from "@/components/logo"import { RequestChatbot } from "@/components/request-chatbot";
 const indoorRequestSchema = z.object({
   userName: z.string().min(2, "User name is required."),
   contactNumber: z.string().min(10, "A valid contact number is required."),
@@ -122,6 +121,7 @@ export default function IndoorRequestPage() {
   return (
     <>
         <PublicHeader />
+        <RequestChatbot requestType="indoor" />
         <div className="container mx-auto py-8 px-4">
             <div className="flex justify-center">
                 <Card className="w-full max-w-2xl shadow-xl">

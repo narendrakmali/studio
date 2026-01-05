@@ -27,6 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { useEffect } from "react";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -47,6 +48,13 @@ export default function LoginPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Clear any mock login when hitting the login page (acts as logout)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('mockUserEmail');
+    }
+  }, []);
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -60,6 +68,9 @@ export default function LoginPage() {
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     if (allowedUsers.includes(values.email) && values.password === "password") {
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('mockUserEmail', values.email);
+      }
       toast({
         title: "Login Successful",
         description: "Redirecting to your dashboard...",
