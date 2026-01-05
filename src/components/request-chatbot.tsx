@@ -201,7 +201,7 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
   const addMessage = (role: 'bot' | 'user', content: string) => {
     messageCounterRef.current += 1;
     const newMessage: Message = {
-      id: `${Date.now()}-${messageCounterRef.current}`,
+      id: `${Date.now()}-${messageCounterRef.current}-${Math.random().toString(36).substr(2, 9)}`,
       role,
       content,
       timestamp: new Date(),
