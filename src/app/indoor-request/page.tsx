@@ -28,7 +28,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { AuthLayout } from "@/components/auth-layout";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { addRequest } from "@/lib/data";
 import { TransportRequest } from "@/lib/types";
@@ -40,7 +39,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import Link from "next/link";
+import { Logo } from "@/components/logo"
 
 const indoorRequestSchema = z.object({
   userName: z.string().min(2, "User name is required."),
@@ -80,6 +81,23 @@ export default function IndoorRequestPage() {
       durationTo: undefined,
     },
   });
+  
+  const PublicHeader = () => (
+    <header className="sticky top-0 left-0 right-0 p-4 z-20 bg-background/80 backdrop-blur-sm border-b">
+        <div className="container mx-auto flex justify-between items-center">
+            <Link href="/" className="flex items-center gap-3">
+              <Logo className="w-8 h-8" />
+              <h1 className="text-xl font-headline font-bold text-primary">Transport Coordination Portal</h1>
+            </Link>
+            <div className="flex items-center gap-2">
+                <p className="hidden sm:block text-sm text-muted-foreground font-medium">Branch: Pune-1</p>
+                <Button asChild variant="outline" className="bg-background/80 backdrop-blur-sm">
+                    <Link href="/login">Team Login</Link>
+                </Button>
+            </div>
+        </div>
+    </header>
+  );
 
   async function onSubmit(data: z.infer<typeof indoorRequestSchema>) {
     setIsSubmitting(true);
@@ -102,10 +120,12 @@ export default function IndoorRequestPage() {
   }
 
   return (
-    <AuthLayout>
-        <div className="flex justify-center">
-            <Card className="w-full max-w-2xl shadow-xl">
-            <Form {...form}>
+    <>
+        <PublicHeader />
+        <div className="container mx-auto py-8 px-4">
+            <div className="flex justify-center">
+                <Card className="w-full max-w-2xl shadow-xl">
+                <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <CardHeader>
                         <CardTitle className="font-headline text-3xl">Request a Vehicle</CardTitle>
@@ -179,7 +199,7 @@ export default function IndoorRequestPage() {
                                         </FormControl>
                                         <FormLabel className="font-normal">Four-wheeler</FormLabel>
                                     </FormItem>
-                                    <FormItem className="flex items-center-center space-x-2 space-y-0">
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
                                         <RadioGroupItem value="tempo" />
                                         </FormControl>
@@ -310,6 +330,7 @@ export default function IndoorRequestPage() {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    </AuthLayout>
+        </div>
+    </>
   );
 }
