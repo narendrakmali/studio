@@ -122,8 +122,14 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
     data: {},
   });
   const [isCompleted, setIsCompleted] = useState(false);
+  const [lastActivityTime, setLastActivityTime] = useState<number>(Date.now());
+  const [reminderShown, setReminderShown] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const INACTIVITY_WARNING = 3 * 60 * 1000; // 3 minutes in milliseconds
+  const INACTIVITY_CLOSE = 4 * 60 * 1000; // 4 minutes total (1 minute after warning)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -138,6 +144,58 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
       askLanguagePreference();
     }
   }, [isOpen]);
+
+  // Inactivity timeout effect
+  useEffect(() => {
+    if (!isOpen || isCompleted) {
+      if (inactivityTimerRef.current) {
+        clearInterval(inactivityTimerRef.current);
+      }
+      return;
+    }
+
+    // Check for inactivity every 30 seconds
+    inactivityTimerRef.current = setInterval(() => {
+      const now = Date.now();
+      const inactiveTime = now - lastActivityTime;
+
+      if (inactiveTime >= INACTIVITY_CLOSE) {
+        // Close chat after 4 minutes of total inactivity
+        const closeMsg = language 
+          ? (language === 'hindi' ? 'चैट निष्क्रियता के कारण बंद हो रही है।' 
+             : language === 'marathi' ? 'चॅट निष्क्रियतेमुळे बंद होत आहे।'
+             : 'Chat closing due to inactivity.')
+          : 'Chat closing due to inactivity.';
+        
+        addMessage('bot', closeMsg);
+        setTimeout(() => {
+          setIsOpen(false);
+          resetChat();
+        }, 2000);
+      } else if (inactiveTime >= INACTIVITY_WARNING && !reminderShown) {
+        // Show reminder after 3 minutes
+        const reminderMsg = language
+          ? (language === 'hindi' ? '⏰ क्या आप अभी भी यहाँ हैं? कृपया जारी रखने के लिए जवाब दें या चैट 1 मिनट में बंद हो जाएगी।'
+             : language === 'marathi' ? '⏰ तुम्ही अजूनही येथे आहात का? कृपया सुरू ठेवण्यासाठी उत्तर द्या किंवा चॅट 1 मिनिटात बंद होईल.'
+             : '⏰ Are you still there? Please respond to continue or the chat will close in 1 minute.')
+          : '⏰ Are you still there? Please respond to continue or the chat will close in 1 minute.';
+        
+        addMessage('bot', reminderMsg);
+        setReminderShown(true);
+      }
+    }, 30000); // Check every 30 seconds
+
+    return () => {
+      if (inactivityTimerRef.current) {
+        clearInterval(inactivityTimerRef.current);
+      }
+    };
+  }, [isOpen, lastActivityTime, reminderShown, isCompleted, language]);
+
+  const resetActivityTimer = () => {
+    setLastActivityTime(Date.now());
+    setReminderShown(false);
+  };
 
   const addMessage = (role: 'bot' | 'user', content: string) => {
     const newMessage: Message = {
@@ -173,6 +231,7 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
     const userInput = input.trim();
     addMessage('user', userInput);
     setInput('');
+    resetActivityTimer(); // Reset timer on user activity
 
     // Handle language selection first
     if (!language) {
@@ -282,7 +341,11 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
     setIsCompleted(false);
     setInput('');
     setLanguage(null);
-    askLanguagePreference();
+    setReminderShown(false);
+    resetActivityTimer();
+    if (isOpen) {
+      askLanguagePreference();
+    }
   };
 
   return (
