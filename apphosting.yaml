@@ -5,3 +5,19 @@ runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
   maxInstances: 1
+
+env:
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyCpD5SX4LSR3Mi1a0DkP0YyxqeGChS-Tw4
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: samagamtransport-375d5.firebaseapp.com
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: samagamtransport-375d5
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: samagamtransport-375d5.firebasestorage.app
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "498778405972"
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: 1:498778405972:web:643a654d21255fe73141c1
+  - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+    value: G-0REQ287TFZ

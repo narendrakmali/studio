@@ -1,3 +1,14 @@
+// Log configuration status (helpful for debugging on mobile)
+if (typeof window !== 'undefined') {
+  const hasConfig = !!(
+    process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+  );
+  if (!hasConfig) {
+    console.warn('Firebase configuration incomplete. Check environment variables.');
+  }
+}
+
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
