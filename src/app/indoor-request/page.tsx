@@ -62,7 +62,10 @@ const indoorRequestSchema = z.object({
     required_error: "You need to select a special category.",
   }),
   otherSpecialCategory: z.string().optional(),
-  location: z.string().min(1, "Location is required."),
+  groundNumber: z.enum(['1', '2', '3'], {
+    required_error: "You need to select a ground number.",
+  }),
+  tentOrOfficeLocation: z.string().optional(),
   durationFrom: z.date({
     required_error: "A start date is required.",
   }),
@@ -109,7 +112,8 @@ export default function IndoorRequestPage() {
       passengerCount: 1,
       specialCategory: 'none',
       otherSpecialCategory: "",
-      location: "",
+      groundNumber: undefined,
+      tentOrOfficeLocation: "",
       durationFrom: undefined,
       durationTo: undefined,
       specialInstructions: "",
@@ -373,22 +377,20 @@ export default function IndoorRequestPage() {
                             />
                             <FormField
                                 control={form.control}
-                                name="location"
+                                name="groundNumber"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>📍 Location</FormLabel>
+                                    <FormLabel>🏟 Ground Number</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select location" />
+                                            <SelectValue placeholder="Select ground" />
                                         </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                        <SelectItem value="ground-1">Ground 1</SelectItem>
-                                        <SelectItem value="ground-2">Ground 2</SelectItem>
-                                        <SelectItem value="ground-3">Ground 3</SelectItem>
-                                        <SelectItem value="tent-number">Tent Number</SelectItem>
-                                        <SelectItem value="office-location">Office Location</SelectItem>
+                                        <SelectItem value="1">Ground 1</SelectItem>
+                                        <SelectItem value="2">Ground 2</SelectItem>
+                                        <SelectItem value="3">Ground 3</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -396,6 +398,19 @@ export default function IndoorRequestPage() {
                                 )}
                             />
                         </div>
+                        <FormField
+                            control={form.control}
+                            name="tentOrOfficeLocation"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>📍 Tent Number or Office Location (Optional)</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.g., Tent 45 or Admin Office" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="specialCategory"
