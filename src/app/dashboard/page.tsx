@@ -5,7 +5,6 @@ import { AuthLayout } from "@/components/auth-layout";
 
 // Force dynamic rendering - don't statically generate at build time
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 import {
   Card,
   CardContent,
