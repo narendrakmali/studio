@@ -34,9 +34,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { addRequest } from "@/lib/data";
+import { addRequest, setFirestoreDb } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import { RequestChatbot } from "@/components/request-chatbot";
+import { useFirebase } from "@/firebase/provider";
 
 const privateVehicleSchema = z.object({
     requestType: z.literal("private"),
@@ -136,14 +137,43 @@ export default function OutdoorRequestPage() {
   const { toast } = useToast();
   const [firestoreReady, setFirestoreReady] = useState(false);
 
-  // Check if Firestore is ready
+  // Initialize Firestore DB
   useEffect(() => {
-    // Give Firebase a moment to initialize
-    const timer = setTimeout(() => {
-      setFirestoreReady(true);
-      console.log('🔥 Firestore initialization check complete');
-    }, 1000);
-    return () => clearTimeout(timer);
+    let mounted = true;
+    
+    const initFirestore = async () => {
+      try {
+        const { firestore } = useFirebase();
+        if (firestore && mounted) {
+          setFirestoreDb(firestore);
+          setFirestoreReady(true);
+          console.log('🔥 Firestore initialized successfully');
+        }
+      } catch (error) {
+        console.error('⚠️ Could not initialize Firestore:', error);
+        // Wait a bit and retry
+        setTimeout(() => {
+          if (mounted) {
+            try {
+              const { firestore } = useFirebase();
+              if (firestore) {
+                setFirestoreDb(firestore);
+                setFirestoreReady(true);
+                console.log('🔥 Firestore initialized on retry');
+              }
+            } catch (retryError) {
+              console.error('❌ Firestore initialization failed:', retryError);
+            }
+          }
+        }, 2000);
+      }
+    };
+
+    initFirestore();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const form = useForm<z.infer<typeof requestFormSchema>>({

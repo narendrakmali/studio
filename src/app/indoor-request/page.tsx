@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { addRequest } from "@/lib/data";
+import { addRequest, setFirestoreDb } from "@/lib/data";
 import { TransportRequest } from "@/lib/types";
 import {
   AlertDialog,
@@ -45,6 +45,7 @@ import {
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { RequestChatbot } from "@/components/request-chatbot";
+import { useFirebase } from "@/firebase/provider";
 
 const indoorRequestSchema = z.object({
   userName: z.string().min(2, "User name is required."),
@@ -90,14 +91,43 @@ export default function IndoorRequestPage() {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [firestoreReady, setFirestoreReady] = useState(false);
 
-  // Check if Firestore is ready
+  // Initialize Firestore DB
   useEffect(() => {
-    // Give Firebase a moment to initialize
-    const timer = setTimeout(() => {
-      setFirestoreReady(true);
-      console.log('🔥 Firestore initialization check complete');
-    }, 1000);
-    return () => clearTimeout(timer);
+    let mounted = true;
+    
+    const initFirestore = async () => {
+      try {
+        const { firestore } = useFirebase();
+        if (firestore && mounted) {
+          setFirestoreDb(firestore);
+          setFirestoreReady(true);
+          console.log('🔥 Firestore initialized successfully');
+        }
+      } catch (error) {
+        console.error('⚠️ Could not initialize Firestore:', error);
+        // Wait a bit and retry
+        setTimeout(() => {
+          if (mounted) {
+            try {
+              const { firestore } = useFirebase();
+              if (firestore) {
+                setFirestoreDb(firestore);
+                setFirestoreReady(true);
+                console.log('🔥 Firestore initialized on retry');
+              }
+            } catch (retryError) {
+              console.error('❌ Firestore initialization failed:', retryError);
+            }
+          }
+        }, 2000);
+      }
+    };
+
+    initFirestore();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const form = useForm<z.infer<typeof indoorRequestSchema>>({
