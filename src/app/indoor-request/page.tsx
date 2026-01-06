@@ -49,7 +49,7 @@ import { useFirebase } from "@/firebase/provider";
 
 const indoorRequestSchema = z.object({
   userName: z.string().min(2, "User name is required."),
-  contactNumber: z.string().min(10, "A valid contact number is required."),
+  contactNumber: z.string().regex(/^\d{10}$/, "Contact number must be exactly 10 digits."),
   departmentName: z.string().min(2, "Department name is required."),
   vehicleTypePassenger: z.enum(['two-wheeler', 'three-wheeler', 'four-wheeler', 'mini-bus', 'large-bus'], {
     required_error: "You need to select a passenger vehicle type.",
@@ -239,7 +239,16 @@ export default function IndoorRequestPage() {
                                     <FormItem>
                                     <FormLabel>📞 Contact Number</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="e.g., 9876543210" {...field} />
+                                        <Input 
+                                            type="tel" 
+                                            placeholder="e.g., 9876543210" 
+                                            maxLength={10}
+                                            {...field} 
+                                            onChange={(e) => {
+                                                const value = e.target.value.replace(/\D/g, '');
+                                                field.onChange(value);
+                                            }}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>

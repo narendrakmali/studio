@@ -42,7 +42,7 @@ import { useFirebase } from "@/firebase/provider";
 const privateVehicleSchema = z.object({
     requestType: z.literal("private"),
     userName: z.string().min(2, "Sanyojak/In-charge name is required."),
-    contactNumber: z.string().min(10, "A valid contact number is required."),
+    contactNumber: z.string().regex(/^\d{10}$/, "Contact number must be exactly 10 digits."),
     departmentName: z.string().min(2, "Branch/Zone name is required."),
     vehicleType: z.enum(["two-wheeler", "car", "suv", "winger", "innova"]),
     registrationNumber: z.string().min(1, "Registration number is required."),
@@ -56,7 +56,7 @@ const privateVehicleSchema = z.object({
 const busSchema = z.object({
     requestType: z.literal("bus"),
     userName: z.string().min(2, "Sanyojak/In-charge name is required."),
-    contactNumber: z.string().min(10, "A valid contact number is required."),
+    contactNumber: z.string().regex(/^\d{10}$/, "Contact number must be exactly 10 digits."),
     departmentName: z.string().min(2, "Branch/Zone name is required."),
     busType: z.enum(["private", "msrtc"], { required_error: "Bus type is required." }),
     busQuantity: z.coerce.number().min(1, "Please enter the number of buses."),
@@ -71,7 +71,7 @@ const busSchema = z.object({
 const trainSchema = z.object({
     requestType: z.literal("train"),
     userName: z.string().min(2, "Sanyojak/In-charge name is required."),
-    contactNumber: z.string().min(10, "A valid contact number is required."),
+    contactNumber: z.string().regex(/^\d{10}$/, "Contact number must be exactly 10 digits."),
     departmentName: z.string().min(2, "Branch/Zone name is required."),
     trainTeamLeaderName: z.string().min(1, "Team Leader name is required."),
     trainTeamLeaderContact: z.string().min(1, "Team Leader contact is required."),
@@ -86,7 +86,7 @@ const trainSchema = z.object({
 const airportSchema = z.object({
     requestType: z.literal("airport"),
     userName: z.string().min(2, "Saint/In-charge name is required."),
-    contactNumber: z.string().min(10, "A valid contact number is required."),
+    contactNumber: z.string().regex(/^\d{10}$/, "Contact number must be exactly 10 digits."),
     departmentName: z.string().min(2, "Branch/Zone name is required."),
     airportName: z.enum(["pune", "kolhapur"], { required_error: "Airport selection is required." }),
     flightNumber: z.string().min(1, "Flight number is required."),
@@ -299,7 +299,16 @@ export default function OutdoorRequestPage() {
             <FormItem>
               <FormLabel>Contact Number</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., 9876543210" {...field} />
+                <Input 
+                  type="tel" 
+                  placeholder="e.g., 9876543210" 
+                  maxLength={10}
+                  {...field} 
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    field.onChange(value);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
