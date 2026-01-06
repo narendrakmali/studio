@@ -170,11 +170,11 @@ function getQuestionsForType(requestType: RequestType, lang: Language) {
   ];
 }
 
-export function RequestChatbot({ requestType = 'indoor' }: { requestType?: RequestType }) {
-  const [isOpen, setIsOpen] = useState(false);
+export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { requestType?: RequestType; autoPopup?: boolean }) {
+  const [isOpen, setIsOpen] = useState(autoPopup);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [language, setLanguage] = useState<Language | null>(null);
+  const [language, setLanguage] = useState<Language | null>(autoPopup ? 'marathi' : null);
   const [conversationState, setConversationState] = useState<ConversationState>({
     step: -1,
     data: {},
@@ -199,10 +199,20 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
   }, [messages]);
 
   useEffect(() => {
-    if (isOpen && conversationState.step === -1 && !language) {
-      askLanguagePreference();
+    if (isOpen && conversationState.step === -1) {
+      if (autoPopup && language === 'marathi') {
+        // Auto-popup with Marathi greeting
+        setTimeout(() => {
+          addMessage('bot', 'धन निरंकार जी, मी तुमची कशी मदत करू शकतो? 🙏');
+          setTimeout(() => {
+            startConversation('marathi');
+          }, 1000);
+        }, 500);
+      } else if (!language) {
+        askLanguagePreference();
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, autoPopup]);
 
   // Inactivity timeout effect
   useEffect(() => {

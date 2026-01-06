@@ -7,6 +7,7 @@ import { ArrowRight, Car, Building } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { TrainArrivalChatbot } from '@/components/train-arrival-chatbot';
+import { RequestChatbot } from '@/components/request-chatbot';
 
 export default function HomePage() {
   return (
@@ -76,7 +77,10 @@ export default function HomePage() {
           </Link>
         </div>
       </div>
+      Vehicle Request Chatbot with Marathi auto-popup */}
+      <RequestChatbot requestType="indoor" autoPopup={true} />
       
+      {/* 
       {/* Train Arrival Chatbot */}
       <TrainArrivalChatbot />
     </main>
