@@ -50,10 +50,10 @@ const indoorRequestSchema = z.object({
   userName: z.string().min(2, "User name is required."),
   contactNumber: z.string().min(10, "A valid contact number is required."),
   departmentName: z.string().min(2, "Department name is required."),
-  vehicleTypePassenger: z.enum(['electric-cart', 'manual-wheelchair', 'push-trolley', 'small-tempo', 'other'], {
+  vehicleTypePassenger: z.enum(['two-wheeler', 'three-wheeler', 'four-wheeler', 'mini-bus', 'large-bus'], {
     required_error: "You need to select a passenger vehicle type.",
   }).optional(),
-  vehicleTypeGoods: z.enum(['hand-trolley', 'push-cart', 'tempo-small', 'eicher', 'goods-carrier-open', 'goods-carrier-closed', 'other'], {
+  vehicleTypeGoods: z.enum(['hand-trolley', 'mini-trucks', 'chhota-hathi', 'tempo-small', 'eicher', 'goods-carrier-open', 'goods-carrier-closed', 'other'], {
     required_error: "You need to select a goods vehicle type.",
   }).optional(),
   otherVehicleType: z.string().optional(),
@@ -62,9 +62,7 @@ const indoorRequestSchema = z.object({
     required_error: "You need to select a special category.",
   }),
   otherSpecialCategory: z.string().optional(),
-  groundNumber: z.enum(['1', '2', '3'], {
-    required_error: "You need to select a ground number.",
-  }),
+  location: z.string().min(1, "Location is required."),
   durationFrom: z.date({
     required_error: "A start date is required.",
   }),
@@ -111,7 +109,7 @@ export default function IndoorRequestPage() {
       passengerCount: 1,
       specialCategory: 'none',
       otherSpecialCategory: "",
-      groundNumber: undefined,
+      location: "",
       durationFrom: undefined,
       durationTo: undefined,
       specialInstructions: "",
@@ -241,33 +239,33 @@ export default function IndoorRequestPage() {
                                     >
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="electric-cart" />
+                                        <RadioGroupItem value="two-wheeler" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Electric Cart</FormLabel>
+                                        <FormLabel className="font-normal">Two Wheeler</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="manual-wheelchair" />
+                                        <RadioGroupItem value="three-wheeler" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Manual Wheelchair</FormLabel>
+                                        <FormLabel className="font-normal">Three Wheeler</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="push-trolley" />
+                                        <RadioGroupItem value="four-wheeler" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Push Trolley</FormLabel>
+                                        <FormLabel className="font-normal">Four Wheeler</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="small-tempo" />
+                                        <RadioGroupItem value="mini-bus" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Small Tempo (Indoor Use)</FormLabel>
+                                        <FormLabel className="font-normal">Mini Bus</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="other" />
+                                        <RadioGroupItem value="large-bus" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Other</FormLabel>
+                                        <FormLabel className="font-normal">Large Bus</FormLabel>
                                     </FormItem>
                                     </RadioGroup>
                                 </FormControl>
@@ -295,9 +293,15 @@ export default function IndoorRequestPage() {
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="push-cart" />
+                                        <RadioGroupItem value="mini-trucks" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Push Cart</FormLabel>
+                                        <FormLabel className="font-normal">Mini Trucks</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="chhota-hathi" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Chhota Hathi</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
@@ -309,7 +313,7 @@ export default function IndoorRequestPage() {
                                         <FormControl>
                                         <RadioGroupItem value="eicher" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Eicher (Medium Truck)</FormLabel>
+                                        <FormLabel className="font-normal">Eicher</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
@@ -369,20 +373,22 @@ export default function IndoorRequestPage() {
                             />
                             <FormField
                                 control={form.control}
-                                name="groundNumber"
+                                name="location"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>🏟 Ground Number</FormLabel>
+                                    <FormLabel>📍 Location</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select ground" />
+                                            <SelectValue placeholder="Select location" />
                                         </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                        <SelectItem value="1">Ground 1</SelectItem>
-                                        <SelectItem value="2">Ground 2</SelectItem>
-                                        <SelectItem value="3">Ground 3</SelectItem>
+                                        <SelectItem value="ground-1">Ground 1</SelectItem>
+                                        <SelectItem value="ground-2">Ground 2</SelectItem>
+                                        <SelectItem value="ground-3">Ground 3</SelectItem>
+                                        <SelectItem value="tent-number">Tent Number</SelectItem>
+                                        <SelectItem value="office-location">Office Location</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
