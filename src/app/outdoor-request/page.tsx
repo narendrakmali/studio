@@ -288,13 +288,13 @@ export default function OutdoorRequestPage() {
   );
   
   const BusTabContent = () => {
-    const { watch } = useFormContext();
+    const { control, watch, getValues } = useFormContext();
     const busType = watch('busType');
 
     return (
         <TabsContent value="bus" className="space-y-6 border-l-4 border-msrtc-orange pl-4 -ml-4">
             <FormField
-            control={form.control}
+            control={control}
             name="busType"
             render={({ field }) => (
                 <FormItem>
@@ -316,7 +316,7 @@ export default function OutdoorRequestPage() {
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
-                control={form.control}
+                control={control}
                 name="busCoordinatorName"
                 render={({ field }) => (
                     <FormItem>
@@ -332,7 +332,7 @@ export default function OutdoorRequestPage() {
                 )}
                 />
                 <FormField
-                control={form.control}
+                control={control}
                 name="busCoordinatorContact"
                 render={({ field }) => (
                     <FormItem>
@@ -351,7 +351,7 @@ export default function OutdoorRequestPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
-                control={form.control}
+                control={control}
                 name="busQuantity"
                 render={({ field }) => (
                 <FormItem>
@@ -367,7 +367,7 @@ export default function OutdoorRequestPage() {
                 )}
             />
             <FormField
-                control={form.control}
+                control={control}
                 name="busRoute"
                 render={({ field }) => (
                 <FormItem>
@@ -386,7 +386,7 @@ export default function OutdoorRequestPage() {
             
             {busType === 'msrtc' && (
                 <FormField
-                    control={form.control}
+                    control={control}
                     name="busBookingReceipt"
                     render={({ field }) => (
                         <FormItem>
@@ -405,7 +405,7 @@ export default function OutdoorRequestPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
-                control={form.control}
+                control={control}
                 name="durationFrom"
                 render={({ field }) => (
                 <FormItem className="flex flex-col">
@@ -428,7 +428,7 @@ export default function OutdoorRequestPage() {
                 )}
             />
             <FormField
-                control={form.control}
+                control={control}
                 name="durationTo"
                 render={({ field }) => (
                 <FormItem className="flex flex-col">
@@ -443,7 +443,7 @@ export default function OutdoorRequestPage() {
                         </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
                     </PopoverContent>
                     </Popover>
                     <FormMessage />
