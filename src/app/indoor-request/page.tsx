@@ -142,13 +142,13 @@ export default function IndoorRequestPage() {
         <RequestChatbot requestType="indoor" />
         <div className="container mx-auto py-8 px-4">
             <div className="flex justify-center">
-                <Card className="w-full max-w-2xl shadow-xl">
+                <Card className="w-full max-w-2xl shadow-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white">
                 <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <CardHeader>
-                        <CardTitle className="font-headline text-3xl">Request a Vehicle</CardTitle>
-                        <CardDescription>
-                            Fill out the form below to request transport for your department.
+                    <CardHeader className="bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-t-lg">
+                        <CardTitle className="font-headline text-3xl">Samagam Ground Internal Vehicle Request</CardTitle>
+                        <CardDescription className="text-blue-100">
+                            Fill out the form below to request transport for your department within the Samagam grounds.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">

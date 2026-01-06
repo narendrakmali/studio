@@ -446,11 +446,11 @@ export default function OutdoorRequestPage() {
       <PublicHeader />
       <RequestChatbot requestType="outdoor" />
       <main className="flex flex-col items-center justify-center p-4 sm:p-8">
-      <Card className="w-full max-w-3xl shadow-2xl animate-in fade-in-50 zoom-in-95">
-        <CardHeader>
-          <CardTitle className="font-headline text-3xl">Outdoor Vehicle Request</CardTitle>
-          <CardDescription>
-            Register your branch/zone's vehicle and travel details for Samagam.
+      <Card className="w-full max-w-3xl shadow-2xl animate-in fade-in-50 zoom-in-95 border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-white">
+        <CardHeader className="bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-t-lg">
+          <CardTitle className="font-headline text-3xl">Travel and Arrival Request for Samagam</CardTitle>
+          <CardDescription className="text-teal-100">
+            Register your branch/zone's vehicle and travel details from different parts of India.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -461,10 +461,10 @@ export default function OutdoorRequestPage() {
                 form.setValue("requestType", value as "private" | "bus" | "train");
                 setActiveTab(value);
               }} className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="private" className="data-[state=active]:border-b-2 data-[state=active]:border-eco-green data-[state=active]:text-eco-green"><Car className="mr-2 h-4 w-4"/>Private Vehicle</TabsTrigger>
-                  <TabsTrigger value="bus" className="data-[state=active]:border-b-2 data-[state=active]:border-msrtc-orange data-[state=active]:text-msrtc-orange"><Bus className="mr-2 h-4 w-4"/>Bus</TabsTrigger>
-                  <TabsTrigger value="train" className="data-[state=active]:border-b-2 data-[state=active]:border-trust-blue data-[state=active]:text-trust-blue"><Train className="mr-2 h-4 w-4"/>Train</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-3 bg-slate-100">
+                  <TabsTrigger value="private" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"><Car className="mr-2 h-4 w-4"/>Private Vehicle</TabsTrigger>
+                  <TabsTrigger value="bus" className="data-[state=active]:bg-teal-500 data-[state=active]:text-white"><Users className="mr-2 h-4 w-4"/>Bus</TabsTrigger>
+                  <TabsTrigger value="train" className="data-[state=active]:bg-green-500 data-[state=active]:text-white"><Train className="mr-2 h-4 w-4"/>Train</TabsTrigger>
                 </TabsList>
                 
                 <div className="space-y-6 pt-4">
@@ -788,14 +788,14 @@ export default function OutdoorRequestPage() {
                 </TabsContent>
 
               </Tabs>
-              <Button type="submit" className="w-full btn-submit" disabled={isSubmitting}>
+              <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-6 text-lg shadow-lg" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     Submitting...
                   </>
                 ) : (
-                  "Submit Request"
+                  "Submit Travel Request"
                 )}
               </Button>
             </form>

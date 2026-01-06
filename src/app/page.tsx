@@ -25,62 +25,62 @@ export default function HomePage() {
     </header>
       <div className="w-full max-w-4xl pt-24 sm:pt-0">
         <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4 text-spiritual-purple">Transport Request Portal</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Please select the appropriate form to register your vehicle or request transport for the Samagam.</p>
+            <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4 bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">Transport Request Portal</h1>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Please select the appropriate form to register your vehicle or request transport for the Samagam.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Link href="/indoor-request" className="group">
-            <Card className="shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-transform duration-300 h-full flex flex-col rounded-2xl">
+            <Card className="shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full flex flex-col rounded-2xl border-2 border-blue-100 hover:border-blue-300 bg-gradient-to-br from-blue-50 to-white">
               <CardHeader>
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-primary/10 rounded-lg text-primary">
+                  <div className="p-3 bg-blue-500 rounded-lg text-white shadow-md">
                     <Building className="w-8 h-8" />
                   </div>
                   <div>
-                    <CardTitle className="font-headline text-2xl">Indoor Vehicle Request</CardTitle>
-                    <CardDescription>For internal department use.</CardDescription>
+                    <CardTitle className="font-headline text-xl text-blue-900">Samagam Ground Internal Vehicle Request</CardTitle>
+                    <CardDescription className="text-blue-600">For internal department use</CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow">
-                <p className="text-muted-foreground">Submit a request for local transport needed by a department within the Samagam site (e.g., Guest Services, Construction).</p>
+                <p className="text-slate-600">Submit a request for local transport needed by departments within the Samagam site (e.g., Guest Services, Construction, Arrangements).</p>
               </CardContent>
               <div className="p-6 pt-0">
-                 <div className="flex items-center font-semibold text-primary">
-                    Go to Form <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                 <div className="flex items-center justify-center bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+                    Request Vehicle <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             </Card>
           </Link>
           <Link href="/outdoor-request" className="group">
-            <Card className="shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-transform duration-300 h-full flex flex-col rounded-2xl">
+            <Card className="shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full flex flex-col rounded-2xl border-2 border-teal-100 hover:border-teal-300 bg-gradient-to-br from-teal-50 to-white">
                <CardHeader>
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-accent/10 rounded-lg text-accent">
+                  <div className="p-3 bg-teal-500 rounded-lg text-white shadow-md">
                     <Car className="w-8 h-8" />
                   </div>
                   <div>
-                    <CardTitle className="font-headline text-2xl">Outdoor Vehicle Request</CardTitle>
-                    <CardDescription>For Branch/Zone vehicles.</CardDescription>
+                    <CardTitle className="font-headline text-xl text-teal-900">Travel and Arrival Request for Samagam</CardTitle>
+                    <CardDescription className="text-teal-600">From different parts of India</CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow">
-                <p className="text-muted-foreground">Register private vehicles, buses, or train itineraries for devotees arriving from outside branches or zones for the Samagam.</p>
+                <p className="text-slate-600">Register private vehicles, buses, or train itineraries for devotees traveling from outside branches or zones across India to attend the Samagam.</p>
               </CardContent>
                <div className="p-6 pt-0">
-                 <div className="flex items-center font-semibold text-accent">
-                    Go to Form <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                 <div className="flex items-center justify-center bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+                    Request Travel <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             </Card>
           </Link>
         </div>
       </div>
-      Vehicle Request Chatbot with Marathi auto-popup */}
+      
+      {/* Vehicle Request Chatbot with Marathi auto-popup */}
       <RequestChatbot requestType="indoor" autoPopup={true} />
       
-      {/* 
       {/* Train Arrival Chatbot */}
       <TrainArrivalChatbot />
     </main>
