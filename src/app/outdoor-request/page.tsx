@@ -135,46 +135,6 @@ export default function OutdoorRequestPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState("private");
   const { toast } = useToast();
-  const [firestoreReady, setFirestoreReady] = useState(false);
-
-  // Initialize Firestore DB
-  useEffect(() => {
-    let mounted = true;
-    
-    const initFirestore = async () => {
-      try {
-        const { firestore } = useFirebase();
-        if (firestore && mounted) {
-          setFirestoreDb(firestore);
-          setFirestoreReady(true);
-          console.log('🔥 Firestore initialized successfully');
-        }
-      } catch (error) {
-        console.error('⚠️ Could not initialize Firestore:', error);
-        // Wait a bit and retry
-        setTimeout(() => {
-          if (mounted) {
-            try {
-              const { firestore } = useFirebase();
-              if (firestore) {
-                setFirestoreDb(firestore);
-                setFirestoreReady(true);
-                console.log('🔥 Firestore initialized on retry');
-              }
-            } catch (retryError) {
-              console.error('❌ Firestore initialization failed:', retryError);
-            }
-          }
-        }, 2000);
-      }
-    };
-
-    initFirestore();
-    
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   const form = useForm<z.infer<typeof requestFormSchema>>({
     resolver: zodResolver(requestFormSchema),

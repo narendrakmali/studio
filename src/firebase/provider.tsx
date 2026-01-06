@@ -95,14 +95,19 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
     return () => unsubscribe(); // Cleanup
   }, [auth]); // Depends on the auth instance
 
+  // Initialize data layer with Firestore when it becomes available
+  useEffect(() => {
+    if (firestore) {
+      setFirestoreDb(firestore);
+      console.log('🔥 FirebaseProvider: setFirestoreDb called with firestore instance');
+    } else {
+      console.warn('⚠️ FirebaseProvider: firestore not available yet');
+    }
+  }, [firestore]);
+
   // Memoize the context value
   const contextValue = useMemo((): FirebaseContextState => {
     const servicesAvailable = !!(firebaseApp && firestore && auth);
-    
-    // Initialize data layer with Firestore instance
-    if (servicesAvailable && firestore) {
-      setFirestoreDb(firestore);
-    }
     
     return {
       areServicesAvailable: servicesAvailable,
