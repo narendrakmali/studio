@@ -215,14 +215,6 @@ export default function OutdoorRequestPage() {
       setIsSubmitting(false);
     }
   }
-        variant: "destructive",
-        title: "Submission Failed",
-        description: "Failed to submit request. Please try again or contact support.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
   
   const PublicHeader = () => (
     <header className="sticky top-0 left-0 right-0 p-4 z-20 bg-background/80 backdrop-blur-sm border-b">
