@@ -526,8 +526,8 @@ export default function IndoorRequestPage() {
                                             </Button>
                                         </FormControl>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
+                                        <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus className="rounded-md" />
                                         </PopoverContent>
                                     </Popover>
                                     <FormMessage />
@@ -549,8 +549,8 @@ export default function IndoorRequestPage() {
                                             </Button>
                                         </FormControl>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                                        <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus className="rounded-md" />
                                         </PopoverContent>
                                     </Popover>
                                     <FormMessage />

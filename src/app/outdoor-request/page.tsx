@@ -441,8 +441,8 @@ export default function OutdoorRequestPage() {
                         </Button>
                         </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
+                    <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                        <Calendar mode="single" className="rounded-md" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
                     </PopoverContent>
                     </Popover>
                     <FormMessage />
@@ -464,8 +464,8 @@ export default function OutdoorRequestPage() {
                         </Button>
                         </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                    <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                        <Calendar mode="single" className="rounded-md" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
                     </PopoverContent>
                     </Popover>
                     <FormMessage />
@@ -644,8 +644,8 @@ export default function OutdoorRequestPage() {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
+                            <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                              <Calendar mode="single" className="rounded-md" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
                             </PopoverContent>
                           </Popover>
                           <FormMessage />
@@ -667,8 +667,8 @@ export default function OutdoorRequestPage() {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                            <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                              <Calendar mode="single" className="rounded-md" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("durationFrom") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
                             </PopoverContent>
                           </Popover>
                           <FormMessage />
@@ -752,8 +752,8 @@ export default function OutdoorRequestPage() {
                                     </Button>
                                   </FormControl>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                  <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
+                                <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                                  <Calendar mode="single" className="rounded-md" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} initialFocus />
                                 </PopoverContent>
                               </Popover>
                               <FormMessage />
@@ -815,8 +815,8 @@ export default function OutdoorRequestPage() {
                                     </Button>
                                   </FormControl>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                  <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("trainArrivalDate") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                                <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                                  <Calendar mode="single" className="rounded-md" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("trainArrivalDate") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
                                 </PopoverContent>
                               </Popover>
                               <FormMessage />
@@ -927,8 +927,8 @@ export default function OutdoorRequestPage() {
                                   </Button>
                                 </FormControl>
                               </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                              <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                                <Calendar mode="single" className="rounded-md" selected={field.value} onSelect={field.onChange} initialFocus />
                               </PopoverContent>
                             </Popover>
                             <FormMessage />
@@ -1002,8 +1002,8 @@ export default function OutdoorRequestPage() {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("arrivalDate") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                            <PopoverContent className="w-auto p-0 max-w-[calc(100vw-2rem)]" align="start" side="bottom" sideOffset={4}>
+                              <Calendar mode="single" className="rounded-md" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("arrivalDate") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
                             </PopoverContent>
                           </Popover>
                           <FormMessage />
