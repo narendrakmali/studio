@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -149,6 +149,11 @@ export default function IndoorRequestPage() {
       specialInstructions: "",
     },
   });
+  
+  // Watch values for conditional rendering
+  const vehicleTypePassenger = useWatch({ control: form.control, name: 'vehicleTypePassenger' });
+  const vehicleTypeGoods = useWatch({ control: form.control, name: 'vehicleTypeGoods' });
+  const specialCategory = useWatch({ control: form.control, name: 'specialCategory' });
   
   const PublicHeader = () => (
     <header className="sticky top-0 left-0 right-0 p-4 z-20 bg-background/80 backdrop-blur-sm border-b">
@@ -382,7 +387,7 @@ export default function IndoorRequestPage() {
                                 </FormItem>
                             )}
                         />
-                        {(form.watch('vehicleTypePassenger') === 'other' || form.watch('vehicleTypeGoods') === 'other') && (
+                        {(vehicleTypePassenger === 'other' || vehicleTypeGoods === 'other') && (
                             <FormField
                                 control={form.control}
                                 name="otherVehicleType"
@@ -504,7 +509,7 @@ export default function IndoorRequestPage() {
                                 </FormItem>
                             )}
                         />
-                        {form.watch('specialCategory') === 'other' && (
+                        {specialCategory === 'other' && (
                             <FormField
                                 control={form.control}
                                 name="otherSpecialCategory"
