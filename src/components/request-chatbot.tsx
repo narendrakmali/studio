@@ -449,20 +449,20 @@ export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { 
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-lg z-50"
           size="icon"
         >
-          <MessageCircle className="h-6 w-6" />
+          <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
         </Button>
       )}
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-6 right-6 w-96 h-[600px] flex flex-col shadow-2xl z-50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b">
+        <Card className="fixed bottom-0 right-0 left-0 sm:bottom-6 sm:right-6 sm:left-auto w-full sm:w-96 h-[100dvh] sm:h-[600px] flex flex-col shadow-2xl z-50 sm:rounded-lg rounded-none">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4 border-b px-3 sm:px-6">
             <div className="flex items-center gap-2">
-              <Bot className="h-5 w-5 text-primary" />
-              <CardTitle className="text-lg">
+              <Bot className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <CardTitle className="text-base sm:text-lg">
                 {language ? TRANSLATIONS[language].title : 'Vehicle Request Assistant'}
               </CardTitle>
             </div>
@@ -470,13 +470,13 @@ export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { 
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(false)}
-              className="h-8 w-8"
+              className="h-7 w-7 sm:h-8 sm:w-8"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </CardHeader>
 
-          <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
+          <CardContent className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -486,23 +486,23 @@ export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { 
                 )}
               >
                 {message.role === 'bot' && (
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Bot className="h-4 w-4 text-primary" />
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Bot className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                   </div>
                 )}
                 <div
                   className={cn(
-                    'rounded-lg px-4 py-2 max-w-[80%]',
+                    'rounded-lg px-3 py-2 sm:px-4 sm:py-2 max-w-[85%] sm:max-w-[80%]',
                     message.role === 'user'
                       ? 'bg-primary text-primary-foreground'
                       : 'bg-muted'
                   )}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  <p className="text-xs sm:text-sm whitespace-pre-wrap break-words">{message.content}</p>
                 </div>
                 {message.role === 'user' && (
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                    <User className="h-4 w-4 text-primary-foreground" />
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary flex items-center justify-center">
+                    <User className="h-3 w-3 sm:h-4 sm:w-4 text-primary-foreground" />
                   </div>
                 )}
               </div>
@@ -510,9 +510,9 @@ export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { 
             <div ref={messagesEndRef} />
           </CardContent>
 
-          <CardFooter className="border-t p-4">
+          <CardFooter className="border-t p-3 sm:p-4">
             {isCompleted ? (
-              <Button onClick={resetChat} className="w-full">
+              <Button onClick={resetChat} className="w-full text-sm sm:text-base">
                 {language ? TRANSLATIONS[language].newRequest : 'Start New Request'}
               </Button>
             ) : (
@@ -522,11 +522,11 @@ export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={language ? TRANSLATIONS[language].placeholder : 'Type your answer...'}
-                  className="flex-1"
+                  className="flex-1 text-sm sm:text-base"
                   autoFocus
                 />
-                <Button type="submit" size="icon">
-                  <Send className="h-4 w-4" />
+                <Button type="submit" size="icon" className="h-9 w-9 sm:h-10 sm:w-10">
+                  <Send className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               </form>
             )}
