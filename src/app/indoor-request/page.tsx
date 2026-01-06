@@ -387,7 +387,7 @@ export default function IndoorRequestPage() {
                                 </FormItem>
                             )}
                         />
-                        {(vehicleTypePassenger === 'other' || vehicleTypeGoods === 'other') && (
+                        {vehicleTypeGoods === 'other' && (
                             <FormField
                                 control={form.control}
                                 name="otherVehicleType"
