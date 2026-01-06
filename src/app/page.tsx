@@ -78,9 +78,7 @@ export default function HomePage() {
         </div>
       </div>
       
-      {/* Vehicle Request Chatbot with Marathi auto-popup */}
-      <RequestChatbot requestType="indoor" autoPopup={true} />
-      
+
       {/* Train Arrival Chatbot */}
       <TrainArrivalChatbot />
     </main>

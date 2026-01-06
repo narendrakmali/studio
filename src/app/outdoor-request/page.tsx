@@ -86,7 +86,6 @@ const airportSchema = z.object({
     requestType: z.literal("airport"),
     userName: z.string().min(2, "Saint/In-charge name is required."),
     contactNumber: z.string().min(10, "A valid contact number is required."),
-    airportSchema,
     departmentName: z.string().min(2, "Branch/Zone name is required."),
     airportName: z.enum(["pune", "kolhapur"], { required_error: "Airport selection is required." }),
     flightNumber: z.string().min(1, "Flight number is required."),
@@ -103,6 +102,7 @@ const requestFormSchema = z.discriminatedUnion("requestType", [
     privateVehicleSchema,
     busSchema,
     trainSchema,
+    airportSchema,
 ]).superRefine((data, ctx) => {
     if (data.requestType === 'bus' && data.busType === 'msrtc' && !data.busBookingReceipt) {
         ctx.addIssue({
@@ -189,6 +189,9 @@ export default function OutdoorRequestPage() {
     setIsSubmitting(true);
     
     try {
+      console.log('📝 Form data to submit:', data);
+      console.log('📝 Form data type:', data.requestType);
+      
       // CRITICAL: await the promise to ensure data is saved
       const newRequest = await addRequest({ ...data, source: 'outdoor' });
       
@@ -197,7 +200,21 @@ export default function OutdoorRequestPage() {
       setIsSuccess(true);
     } catch (error) {
       console.error("❌ Failed to save request:", error);
+      console.error('Error details:', {
+        name: (error as Error).name,
+        message: (error as Error).message,
+        stack: (error as Error).stack,
+        data: data
+      });
       toast({
+        variant: "destructive",
+        title: "Submission Failed",
+        description: (error as Error).message || "Failed to submit request. Please try again or contact support.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
         variant: "destructive",
         title: "Submission Failed",
         description: "Failed to submit request. Please try again or contact support.",

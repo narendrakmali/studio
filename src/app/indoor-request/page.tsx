@@ -115,11 +115,15 @@ export default function IndoorRequestPage() {
     setIsSubmitting(true);
     
     try {
+      console.log('📝 Indoor form data to submit:', data);
+      
       const newRequestData: Omit<TransportRequest, 'id' | 'status' | 'createdAt'> = {
         ...data,
         source: 'indoor',
         requestType: 'private', 
       };
+
+      console.log('📝 Prepared request data:', newRequestData);
 
       // CRITICAL: await the promise to ensure data is saved
       const newRequest = await addRequest(newRequestData);
@@ -130,7 +134,13 @@ export default function IndoorRequestPage() {
       setShowSuccessAlert(true);
     } catch (error) {
       console.error("❌ Failed to save request:", error);
-      alert("Failed to submit request. Please try again or contact support.");
+      console.error('Error details:', {
+        name: (error as Error).name,
+        message: (error as Error).message,
+        stack: (error as Error).stack,
+        data: data
+      });
+      alert("Failed to submit request: " + (error as Error).message + ". Please try again or contact support.");
     } finally {
       setIsSubmitting(false);
     }
