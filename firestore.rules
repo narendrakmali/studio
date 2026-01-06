@@ -111,11 +111,13 @@ service cloud.firestore {
      * @allow (create) Anyone can submit a transport request (public form).
      * @allow (read) Only authenticated users can read requests.
      * @principle Enables public request submission while protecting data visibility.
+     * NOTE: Does NOT enforce ID matching on create since Firestore auto-generates IDs.
      */
     match /transportRequests/{requestId} {
       allow get, list: if isSignedIn();
-      allow create: if true; // Allow public creation
-      allow update, delete: if isSignedIn();
+      allow create: if true; // Allow public creation without ID field requirement
+      allow update: if isSignedIn() && docExists();
+      allow delete: if isSignedIn() && docExists();
     }
 
     /**
