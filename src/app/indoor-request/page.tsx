@@ -23,8 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { CalendarIcon, Loader2, Users, Radio } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -48,21 +50,38 @@ const indoorRequestSchema = z.object({
   userName: z.string().min(2, "User name is required."),
   contactNumber: z.string().min(10, "A valid contact number is required."),
   departmentName: z.string().min(2, "Department name is required."),
-  vehicleType: z.enum(['two-wheeler', 'four-wheeler', 'tempo', 'eicher', 'bus'], {
-    required_error: "You need to select a vehicle type.",
+  vehicleTypePassenger: z.enum(['electric-cart', 'manual-wheelchair', 'push-trolley', 'small-tempo', 'other'], {
+    required_error: "You need to select a passenger vehicle type.",
+  }).optional(),
+  vehicleTypeGoods: z.enum(['hand-trolley', 'push-cart', 'tempo-small', 'eicher', 'goods-carrier-open', 'goods-carrier-closed', 'other'], {
+    required_error: "You need to select a goods vehicle type.",
+  }).optional(),
+  otherVehicleType: z.string().optional(),
+  passengerCount: z.coerce.number().min(1, "At least one passenger/item is required."),
+  specialCategory: z.enum(['senior-citizen', 'differently-abled', 'emergency-medical', 'vip-movement', 'other', 'none'], {
+    required_error: "You need to select a special category.",
   }),
-  passengerCount: z.coerce.number().min(1, "At least one passenger is required."),
-  destination: z.string().min(1, "Destination is required"),
+  otherSpecialCategory: z.string().optional(),
+  groundNumber: z.enum(['1', '2', '3'], {
+    required_error: "You need to select a ground number.",
+  }),
   durationFrom: z.date({
     required_error: "A start date is required.",
   }),
   durationTo: z.date({
     required_error: "An end date is required.",
   }),
+  specialInstructions: z.string().optional(),
 }).refine((data) => data.durationTo >= data.durationFrom, {
   message: "End date cannot be before start date.",
   path: ["durationTo"],
-});
+}).refine(
+  (data) => data.vehicleTypePassenger || data.vehicleTypeGoods,
+  {
+    message: "Please select either a passenger or goods vehicle type.",
+    path: ["vehicleTypePassenger"],
+  }
+);
 
 
 export default function IndoorRequestPage() {
@@ -86,11 +105,16 @@ export default function IndoorRequestPage() {
       userName: "",
       contactNumber: "",
       departmentName: "",
-      destination: "",
+      vehicleTypePassenger: undefined,
+      vehicleTypeGoods: undefined,
+      otherVehicleType: "",
       passengerCount: 1,
-      vehicleType: undefined,
+      specialCategory: 'none',
+      otherSpecialCategory: "",
+      groundNumber: undefined,
       durationFrom: undefined,
       durationTo: undefined,
+      specialInstructions: "",
     },
   });
   
@@ -156,9 +180,9 @@ export default function IndoorRequestPage() {
                 <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <CardHeader className="bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-t-lg">
-                        <CardTitle className="font-headline text-3xl">Samagam Ground Internal Vehicle Request</CardTitle>
+                        <CardTitle className="font-headline text-3xl">🚗 Samagam Indoor Vehicle Request Portal</CardTitle>
                         <CardDescription className="text-blue-100">
-                            Fill out the form below to request transport for your department within the Samagam grounds.
+                            Team Login - Fill out the form below to request transport within the Samagam grounds.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
@@ -168,7 +192,7 @@ export default function IndoorRequestPage() {
                                 name="userName"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>User Name</FormLabel>
+                                    <FormLabel>👤 User Name</FormLabel>
                                     <FormControl>
                                         <Input placeholder="e.g., John Doe" {...field} />
                                     </FormControl>
@@ -181,7 +205,7 @@ export default function IndoorRequestPage() {
                                 name="contactNumber"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>Contact Number</FormLabel>
+                                    <FormLabel>📞 Contact Number</FormLabel>
                                     <FormControl>
                                         <Input placeholder="e.g., 9876543210" {...field} />
                                     </FormControl>
@@ -195,7 +219,7 @@ export default function IndoorRequestPage() {
                             name="departmentName"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel>Department Name</FormLabel>
+                                <FormLabel>🏢 Department Name</FormLabel>
                                 <FormControl>
                                     <Input placeholder="e.g., Guest Services" {...field} />
                                 </FormControl>
@@ -205,45 +229,45 @@ export default function IndoorRequestPage() {
                         />
                         <FormField
                             control={form.control}
-                            name="vehicleType"
+                            name="vehicleTypePassenger"
                             render={({ field }) => (
                                 <FormItem className="space-y-3">
-                                <FormLabel>Type of Vehicle Required</FormLabel>
+                                <FormLabel>🚘 Type of Vehicle Required (Passenger)</FormLabel>
                                 <FormControl>
                                     <RadioGroup
                                     onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                    className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
+                                    value={field.value}
+                                    className="flex flex-col space-y-2"
                                     >
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="two-wheeler" />
+                                        <RadioGroupItem value="electric-cart" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Two-wheeler</FormLabel>
+                                        <FormLabel className="font-normal">Electric Cart</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="four-wheeler" />
+                                        <RadioGroupItem value="manual-wheelchair" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Four-wheeler</FormLabel>
+                                        <FormLabel className="font-normal">Manual Wheelchair</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="tempo" />
+                                        <RadioGroupItem value="push-trolley" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Tempo</FormLabel>
+                                        <FormLabel className="font-normal">Push Trolley</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="eicher" />
+                                        <RadioGroupItem value="small-tempo" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Eicher</FormLabel>
+                                        <FormLabel className="font-normal">Small Tempo (Indoor Use)</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
-                                        <RadioGroupItem value="bus" />
+                                        <RadioGroupItem value="other" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Bus</FormLabel>
+                                        <FormLabel className="font-normal">Other</FormLabel>
                                     </FormItem>
                                     </RadioGroup>
                                 </FormControl>
@@ -251,26 +275,88 @@ export default function IndoorRequestPage() {
                                 </FormItem>
                             )}
                         />
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                            control={form.control}
+                            name="vehicleTypeGoods"
+                            render={({ field }) => (
+                                <FormItem className="space-y-3">
+                                <FormLabel>🚚 Type of Vehicle Required (Goods Transport)</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                    className="flex flex-col space-y-2"
+                                    >
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="hand-trolley" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Hand Trolley</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="push-cart" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Push Cart</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="tempo-small" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Tempo (Small)</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="eicher" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Eicher (Medium Truck)</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="goods-carrier-open" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Goods Carrier (Open Body)</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="goods-carrier-closed" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Goods Carrier (Closed Body)</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="other" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Other</FormLabel>
+                                    </FormItem>
+                                    </RadioGroup>
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {(form.watch('vehicleTypePassenger') === 'other' || form.watch('vehicleTypeGoods') === 'other') && (
                             <FormField
                                 control={form.control}
-                                name="destination"
+                                name="otherVehicleType"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>Destination</FormLabel>
+                                    <FormLabel>Specify Other Vehicle Type</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="e.g., Pune Airport" {...field} />
+                                        <Input placeholder="Please specify..." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
                                 )}
                             />
+                        )}
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormField
                                 control={form.control}
                                 name="passengerCount"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>Number of Passengers</FormLabel>
+                                    <FormLabel>👥 Number of Passengers / Items</FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -281,7 +367,98 @@ export default function IndoorRequestPage() {
                                     </FormItem>
                                 )}
                             />
+                            <FormField
+                                control={form.control}
+                                name="groundNumber"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>🏟 Ground Number</FormLabel>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select ground" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                        <SelectItem value="1">Ground 1</SelectItem>
+                                        <SelectItem value="2">Ground 2</SelectItem>
+                                        <SelectItem value="3">Ground 3</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         </div>
+                        <FormField
+                            control={form.control}
+                            name="specialCategory"
+                            render={({ field }) => (
+                                <FormItem className="space-y-3">
+                                <FormLabel>🧓 Special Category</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                    className="flex flex-col space-y-2"
+                                    >
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="none" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">None</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="senior-citizen" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Sr सिटीझन (Senior Citizen)</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="differently-abled" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">दिव्यांग (Differently Abled)</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="emergency-medical" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Emergency Medical</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="vip-movement" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">VIP Movement</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="other" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Other</FormLabel>
+                                    </FormItem>
+                                    </RadioGroup>
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {form.watch('specialCategory') === 'other' && (
+                            <FormField
+                                control={form.control}
+                                name="otherSpecialCategory"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Specify Other Special Category</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Please specify..." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormField
                                 control={form.control}
@@ -330,11 +507,28 @@ export default function IndoorRequestPage() {
                                 )}
                             />
                         </div>
+                        <FormField
+                            control={form.control}
+                            name="specialInstructions"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>📝 Special Instructions (if any)</FormLabel>
+                                <FormControl>
+                                    <Textarea 
+                                        placeholder="Enter any special instructions or requirements..."
+                                        className="min-h-[80px]"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </CardContent>
                     <CardFooter>
-                        <Button type="submit" disabled={isSubmitting}>
+                        <Button type="submit" disabled={isSubmitting} className="w-full md:w-auto">
                         {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                        Submit Request
+                        ✅ Submit Request
                         </Button>
                     </CardFooter>
                 </form>
