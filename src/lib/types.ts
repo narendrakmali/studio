@@ -61,6 +61,20 @@ export type TransportRequest = {
   pickupRequired?: boolean;
   returnTrainNumber?: string;
   returnTrainDepartureDate?: Date;
+  
+  // Additional train arrival fields
+  zone?: string;
+  unitNo?: string;
+  officialName?: string;
+  trainDetails?: string;
+  departureDate?: string;
+  arrivalDate?: string;
+  arrivalTime?: string;
+  sevadalCount?: string;
+  returnDate?: string;
+  returnStation?: string;
+  returnTime?: string;
+  userPhone?: string;
 };
 
 export type Dispatch = {

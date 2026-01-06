@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { ArrowRight, Car, Building } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
+import { TrainArrivalChatbot } from '@/components/train-arrival-chatbot';
 
 export default function HomePage() {
   return (
@@ -75,6 +76,9 @@ export default function HomePage() {
           </Link>
         </div>
       </div>
+      
+      {/* Train Arrival Chatbot */}
+      <TrainArrivalChatbot />
     </main>
   );
 }

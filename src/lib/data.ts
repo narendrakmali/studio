@@ -63,10 +63,12 @@ export async function addRequest(
   req: Omit<TransportRequest, 'id' | 'status' | 'createdAt'>
 ): Promise<TransportRequest> {
   if (!firestoreDb) {
-    throw new Error('Firestore is not initialized');
+    console.error('❌ CRITICAL: Firestore is not initialized! Request will be lost:', req);
+    throw new Error('Firestore is not initialized. Please refresh the page and try again.');
   }
 
   try {
+    console.log('📝 Attempting to save request to Firestore:', req);
     const requestsRef = collection(firestoreDb, 'transportRequests');
     const docRef = await addDoc(requestsRef, {
       ...req,
@@ -81,9 +83,10 @@ export async function addRequest(
       createdAt: new Date(),
     };
 
+    console.log('✅ Request successfully saved with ID:', docRef.id);
     return newRequest;
   } catch (error) {
-    console.error('Error adding request to Firestore:', error);
+    console.error('❌ Error adding request to Firestore:', error);
     throw error;
   }
 }

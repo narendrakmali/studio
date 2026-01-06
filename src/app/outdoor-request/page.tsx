@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -117,6 +117,17 @@ export default function OutdoorRequestPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState("private");
   const { toast } = useToast();
+  const [firestoreReady, setFirestoreReady] = useState(false);
+
+  // Check if Firestore is ready
+  useEffect(() => {
+    // Give Firebase a moment to initialize
+    const timer = setTimeout(() => {
+      setFirestoreReady(true);
+      console.log('🔥 Firestore initialization check complete');
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const form = useForm<z.infer<typeof requestFormSchema>>({
     resolver: zodResolver(requestFormSchema),
@@ -151,14 +162,24 @@ export default function OutdoorRequestPage() {
 
   async function onSubmit(data: z.infer<typeof requestFormSchema>) {
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    addRequest({ ...data, source: 'outdoor' });
-
-    console.log("Form submitted and new request added:", data);
-
-    setIsSubmitting(false);
-    setIsSuccess(true);
+    
+    try {
+      // CRITICAL: await the promise to ensure data is saved
+      const newRequest = await addRequest({ ...data, source: 'outdoor' });
+      
+      console.log("✅ Request successfully saved to Firestore:", newRequest);
+      
+      setIsSuccess(true);
+    } catch (error) {
+      console.error("❌ Failed to save request:", error);
+      toast({
+        variant: "destructive",
+        title: "Submission Failed",
+        description: "Failed to submit request. Please try again or contact support.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
   
   const PublicHeader = () => (

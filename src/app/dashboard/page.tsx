@@ -15,13 +15,19 @@ import {
 import { Car, ClipboardList, Send, Users, Route, Building, Globe } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { requests, dispatches, vehicles } from "@/lib/data";
+import { requests, dispatches, vehicles, initializeRequestsListener, stopRequestsListener } from "@/lib/data";
 import { isToday } from "date-fns";
 import { useEffect, useState } from "react";
 import { TransportRequest } from "@/lib/types";
 
 export default function DashboardPage() {
   const [currentRequests, setCurrentRequests] = useState(requests);
+
+  // Initialize Firestore listener
+  useEffect(() => {
+    initializeRequestsListener();
+    return () => stopRequestsListener();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {

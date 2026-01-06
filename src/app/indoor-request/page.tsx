@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -68,6 +68,17 @@ const indoorRequestSchema = z.object({
 export default function IndoorRequestPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [firestoreReady, setFirestoreReady] = useState(false);
+
+  // Check if Firestore is ready
+  useEffect(() => {
+    // Give Firebase a moment to initialize
+    const timer = setTimeout(() => {
+      setFirestoreReady(true);
+      console.log('🔥 Firestore initialization check complete');
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const form = useForm<z.infer<typeof indoorRequestSchema>>({
     resolver: zodResolver(indoorRequestSchema),
@@ -103,21 +114,26 @@ export default function IndoorRequestPage() {
   async function onSubmit(data: z.infer<typeof indoorRequestSchema>) {
     setIsSubmitting(true);
     
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const newRequestData: Omit<TransportRequest, 'id' | 'status' | 'createdAt'> = {
+        ...data,
+        source: 'indoor',
+        requestType: 'private', 
+      };
 
-    const newRequestData: Omit<TransportRequest, 'id' | 'status' | 'createdAt'> = {
-      ...data,
-      source: 'indoor',
-      requestType: 'private', 
-    };
-
-    const newRequest = addRequest(newRequestData);
-    
-    console.log("Form submitted and new request added:", newRequest);
-    
-    form.reset();
-    setIsSubmitting(false);
-    setShowSuccessAlert(true);
+      // CRITICAL: await the promise to ensure data is saved
+      const newRequest = await addRequest(newRequestData);
+      
+      console.log("✅ Request successfully saved to Firestore:", newRequest);
+      
+      form.reset();
+      setShowSuccessAlert(true);
+    } catch (error) {
+      console.error("❌ Failed to save request:", error);
+      alert("Failed to submit request. Please try again or contact support.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (

@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { AuthLayout } from "@/components/auth-layout";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { requests as allRequests } from "@/lib/data";
+import { requests as allRequests, initializeRequestsListener, stopRequestsListener } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { Users, Route, Calendar, Hash, User, Phone, Car, PlusCircle, Building, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,12 @@ import type { TransportRequest } from "@/lib/types";
 
 export default function RequestsPage() {
     const [currentRequests, setCurrentRequests] = useState(allRequests);
+
+    // Initialize Firestore listener
+    useEffect(() => {
+        initializeRequestsListener();
+        return () => stopRequestsListener();
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
