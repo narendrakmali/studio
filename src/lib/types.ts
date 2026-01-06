@@ -32,7 +32,7 @@ export type TransportRequest = {
   hodApprovalImage?: string;
   
   // Fields for different request types
-  requestType: 'private' | 'bus' | 'train';
+  requestType: 'private' | 'bus' | 'train' | 'airport';
 
   // Private Vehicle fields (used by both indoor and outdoor)
   vehicleType?: 'two-wheeler' | 'car' | 'suv' | 'winger' | 'innova' | 'four-wheeler' | 'tempo' | 'eicher' | 'bus';
@@ -61,6 +61,15 @@ export type TransportRequest = {
   pickupRequired?: boolean;
   returnTrainNumber?: string;
   returnTrainDepartureDate?: Date;
+  
+  // Airport fields (outdoor only)
+  airportName?: 'pune' | 'kolhapur';
+  flightNumber?: string;
+  arrivalDate?: Date;
+  arrivalTime?: string;
+  returnFlightNumber?: string;
+  departureDate?: Date;
+  departureTime?: string;
   
   // Additional train arrival fields
   zone?: string;
