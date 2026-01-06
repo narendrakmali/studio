@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CalendarIcon, Loader2, PartyPopper, Users, Car, Train, Bus, Hash, Phone, User, MapPin, Upload } from "lucide-react";
+import { CalendarIcon, Loader2, PartyPopper, Users, Car, Train, Bus, Hash, Phone, User, MapPin, Upload, Plane } from "lucide-react";
 import Link from 'next/link';
 import { Logo } from "@/components/logo";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -80,6 +80,23 @@ const trainSchema = z.object({
     pickupRequired: z.boolean().default(false),
     returnTrainNumber: z.string().optional(),
     returnTrainDepartureDate: z.date().optional(),
+});
+
+const airportSchema = z.object({
+    requestType: z.literal("airport"),
+    userName: z.string().min(2, "Saint/In-charge name is required."),
+    contactNumber: z.string().min(10, "A valid contact number is required."),
+    airportSchema,
+    departmentName: z.string().min(2, "Branch/Zone name is required."),
+    airportName: z.enum(["pune", "kolhapur"], { required_error: "Airport selection is required." }),
+    flightNumber: z.string().min(1, "Flight number is required."),
+    arrivalDate: z.date({ required_error: "Arrival date is required." }),
+    arrivalTime: z.string().min(1, "Arrival time is required."),
+    passengerCount: z.coerce.number().min(1, "Number of passengers is required."),
+    pickupRequired: z.boolean().default(true),
+    returnFlightNumber: z.string().optional(),
+    departureDate: z.date().optional(),
+    departureTime: z.string().optional(),
 });
 
 const requestFormSchema = z.discriminatedUnion("requestType", [
@@ -157,6 +174,14 @@ export default function OutdoorRequestPage() {
       durationTo: undefined,
       trainArrivalDate: undefined,
       returnTrainDepartureDate: undefined,
+      // Airport fields
+      airportName: undefined,
+      flightNumber: "",
+      arrivalDate: undefined,
+      arrivalTime: "",
+      returnFlightNumber: "",
+      departureDate: undefined,
+      departureTime: "",
     },
   });
 
@@ -458,13 +483,14 @@ export default function OutdoorRequestPage() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <Tabs value={activeTab} onValueChange={(value) => {
-                form.setValue("requestType", value as "private" | "bus" | "train");
+                form.setValue("requestType", value as "private" | "bus" | "train" | "airport");
                 setActiveTab(value);
               }} className="w-full">
-                <TabsList className="grid w-full grid-cols-3 bg-slate-100">
-                  <TabsTrigger value="private" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"><Car className="mr-2 h-4 w-4"/>Private Vehicle</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-4 bg-slate-100">
+                  <TabsTrigger value="private" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"><Car className="mr-2 h-4 w-4"/>Private</TabsTrigger>
                   <TabsTrigger value="bus" className="data-[state=active]:bg-teal-500 data-[state=active]:text-white"><Users className="mr-2 h-4 w-4"/>Bus</TabsTrigger>
                   <TabsTrigger value="train" className="data-[state=active]:bg-green-500 data-[state=active]:text-white"><Train className="mr-2 h-4 w-4"/>Train</TabsTrigger>
+                  <TabsTrigger value="airport" className="data-[state=active]:bg-purple-500 data-[state=active]:text-white"><Plane className="mr-2 h-4 w-4"/>Airport</TabsTrigger>
                 </TabsList>
                 
                 <div className="space-y-6 pt-4">
@@ -785,6 +811,192 @@ export default function OutdoorRequestPage() {
                         </FormItem>
                       )}
                     />
+                </TabsContent>
+
+                <TabsContent value="airport" className="space-y-6 border-l-4 border-purple-500 pl-4 -ml-4">
+                  <CommonFields />
+                  <Separator />
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-purple-700">Flight Arrival Details</h3>
+                    
+                    <FormField
+                      control={form.control}
+                      name="airportName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Airport</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select airport" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="pune">Pune Airport</SelectItem>
+                              <SelectItem value="kolhapur">Kolhapur Airport</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="flightNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Arrival Flight Number</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g., AI 635" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="passengerCount"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Number of Passengers</FormLabel>
+                            <FormControl>
+                              <Input type="number" min="1" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="arrivalDate"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col">
+                            <FormLabel>Arrival Date</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                    {field.value ? format(field.value, "PPP") : <span>Pick arrival date</span>}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                              </PopoverContent>
+                            </Popover>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="arrivalTime"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Arrival Time</FormLabel>
+                            <FormControl>
+                              <Input type="time" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-purple-700">Return Flight Details (Optional)</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="returnFlightNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Return Flight Number</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g., AI 636" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="departureTime"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Departure Time</FormLabel>
+                            <FormControl>
+                              <Input type="time" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="departureDate"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Departure Date</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                  {field.value ? format(field.value, "PPP") : <span>Pick departure date</span>}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("arrivalDate") || new Date(new Date().setHours(0,0,0,0)))} initialFocus />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <Separator />
+
+                  <FormField
+                    control={form.control}
+                    name="pickupRequired"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 bg-purple-50">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>
+                            Airport Pickup Required
+                          </FormLabel>
+                          <CardDescription>
+                            Check this if you need shuttle service from the airport to Samagam ground.
+                          </CardDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                 </TabsContent>
 
               </Tabs>
