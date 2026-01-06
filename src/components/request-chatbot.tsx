@@ -381,28 +381,42 @@ export function RequestChatbot({ requestType = 'indoor' }: { requestType?: Reque
     }
   };
 
-  const completeRequest = (data: any) => {
+  const completeRequest = async (data: any) => {
     if (!language) return;
     
     const trans = TRANSLATIONS[language];
     
-    setTimeout(() => {
+    setTimeout(async () => {
       addMessage('bot', trans.submitting);
       
-      // Submit the request
-      const requestData: Omit<TransportRequest, 'id' | 'status' | 'createdAt'> = {
-        ...data,
-        source: requestType,
-        requestType: 'private',
-      };
-      
-      addRequest(requestData);
-      
-      setTimeout(() => {
-        addMessage('bot', trans.success);
-        addMessage('bot', trans.contact);
-        setIsCompleted(true);
-      }, 1000);
+      try {
+        // Submit the request
+        const requestData: Omit<TransportRequest, 'id' | 'status' | 'createdAt'> = {
+          ...data,
+          source: requestType,
+          requestType: 'private',
+        };
+        
+        // CRITICAL: await the promise to ensure data is saved
+        const savedRequest = await addRequest(requestData);
+        
+        console.log('✅ Chatbot request successfully saved:', savedRequest);
+        
+        setTimeout(() => {
+          addMessage('bot', trans.success);
+          addMessage('bot', trans.contact);
+          setIsCompleted(true);
+        }, 1000);
+      } catch (error) {
+        console.error('❌ Chatbot failed to save request:', error);
+        setTimeout(() => {
+          addMessage('bot', language === 'english' 
+            ? '❌ Failed to submit request. Please try again or contact support.'
+            : language === 'hindi'
+            ? '❌ अनुरोध जमा करने में विफल। कृपया पुनः प्रयास करें या समर्थन से संपर्क करें।'
+            : '❌ विनंती सबमिट करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा किंवा समर्थनाशी संपर्क साधा.');
+        }, 1000);
+      }
     }, 500);
   };
 
