@@ -1,5 +1,6 @@
 // Log configuration status (helpful for debugging on mobile)
-if (typeof window !== 'undefined') {
+// Only run this check on the client side to avoid build-time errors
+if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
   const hasConfig = !!(
     process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
     process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID

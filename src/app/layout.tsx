@@ -3,6 +3,10 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from "@/firebase";
 
+// Force dynamic rendering - prevent static generation at build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Samagam FleetConnect",
   description: "AI-Powered Fleet Management for Samagam",

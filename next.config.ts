@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Force dynamic rendering to prevent Firebase initialization during build
+  experimental: {
+    dynamicIO: true,
+  },
   images: {
     remotePatterns: [
       {

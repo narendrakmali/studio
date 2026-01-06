@@ -2,6 +2,9 @@
 "use client";
 
 import Link from 'next/link';
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { ArrowRight, Car, Building } from 'lucide-react';
 import { Logo } from '@/components/logo';
