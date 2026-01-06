@@ -10,13 +10,18 @@ interface FirebaseClientProviderProps {
 
 export function FirebaseClientProvider({ children }: FirebaseClientProviderProps) {
   const firebaseServices = useMemo(() => {
+    // Never initialize on server - only in browser
+    if (typeof window === 'undefined') {
+      return { firebaseApp: null, auth: null, firestore: null };
+    }
+
     // Initialize Firebase on the client side, once per component mount.
     // Wrap in try-catch for additional safety on mobile devices
     try {
       const services = initializeFirebase();
       
       // Check if Firebase initialization failed due to missing config
-      if (!services.firebaseApp && typeof window !== 'undefined') {
+      if (!services.firebaseApp) {
         const hasApiKey = !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
         const hasProjectId = !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
         

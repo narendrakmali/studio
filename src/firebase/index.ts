@@ -15,6 +15,11 @@ function createStubSdks(): Sdks {
 }
 
 export function initializeFirebase(): Sdks {
+  // Never initialize Firebase during build or on server
+  if (typeof window === 'undefined') {
+    return createStubSdks();
+  }
+
   const hasApiKey = !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
   const hasProjectId = !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
 
