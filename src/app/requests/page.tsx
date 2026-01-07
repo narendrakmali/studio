@@ -6,7 +6,7 @@ import { AuthLayout } from "@/components/auth-layout";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { requests as allRequests, initializeRequestsListener, stopRequestsListener } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
-import { Users, Route, Calendar, Hash, User, Phone, Car, PlusCircle, Building, Globe } from "lucide-react";
+import { Users, Route, Calendar, Hash, User, Phone, Car, PlusCircle, Building, Globe, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -41,6 +41,58 @@ export default function RequestsPage() {
 
     const indoorRequests = currentRequests.filter(r => r.source === 'indoor');
     const outdoorRequests = currentRequests.filter(r => r.source === 'outdoor');
+
+    // Helper function to create clone URL with pre-filled data
+    const getCloneUrl = (req: TransportRequest) => {
+        const params = new URLSearchParams();
+        
+        // Common fields
+        params.set('userName', req.userName);
+        params.set('contactNumber', req.contactNumber);
+        params.set('departmentName', req.departmentName);
+        params.set('requestType', req.requestType);
+        
+        if (req.source === 'indoor') {
+            // Indoor-specific fields
+            if (req.vehicleType) params.set('vehicleType', req.vehicleType);
+            if (req.passengerCount) params.set('passengerCount', req.passengerCount.toString());
+            if (req.destination) params.set('destination', req.destination);
+            if (req.durationFrom) params.set('durationFrom', new Date(req.durationFrom).toISOString());
+            if (req.durationTo) params.set('durationTo', new Date(req.durationTo).toISOString());
+            
+            return `/indoor-request?${params.toString()}`;
+        } else {
+            // Outdoor-specific fields based on request type
+            if (req.requestType === 'private') {
+                if (req.vehicleType) params.set('vehicleType', req.vehicleType);
+                if (req.registrationNumber) params.set('registrationNumber', req.registrationNumber);
+                if (req.passengerCount) params.set('passengerCount', req.passengerCount.toString());
+                if (req.driverName) params.set('driverName', req.driverName);
+                if (req.driverContact) params.set('driverContact', req.driverContact);
+                if (req.durationFrom) params.set('durationFrom', new Date(req.durationFrom).toISOString());
+                if (req.durationTo) params.set('durationTo', new Date(req.durationTo).toISOString());
+            } else if (req.requestType === 'bus') {
+                if (req.busType) params.set('busType', req.busType);
+                if (req.busQuantity) params.set('busQuantity', req.busQuantity.toString());
+                if (req.busRoute) params.set('busRoute', req.busRoute);
+                if (req.busCoordinatorName) params.set('busCoordinatorName', req.busCoordinatorName);
+                if (req.busCoordinatorContact) params.set('busCoordinatorContact', req.busCoordinatorContact);
+                if (req.durationFrom) params.set('durationFrom', new Date(req.durationFrom).toISOString());
+                if (req.durationTo) params.set('durationTo', new Date(req.durationTo).toISOString());
+            } else if (req.requestType === 'train') {
+                if (req.trainTeamLeaderName) params.set('trainTeamLeaderName', req.trainTeamLeaderName);
+                if (req.trainTeamLeaderContact) params.set('trainTeamLeaderContact', req.trainTeamLeaderContact);
+                if (req.trainNumber) params.set('trainNumber', req.trainNumber);
+                if (req.trainArrivalDate) params.set('trainArrivalDate', new Date(req.trainArrivalDate).toISOString());
+                if (req.trainDevoteeCount) params.set('trainDevoteeCount', req.trainDevoteeCount.toString());
+                if (req.pickupRequired !== undefined) params.set('pickupRequired', req.pickupRequired.toString());
+                if (req.returnTrainNumber) params.set('returnTrainNumber', req.returnTrainNumber);
+                if (req.returnTrainDepartureDate) params.set('returnTrainDepartureDate', new Date(req.returnTrainDepartureDate).toISOString());
+            }
+            
+            return `/outdoor-request?${params.toString()}`;
+        }
+    };
     
     const RequestSection = ({ title, requests, icon: Icon }: { title: string, requests: TransportRequest[], icon: React.ElementType }) => (
         <section className="space-y-4">
@@ -87,7 +139,7 @@ export default function RequestsPage() {
                                     </div>
                                 )}
                             </CardContent>
-                            <CardFooter className="flex justify-between items-center">
+                            <CardFooter className="flex justify-between items-center gap-2 flex-wrap">
                                 {req.hodApprovalImage && <Dialog>
                                     <DialogTrigger asChild>
                                         <Button variant="outline" size="sm">Approval</Button>
@@ -104,6 +156,12 @@ export default function RequestsPage() {
                                         </div>
                                     </DialogContent>
                                 </Dialog>}
+                                <Button variant="outline" size="sm" asChild>
+                                    <Link href={getCloneUrl(req)}>
+                                        <Copy className="h-3 w-3 mr-1" />
+                                        Clone
+                                    </Link>
+                                </Button>
                                 {req.status === 'pending' && req.source === 'indoor' && (
                                     <Button size="sm" asChild className="ml-auto">
                                         <Link href="/dispatch">Allocate Vehicle</Link>
