@@ -130,20 +130,38 @@ export default function IndoorRequestPage() {
       
       // Map vehicle type to the correct field
       if (vehicleType) {
-        const passengerTypes = ['two-wheeler', 'three-wheeler', 'four-wheeler', 'mini-bus', 'large-bus'];
-        const goodsTypes = ['hand-trolley', 'mini-trucks', 'chhota-hathi', 'tempo-small', 'eicher', 'goods-carrier-open', 'goods-carrier-closed', 'other'];
+        const passengerTypes: readonly string[] = ['two-wheeler', 'three-wheeler', 'four-wheeler', 'mini-bus', 'large-bus'];
+        const goodsTypes: readonly string[] = ['hand-trolley', 'mini-trucks', 'chhota-hathi', 'tempo-small', 'eicher', 'goods-carrier-open', 'goods-carrier-closed', 'other'];
         
         if (passengerTypes.includes(vehicleType)) {
-          form.setValue('vehicleTypePassenger', vehicleType as any);
+          form.setValue('vehicleTypePassenger', vehicleType as 'two-wheeler' | 'three-wheeler' | 'four-wheeler' | 'mini-bus' | 'large-bus');
         } else if (goodsTypes.includes(vehicleType)) {
-          form.setValue('vehicleTypeGoods', vehicleType as any);
+          form.setValue('vehicleTypeGoods', vehicleType as 'hand-trolley' | 'mini-trucks' | 'chhota-hathi' | 'tempo-small' | 'eicher' | 'goods-carrier-open' | 'goods-carrier-closed' | 'other');
         }
       }
       
-      if (passengerCount) form.setValue('passengerCount', parseInt(passengerCount));
+      if (passengerCount) form.setValue('passengerCount', parseInt(passengerCount, 10));
       if (destination) form.setValue('tentOrOfficeLocation', destination);
-      if (durationFrom) form.setValue('durationFrom', new Date(durationFrom));
-      if (durationTo) form.setValue('durationTo', new Date(durationTo));
+      if (durationFrom) {
+        try {
+          const fromDate = new Date(durationFrom);
+          if (!isNaN(fromDate.getTime())) {
+            form.setValue('durationFrom', fromDate);
+          }
+        } catch (e) {
+          console.warn('Invalid durationFrom date:', durationFrom);
+        }
+      }
+      if (durationTo) {
+        try {
+          const toDate = new Date(durationTo);
+          if (!isNaN(toDate.getTime())) {
+            form.setValue('durationTo', toDate);
+          }
+        } catch (e) {
+          console.warn('Invalid durationTo date:', durationTo);
+        }
+      }
     }
   }, [searchParams, form]);
   
