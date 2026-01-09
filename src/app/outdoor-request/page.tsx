@@ -38,6 +38,7 @@ import { addRequest, setFirestoreDb } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import { RequestChatbot } from "@/components/request-chatbot";
 import { useFirebase } from "@/firebase/provider";
+import { useSearchParams } from "next/navigation";
 
 const privateVehicleSchema = z.object({
     requestType: z.literal("private"),
@@ -135,6 +136,16 @@ export default function OutdoorRequestPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState("private");
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const { firestore } = useFirebase();
+
+  // Initialize Firestore database connection
+  useEffect(() => {
+    if (firestore) {
+      setFirestoreDb(firestore);
+      console.log('🔥 Outdoor request page: Firestore initialized');
+    }
+  }, [firestore]);
 
   const form = useForm<z.infer<typeof requestFormSchema>>({
     resolver: zodResolver(requestFormSchema),
@@ -174,6 +185,147 @@ export default function OutdoorRequestPage() {
       departureTime: "",
     },
   });
+
+  // Pre-fill form from URL parameters (for cloning)
+  useEffect(() => {
+    const requestType = searchParams.get('requestType');
+    const userName = searchParams.get('userName');
+    const contactNumber = searchParams.get('contactNumber');
+    const departmentName = searchParams.get('departmentName');
+
+    if (userName) {
+      // Set common fields
+      form.setValue('userName', userName);
+      form.setValue('contactNumber', contactNumber || '');
+      form.setValue('departmentName', departmentName || '');
+      
+      // Set request type and switch tab
+      if (requestType === 'private') {
+        form.setValue('requestType', 'private' as const);
+        setActiveTab('private');
+        
+        const vehicleType = searchParams.get('vehicleType');
+        const registrationNumber = searchParams.get('registrationNumber');
+        const passengerCount = searchParams.get('passengerCount');
+        const driverName = searchParams.get('driverName');
+        const driverContact = searchParams.get('driverContact');
+        const durationFrom = searchParams.get('durationFrom');
+        const durationTo = searchParams.get('durationTo');
+        
+        if (vehicleType) {
+          const validVehicleTypes: readonly string[] = ['two-wheeler', 'car', 'suv', 'winger', 'innova'];
+          if (validVehicleTypes.includes(vehicleType)) {
+            form.setValue('vehicleType', vehicleType as 'two-wheeler' | 'car' | 'suv' | 'winger' | 'innova');
+          }
+        }
+        if (registrationNumber) form.setValue('registrationNumber', registrationNumber);
+        if (passengerCount) form.setValue('passengerCount', parseInt(passengerCount, 10));
+        if (driverName) form.setValue('driverName', driverName);
+        if (driverContact) form.setValue('driverContact', driverContact);
+        if (durationFrom) {
+          try {
+            const fromDate = new Date(durationFrom);
+            if (!isNaN(fromDate.getTime())) {
+              form.setValue('durationFrom', fromDate);
+            }
+          } catch (e) {
+            console.warn('Invalid durationFrom date:', durationFrom);
+          }
+        }
+        if (durationTo) {
+          try {
+            const toDate = new Date(durationTo);
+            if (!isNaN(toDate.getTime())) {
+              form.setValue('durationTo', toDate);
+            }
+          } catch (e) {
+            console.warn('Invalid durationTo date:', durationTo);
+          }
+        }
+      } else if (requestType === 'bus') {
+        form.setValue('requestType', 'bus' as const);
+        setActiveTab('bus');
+        
+        const busType = searchParams.get('busType');
+        const busQuantity = searchParams.get('busQuantity');
+        const busRoute = searchParams.get('busRoute');
+        const busCoordinatorName = searchParams.get('busCoordinatorName');
+        const busCoordinatorContact = searchParams.get('busCoordinatorContact');
+        const durationFrom = searchParams.get('durationFrom');
+        const durationTo = searchParams.get('durationTo');
+        
+        if (busType) {
+          const validBusTypes: readonly string[] = ['private', 'msrtc'];
+          if (validBusTypes.includes(busType)) {
+            form.setValue('busType', busType as 'private' | 'msrtc');
+          }
+        }
+        if (busQuantity) form.setValue('busQuantity', parseInt(busQuantity, 10));
+        if (busRoute) form.setValue('busRoute', busRoute);
+        if (busCoordinatorName) form.setValue('busCoordinatorName', busCoordinatorName);
+        if (busCoordinatorContact) form.setValue('busCoordinatorContact', busCoordinatorContact);
+        if (durationFrom) {
+          try {
+            const fromDate = new Date(durationFrom);
+            if (!isNaN(fromDate.getTime())) {
+              form.setValue('durationFrom', fromDate);
+            }
+          } catch (e) {
+            console.warn('Invalid durationFrom date:', durationFrom);
+          }
+        }
+        if (durationTo) {
+          try {
+            const toDate = new Date(durationTo);
+            if (!isNaN(toDate.getTime())) {
+              form.setValue('durationTo', toDate);
+            }
+          } catch (e) {
+            console.warn('Invalid durationTo date:', durationTo);
+          }
+        }
+      } else if (requestType === 'train') {
+        form.setValue('requestType', 'train' as const);
+        setActiveTab('train');
+        
+        const trainTeamLeaderName = searchParams.get('trainTeamLeaderName');
+        const trainTeamLeaderContact = searchParams.get('trainTeamLeaderContact');
+        const trainNumber = searchParams.get('trainNumber');
+        const trainArrivalDate = searchParams.get('trainArrivalDate');
+        const trainDevoteeCount = searchParams.get('trainDevoteeCount');
+        const pickupRequired = searchParams.get('pickupRequired');
+        const returnTrainNumber = searchParams.get('returnTrainNumber');
+        const returnTrainDepartureDate = searchParams.get('returnTrainDepartureDate');
+        
+        if (trainTeamLeaderName) form.setValue('trainTeamLeaderName', trainTeamLeaderName);
+        if (trainTeamLeaderContact) form.setValue('trainTeamLeaderContact', trainTeamLeaderContact);
+        if (trainNumber) form.setValue('trainNumber', trainNumber);
+        if (trainArrivalDate) {
+          try {
+            const arrivalDate = new Date(trainArrivalDate);
+            if (!isNaN(arrivalDate.getTime())) {
+              form.setValue('trainArrivalDate', arrivalDate);
+            }
+          } catch (e) {
+            console.warn('Invalid trainArrivalDate:', trainArrivalDate);
+          }
+        }
+        if (trainDevoteeCount) form.setValue('trainDevoteeCount', parseInt(trainDevoteeCount, 10));
+        if (pickupRequired) form.setValue('pickupRequired', pickupRequired === 'true');
+        if (returnTrainNumber) form.setValue('returnTrainNumber', returnTrainNumber);
+        if (returnTrainDepartureDate) {
+          try {
+            const returnDate = new Date(returnTrainDepartureDate);
+            if (!isNaN(returnDate.getTime())) {
+              form.setValue('returnTrainDepartureDate', returnDate);
+            }
+          } catch (e) {
+            console.warn('Invalid returnTrainDepartureDate:', returnTrainDepartureDate);
+          }
+        }
+      }
+    }
+  }, [searchParams, form]);
 
   async function onSubmit(data: z.infer<typeof requestFormSchema>) {
     setIsSubmitting(true);

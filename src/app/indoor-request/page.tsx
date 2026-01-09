@@ -46,6 +46,7 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { RequestChatbot } from "@/components/request-chatbot";
 import { useFirebase } from "@/firebase/provider";
+import { useSearchParams } from "next/navigation";
 
 const indoorRequestSchema = z.object({
   userName: z.string().min(2, "User name is required."),
@@ -89,6 +90,16 @@ const indoorRequestSchema = z.object({
 export default function IndoorRequestPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const searchParams = useSearchParams();
+  const { firestore } = useFirebase();
+
+  // Initialize Firestore database connection
+  useEffect(() => {
+    if (firestore) {
+      setFirestoreDb(firestore);
+      console.log('🔥 Indoor request page: Firestore initialized');
+    }
+  }, [firestore]);
 
   const form = useForm<z.infer<typeof indoorRequestSchema>>({
     resolver: zodResolver(indoorRequestSchema),
@@ -109,6 +120,59 @@ export default function IndoorRequestPage() {
       specialInstructions: "",
     },
   });
+
+  // Pre-fill form from URL parameters (for cloning)
+  useEffect(() => {
+    const userName = searchParams.get('userName');
+    const contactNumber = searchParams.get('contactNumber');
+    const departmentName = searchParams.get('departmentName');
+    const vehicleType = searchParams.get('vehicleType');
+    const passengerCount = searchParams.get('passengerCount');
+    const destination = searchParams.get('destination');
+    const durationFrom = searchParams.get('durationFrom');
+    const durationTo = searchParams.get('durationTo');
+
+    if (userName) {
+      form.setValue('userName', userName);
+      form.setValue('contactNumber', contactNumber || '');
+      form.setValue('departmentName', departmentName || '');
+      
+      // Map vehicle type to the correct field
+      if (vehicleType) {
+        const passengerTypes: readonly string[] = ['two-wheeler', 'three-wheeler', 'four-wheeler', 'mini-bus', 'large-bus'];
+        const goodsTypes: readonly string[] = ['hand-trolley', 'mini-trucks', 'chhota-hathi', 'tempo-small', 'eicher', 'goods-carrier-open', 'goods-carrier-closed', 'other'];
+        
+        if (passengerTypes.includes(vehicleType)) {
+          form.setValue('vehicleTypePassenger', vehicleType as 'two-wheeler' | 'three-wheeler' | 'four-wheeler' | 'mini-bus' | 'large-bus');
+        } else if (goodsTypes.includes(vehicleType)) {
+          form.setValue('vehicleTypeGoods', vehicleType as 'hand-trolley' | 'mini-trucks' | 'chhota-hathi' | 'tempo-small' | 'eicher' | 'goods-carrier-open' | 'goods-carrier-closed' | 'other');
+        }
+      }
+      
+      if (passengerCount) form.setValue('passengerCount', parseInt(passengerCount, 10));
+      if (destination) form.setValue('tentOrOfficeLocation', destination);
+      if (durationFrom) {
+        try {
+          const fromDate = new Date(durationFrom);
+          if (!isNaN(fromDate.getTime())) {
+            form.setValue('durationFrom', fromDate);
+          }
+        } catch (e) {
+          console.warn('Invalid durationFrom date:', durationFrom);
+        }
+      }
+      if (durationTo) {
+        try {
+          const toDate = new Date(durationTo);
+          if (!isNaN(toDate.getTime())) {
+            form.setValue('durationTo', toDate);
+          }
+        } catch (e) {
+          console.warn('Invalid durationTo date:', durationTo);
+        }
+      }
+    }
+  }, [searchParams, form]);
   
   // Watch values for conditional rendering
   const vehicleTypePassenger = useWatch({ control: form.control, name: 'vehicleTypePassenger' });
