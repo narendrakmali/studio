@@ -137,6 +137,15 @@ export default function OutdoorRequestPage() {
   const [activeTab, setActiveTab] = useState("private");
   const { toast } = useToast();
   const searchParams = useSearchParams();
+  const { firestore } = useFirebase();
+
+  // Initialize Firestore database connection
+  useEffect(() => {
+    if (firestore) {
+      setFirestoreDb(firestore);
+      console.log('🔥 Outdoor request page: Firestore initialized');
+    }
+  }, [firestore]);
 
   const form = useForm<z.infer<typeof requestFormSchema>>({
     resolver: zodResolver(requestFormSchema),

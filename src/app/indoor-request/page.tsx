@@ -91,6 +91,15 @@ export default function IndoorRequestPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const searchParams = useSearchParams();
+  const { firestore } = useFirebase();
+
+  // Initialize Firestore database connection
+  useEffect(() => {
+    if (firestore) {
+      setFirestoreDb(firestore);
+      console.log('🔥 Indoor request page: Firestore initialized');
+    }
+  }, [firestore]);
 
   const form = useForm<z.infer<typeof indoorRequestSchema>>({
     resolver: zodResolver(indoorRequestSchema),
