@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Send, Train, X, MessageCircle } from 'lucide-react';
-import { addRequest } from '@/lib/data';
+import { createTransportRequest } from '@dataconnect/generated';
+import { getDataConnectInstance } from '@/firebase/dataconnect';
 
 type Message = {
   id: number;
@@ -29,23 +30,28 @@ type TrainArrivalData = {
   returnDate?: string;
   returnStation?: string;
   returnTime?: string;
+  selectedTrain?: string;
 };
 
+// Common trains arriving at Sangli/Miraj for the Samagam
+const COMMON_TRAINS = [
+  { id: '1', name: 'कोल्हापूर-पुणे इंटरसिटी', number: '11029', arrival: '05:12 AM', station: 'मिरज' },
+  { id: '2', name: 'मुंबई-कोल्हापूर महालक्ष्मी एक्सप्रेस', number: '11023', arrival: '06:30 AM', station: 'सांगली' },
+  { id: '3', name: 'बेंगलुरु-पुणे एक्सप्रेस', number: '16592', arrival: '08:15 AM', station: 'मिरज' },
+  { id: '4', name: 'सहयाद्री एक्सप्रेस', number: '11046', arrival: '09:45 AM', station: 'सांगली' },
+  { id: '5', name: 'कोल्हापूर-मुंबई जनशताब्दी', number: '12052', arrival: '12:30 PM', station: 'सांगली' },
+  { id: '6', name: 'पुणे-कोल्हापूर पॅसेंजर', number: '51451', arrival: '02:15 PM', station: 'मिरज' },
+  { id: '7', name: 'दिल्ली-कोल्हापूर राजधानी', number: '12218', arrival: '04:30 PM', station: 'सांगली' },
+  { id: '8', name: 'Other (इतर ट्रेन)', number: 'CUSTOM', arrival: '', station: '' },
+];
+
 const STEPS = [
-  { key: 'zone', question: 'तुमच्या झोनचे (Zone) नाव सांगा?' },
-  { key: 'branch', question: 'तुमच्या ब्रान्चचे (Branch) नाव काय आहे?' },
-  { key: 'unitNo', question: 'तुमचा युनिट नंबर (Unit No.) काय आहे?' },
-  { key: 'officialName', question: 'मुखी / संयोजक / सेवादल अधिकारी महोदयांचे पूर्ण नाव सांगा?' },
   { key: 'passengerName', question: 'प्रवास करणाऱ्या मुख्य महात्मांचे नाव सांगा?' },
   { key: 'contactNo', question: 'त्यांचा संपर्क क्रमांक (Mobile Number) द्या?' },
-  { key: 'trainDetails', question: 'ट्रेनचे नाव आणि नंबर काय आहे?' },
-  { key: 'departureDate', question: 'आपण निघण्याची तारीख काय आहे? (DD/MM/YYYY)' },
+  { key: 'selectedTrain', question: 'कृपया तुमची ट्रेन निवडा:\n\n' + COMMON_TRAINS.map(t => `${t.id}️⃣ ${t.name} (${t.number})${t.arrival ? ` - ${t.arrival}` : ''}`).join('\n') + '\n\nक्रमांक टाइप करा (1-8):' },
   { key: 'arrivalDate', question: 'आपण सांगली/मिरज स्टेशनवर कधी पोहोचणार? ती तारीख सांगा. (DD/MM/YYYY)' },
-  { key: 'arrivalTime', question: 'स्टेशनवर पोहोचण्याची वेळ काय असेल? (उदा. 05:12 AM)' },
   { key: 'sevadalCount', question: 'आपल्या सोबत एकूण किती सेवादल सदस्य आहेत?' },
   { key: 'returnDate', question: 'तुमची परतीची तारीख (Return Date) काय आहे? (DD/MM/YYYY)' },
-  { key: 'returnStation', question: 'परतीचे स्टेशन कोणते असेल? (सांगली / मिरज)' },
-  { key: 'returnTime', question: 'परतीच्या ट्रेनची वेळ काय आहे?' },
 ];
 
 export function TrainArrivalChatbot() {
@@ -71,12 +77,12 @@ export function TrainArrivalChatbot() {
       // Initial greeting
       addBotMessage('धन निरंकार जी 🙏! सांगली समागम रेल्वे प्रवासाची माहिती नोंदवण्यासाठी कृपया खालील माहिती द्या.');
       setTimeout(() => {
-        addBotMessage('भाग १: प्राथमिक माहिती (Primary Info)');
-        setTimeout(() => {
-          askNextQuestion();
-        }, 500);
+        if (currentStep < STEPS.length) {
+          addBotMessage(STEPS[currentStep].question);
+        }
       }, 1000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const addBotMessage = (text: string) => {
@@ -99,20 +105,7 @@ export function TrainArrivalChatbot() {
 
   const askNextQuestion = () => {
     if (currentStep < STEPS.length) {
-      // Add section headers
-      if (currentStep === 6) {
-        addBotMessage('भाग २: आगमनाची माहिती (Arrival Info)');
-        setTimeout(() => {
-          addBotMessage(STEPS[currentStep].question);
-        }, 500);
-      } else if (currentStep === 11) {
-        addBotMessage('भाग ३: परतीचा प्रवास (Return Info)');
-        setTimeout(() => {
-          addBotMessage(STEPS[currentStep].question);
-        }, 500);
-      } else {
-        addBotMessage(STEPS[currentStep].question);
-      }
+      addBotMessage(STEPS[currentStep].question);
     }
   };
 
@@ -126,10 +119,86 @@ export function TrainArrivalChatbot() {
     }
 
     addUserMessage(input);
-
-    // Save the answer
     const currentKey = STEPS[currentStep].key as keyof TrainArrivalData;
-    setData(prev => ({ ...prev, [currentKey]: input }));
+
+    // Special handling for train selection
+    if (currentKey === 'selectedTrain') {
+      const trainIndex = parseInt(input.trim()) - 1;
+      if (trainIndex >= 0 && trainIndex < COMMON_TRAINS.length) {
+        const selectedTrain = COMMON_TRAINS[trainIndex];
+        
+        if (selectedTrain.number === 'CUSTOM') {
+          // User selected "Other" - need to ask for custom train details
+          setData(prev => ({ ...prev, selectedTrain: 'CUSTOM' }));
+          setInput('');
+          addBotMessage('कृपया ट्रेनचे पूर्ण नाव आणि नंबर टाइप करा (उदा: पुणे एक्सप्रेस 12345):');
+          return; // Don't move to next step yet
+        } else {
+          // Auto-fill train details
+          setData(prev => ({ 
+            ...prev, 
+            selectedTrain: input,
+            trainDetails: `${selectedTrain.name} (${selectedTrain.number})`,
+            arrivalTime: selectedTrain.arrival,
+            returnStation: selectedTrain.station,
+          }));
+          addBotMessage(`✅ निवडलेली ट्रेन: ${selectedTrain.name} (${selectedTrain.number})\n📍 स्टेशन: ${selectedTrain.station}\n🕐 आगमन वेळ: ${selectedTrain.arrival}`);
+        }
+      } else {
+        addBotMessage('❌ कृपया 1 ते 8 मधील वैध क्रमांक टाइप करा.');
+        setInput('');
+        return;
+      }
+    } else if (data.selectedTrain === 'CUSTOM' && !data.trainDetails) {
+      // Handle custom train details input
+      if (input.trim().length < 5) {
+        addBotMessage('❌ कृपया ट्रेनचे पूर्ण नाव आणि नंबर द्या.');
+        setInput('');
+        return;
+      }
+      setData(prev => ({ 
+        ...prev, 
+        trainDetails: input,
+        arrivalTime: 'तुम्ही सांगाल',
+        returnStation: 'सांगली/मिरज',
+      }));
+      addBotMessage(`✅ ट्रेन नोंदवली: ${input}`);
+      setInput('');
+      // Now move to next step
+      setCurrentStep(prev => prev + 1);
+      setTimeout(askNextQuestion, 500);
+      return;
+    } else if (currentKey === 'contactNo') {
+      // Validate phone number
+      const phoneRegex = /^[6-9]\d{9}$/;
+      if (!phoneRegex.test(input.trim())) {
+        addBotMessage('❌ कृपया वैध 10 अंकी मोबाईल नंबर द्या (6, 7, 8, किंवा 9 ने सुरू होणारा).');
+        setInput('');
+        return;
+      }
+      setData(prev => ({ ...prev, [currentKey]: input }));
+    } else if (currentKey === 'arrivalDate' || currentKey === 'returnDate') {
+      // Validate date format DD/MM/YYYY
+      const dateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+      if (!dateRegex.test(input.trim())) {
+        addBotMessage('❌ कृपया तारीख DD/MM/YYYY या स्वरूपात द्या (उदा: 15/01/2026).');
+        setInput('');
+        return;
+      }
+      setData(prev => ({ ...prev, [currentKey]: input }));
+    } else if (currentKey === 'sevadalCount') {
+      // Validate passenger count
+      const count = parseInt(input.trim());
+      if (isNaN(count) || count < 1 || count > 100) {
+        addBotMessage('❌ कृपया 1 ते 100 मधील वैध संख्या द्या.');
+        setInput('');
+        return;
+      }
+      setData(prev => ({ ...prev, [currentKey]: input }));
+    } else {
+      // Save the answer normally
+      setData(prev => ({ ...prev, [currentKey]: input }));
+    }
 
     setInput('');
 
@@ -150,19 +219,16 @@ export function TrainArrivalChatbot() {
     const confirmationMessage = `
 तपासणी (Review Details):
 
-झोन: ${data.zone}
-ब्रान्च: ${data.branch}
-युनिट नंबर: ${data.unitNo}
-अधिकारी: ${data.officialName}
 प्रवासी महात्मा: ${data.passengerName}
 संपर्क: ${data.contactNo}
 
 ट्रेन: ${data.trainDetails}
-आगमन: ${data.arrivalDate} (${data.arrivalTime})
+आगमन तारीख: ${data.arrivalDate}
+आगमन वेळ: ${data.arrivalTime}
+स्टेशन: ${data.returnStation}
 सेवादल संख्या: ${data.sevadalCount}
 
-परतीचा प्रवास: ${data.returnDate} (${data.returnTime})
-परतीचे स्टेशन: ${data.returnStation}
+परतीची तारीख: ${data.returnDate}
 
 ही माहिती बरोबर आहे का? (हो / नाही)
     `.trim();
@@ -177,35 +243,98 @@ export function TrainArrivalChatbot() {
       addBotMessage('कृपया थांबा, तुमची माहिती नोंदवत आहे...');
 
       try {
-        // Submit to Firestore
-        await addRequest({
-          source: 'outdoor',
-          requestType: 'train',
-          departmentName: data.branch || '',
-          userName: data.passengerName || '',
-          userPhone: data.contactNo || '',
-          trainDevoteeCount: parseInt(data.sevadalCount || '0'),
-          zone: data.zone,
-          unitNo: data.unitNo,
-          officialName: data.officialName,
+        // Validate required data before submission
+        if (!data.passengerName || !data.contactNo) {
+          addBotMessage('❌ त्रुटी: नाव आणि संपर्क क्रमांक आवश्यक आहे.');
+          setIsSubmitting(false);
+          setIsConfirming(false);
+          return;
+        }
+
+        // Parse date correctly (DD/MM/YYYY format)
+        const dateParts = data.arrivalDate?.split('/') || [];
+        let scheduledDate: Date;
+        
+        if (dateParts.length === 3) {
+          const day = parseInt(dateParts[0]);
+          const month = parseInt(dateParts[1]) - 1; // Month is 0-indexed
+          const year = parseInt(dateParts[2]);
+          scheduledDate = new Date(year, month, day);
+          
+          // Validate date
+          if (isNaN(scheduledDate.getTime())) {
+            addBotMessage('❌ त्रुटी: अवैध आगमन तारीख. कृपया पुन्हा प्रयत्न करा.');
+            setIsSubmitting(false);
+            setIsConfirming(false);
+            return;
+          }
+        } else {
+          addBotMessage('❌ त्रुटी: आगमन तारीख योग्य स्वरूपात नाही. कृपया पुन्हा प्रयत्न करा.');
+          setIsSubmitting(false);
+          setIsConfirming(false);
+          return;
+        }
+
+        console.log('📤 Submitting train arrival request:', {
+          passengerName: data.passengerName,
+          contactNo: data.contactNo,
           trainDetails: data.trainDetails,
-          departureDate: data.departureDate,
-          arrivalDate: data.arrivalDate,
-          arrivalTime: data.arrivalTime,
-          returnDate: data.returnDate,
-          returnStation: data.returnStation,
-          returnTime: data.returnTime,
+          scheduledDate: scheduledDate.toISOString(),
         });
 
+        // Get Data Connect instance
+        const dcInstance = getDataConnectInstance();
+        if (!dcInstance) {
+          throw new Error('Data Connect not initialized. Please refresh the page.');
+        }
+
+        // Submit to Data Connect with explicit instance
+        const result = await createTransportRequest(dcInstance, {
+          passengerName: data.passengerName,
+          department: 'Train Arrival',
+          purpose: 'Train arrival - Sant Samagam',
+          phoneNumber: data.contactNo,
+          employeeId: '',
+          pickupLocation: `${data.returnStation || 'Station'} - ${data.trainDetails || 'Train'}`,
+          dropLocation: 'Samagam Grounds',
+          scheduledTime: scheduledDate.toISOString(),
+          priority: 'normal',
+          numberOfPassengers: parseInt(data.sevadalCount || '1'),
+          requestType: 'outdoor',
+          specialRequirements: `Train: ${data.trainDetails}, Arrival: ${data.arrivalDate} at ${data.arrivalTime}, Return: ${data.returnDate}`,
+        });
+
+        console.log('✅ Request submitted successfully:', result);
         addBotMessage('✅ धन्यवाद! तुमची माहिती यशस्वीरित्या नोंदवली गेली आहे. आम्ही लवकरच तुमच्याशी संपर्क साधू. धन निरंकार जी! 🙏');
         
         // Reset after 3 seconds
         setTimeout(() => {
           resetChatbot();
         }, 3000);
-      } catch (error) {
-        console.error('Error submitting train arrival:', error);
-        addBotMessage('❌ माफ करा, माहिती नोंदवताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.');
+      } catch (error: any) {
+        console.error('❌ Error submitting train arrival:', error);
+        console.error('Error details:', {
+          name: error?.name,
+          message: error?.message,
+          stack: error?.stack,
+          fullError: error,
+        });
+        
+        let errorMessage = '❌ माफ करा, माहिती नोंदवताना त्रुटी आली.\n\n';
+        
+        if (error?.message?.includes('fetch') || error?.message?.includes('network') || error?.message?.includes('Failed to')) {
+          errorMessage += '⚠️ सर्व्हर उपलब्ध नाही.\n\n';
+          errorMessage += 'डेव्हलपर्ससाठी:\n';
+          errorMessage += '• Firebase Data Connect emulator चालू आहे का ते तपासा\n';
+          errorMessage += '• Firebase config योग्य आहे का ते तपासा\n';
+          errorMessage += '• Browser console मध्ये अधिक तपशील पहा';
+        } else if (error?.message) {
+          errorMessage += `त्रुटी: ${error.message}\n\nकृपया browser console तपासा.`;
+        } else {
+          errorMessage += 'अज्ञात त्रुटी. Browser console तपासा.';
+        }
+        
+        addBotMessage(errorMessage);
         setIsSubmitting(false);
         setIsConfirming(false);
       }

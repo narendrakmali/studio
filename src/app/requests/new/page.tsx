@@ -76,7 +76,8 @@ export default function IndoorRequestPage() {
       id: `R${String(requests.length + 1).padStart(3, '0')}`,
       status: 'pending' as const,
       createdAt: new Date(),
-      requestType: 'private' as const, 
+      requestType: 'private' as const,
+      source: 'indoor' as const,
     };
 
     requests.unshift(newRequest);

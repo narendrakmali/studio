@@ -198,7 +198,7 @@ export default function DispatchPage() {
                                 </div>
                                 <div className="space-y-1">
                                     <Label htmlFor="vehicleType">Vehicle Type</Label>
-                                    <Select value={vehicleType} onValueChange={(value: TransportRequest['vehicleType']) => setVehicleType(value)}>
+                                    <Select value={vehicleType} onValueChange={(value) => setVehicleType(value as TransportRequest['vehicleType'])}>
                                         <SelectTrigger id="vehicleType">
                                             <SelectValue placeholder="Select vehicle type" />
                                         </SelectTrigger>

@@ -1,33 +1,120 @@
-# Example mutations for a simple movie app
+# Mutations for Studio Transport Management System
 
-# Create a movie based on user input
-mutation CreateMovie($title: String!, $genre: String!, $imageUrl: String!)
-@auth(level: USER_EMAIL_VERIFIED, insecureReason: "Any email verified users can create a new movie.") {
-  movie_insert(data: { title: $title, genre: $genre, imageUrl: $imageUrl })
+# Create a new transport request
+mutation CreateTransportRequest(
+  $passengerName: String!
+  $department: String!
+  $purpose: String!
+  $phoneNumber: String
+  $employeeId: String
+  $pickupLocation: String!
+  $dropLocation: String!
+  $scheduledTime: Timestamp!
+  $priority: String
+  $specialRequirements: String
+  $numberOfPassengers: Int
+  $estimatedDistance: Float
+  $requestType: String
+) @auth(level: PUBLIC, insecureReason: "Anyone can create a transport request.") {
+  transportRequest_insert(data: {
+    passengerName: $passengerName
+    department: $department
+    purpose: $purpose
+    phoneNumber: $phoneNumber
+    employeeId: $employeeId
+    pickupLocation: $pickupLocation
+    dropLocation: $dropLocation
+    scheduledTime: $scheduledTime
+    priority: $priority
+    specialRequirements: $specialRequirements
+    numberOfPassengers: $numberOfPassengers
+    estimatedDistance: $estimatedDistance
+    requestType: $requestType
+  })
 }
 
-# Upsert (update or insert) a user's username based on their auth.uid
-mutation UpsertUser($username: String!) @auth(level: USER) {
-  # The "auth.uid" server value ensures that users can only register their own user.
-  user_upsert(data: { id_expr: "auth.uid", username: $username })
+# Update transport request status
+mutation UpdateTransportRequestStatus($id: UUID!, $status: String!) 
+@auth(level: PUBLIC, insecureReason: "Need to update request status.") {
+  transportRequest_update(id: $id, data: { status: $status })
 }
 
-# Add a review for a movie
-mutation AddReview($movieId: UUID!, $rating: Int!, $reviewText: String!)
-@auth(level: USER) {
-  review_upsert(
-    data: {
-      userId_expr: "auth.uid"
-      movieId: $movieId
-      rating: $rating
-      reviewText: $reviewText
-      # reviewDate defaults to today in the schema. No need to set it manually.
-    }
-  )
+# Assign vehicle to request
+mutation AssignVehicleToRequest($requestId: UUID!, $vehicleId: UUID!) 
+@auth(level: PUBLIC, insecureReason: "Dispatch needs to assign vehicles.") {
+  transportRequest_update(id: $requestId, data: { assignedVehicleId: $vehicleId })
 }
 
-# Logged in user can delete their review for a movie
-mutation DeleteReview($movieId: UUID!) @auth(level: USER) {
-  # The "auth.uid" server value ensures that users can only delete their own reviews.
-  review_delete(key: { userId_expr: "auth.uid", movieId: $movieId })
+# Register a new vehicle
+mutation RegisterVehicle(
+  $vehicleNumber: String!
+  $type: String!
+  $model: String!
+  $capacity: Int!
+  $driverName: String!
+  $driverPhone: String!
+  $driverLicense: String
+  $imageUrl: String
+  $currentLocation: String
+) @auth(level: PUBLIC, insecureReason: "Fleet management can register vehicles.") {
+  vehicle_insert(data: {
+    vehicleNumber: $vehicleNumber
+    type: $type
+    model: $model
+    capacity: $capacity
+    driverName: $driverName
+    driverPhone: $driverPhone
+    driverLicense: $driverLicense
+    imageUrl: $imageUrl
+    currentLocation: $currentLocation
+  })
+}
+
+# Update vehicle status
+mutation UpdateVehicleStatus($id: UUID!, $status: String!) 
+@auth(level: PUBLIC, insecureReason: "Need to update vehicle status.") {
+  vehicle_update(id: $id, data: { status: $status })
+}
+
+# Update vehicle location
+mutation UpdateVehicleLocation($id: UUID!, $currentLocation: String!) 
+@auth(level: PUBLIC, insecureReason: "Need to track vehicle location.") {
+  vehicle_update(id: $id, data: { currentLocation: $currentLocation })
+}
+
+# Create a dispatch
+mutation CreateDispatch(
+  $requestId: UUID!
+  $vehicleId: UUID!
+  $estimatedArrival: Timestamp
+  $notes: String
+  $dispatchedBy: String
+) @auth(level: PUBLIC, insecureReason: "Dispatch operations.") {
+  dispatch_insert(data: {
+    requestId: $requestId
+    vehicleId: $vehicleId
+    estimatedArrival: $estimatedArrival
+    notes: $notes
+    dispatchedBy: $dispatchedBy
+  })
+}
+
+# Update dispatch status
+mutation UpdateDispatchStatus(
+  $id: UUID!
+  $status: String!
+  $actualArrival: Timestamp
+  $completedAt: Timestamp
+) @auth(level: PUBLIC, insecureReason: "Track dispatch progress.") {
+  dispatch_update(id: $id, data: { 
+    status: $status
+    actualArrival: $actualArrival
+    completedAt: $completedAt
+  })
+}
+
+# Delete a transport request
+mutation DeleteTransportRequest($id: UUID!) 
+@auth(level: PUBLIC, insecureReason: "Admin can delete requests.") {
+  transportRequest_delete(id: $id)
 }

@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageCircle, X, Send, Bot, User, Languages } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { addRequest } from '@/lib/data';
-import { TransportRequest } from '@/lib/types';
+import { createTransportRequest } from '@dataconnect/generated';
+import { getDataConnectInstance } from '@/firebase/dataconnect';
 
 type Message = {
   id: string;
@@ -16,7 +16,6 @@ type Message = {
   timestamp: Date;
 };
 
-type RequestType = 'indoor' | 'outdoor';
 type Language = 'english' | 'hindi' | 'marathi';
 
 type ConversationState = {
@@ -30,15 +29,13 @@ type ConversationState = {
     passengerCount: number;
     durationFrom: Date;
     durationTo: Date;
-    requestType: string;
-    source: string;
   }>;
 };
 
 const TRANSLATIONS = {
   english: {
     greeting: 'Dhan Nirankar Ji, you are welcome to 59th Nirankari Sant Samagam transport sewa! 🙏',
-    helpMessage: "I'm here to help you request a {type} vehicle. Let's get started!",
+    helpMessage: "I'm here to help you request a vehicle. Let's get started!",
     languageSelect: 'Please select your preferred language / कृपया अपनी भाषा चुनें / कृपया तुमची भाषा निवडा',
     questions: [
       { field: 'userName', question: 'What is your name?', invalidMsg: "Sorry, that doesn't seem valid. What is your name?" },
@@ -59,7 +56,7 @@ const TRANSLATIONS = {
   },
   hindi: {
     greeting: 'धन निरंकार जी, 59वें निरंकारी संत समागम परिवहन सेवा में आपका स्वागत है! 🙏',
-    helpMessage: 'मैं आपको {type} वाहन अनुरोध करने में मदद करने के लिए यहाँ हूँ। चलिए शुरू करते हैं!',
+    helpMessage: 'मैं आपको वाहन अनुरोध करने में मदद करने के लिए यहाँ हूँ। चलिए शुरू करते हैं!',
     languageSelect: 'कृपया अपनी भाषा चुनें / Please select your language / कृपया तुमची भाषा निवडा',
     questions: [
       { field: 'userName', question: 'आपका नाम क्या है?', invalidMsg: 'क्षमा करें, यह सही नहीं लग रहा। आपका नाम क्या है?' },
@@ -80,7 +77,7 @@ const TRANSLATIONS = {
   },
   marathi: {
     greeting: 'धन निरंकार जी, ५९व्या निरंकारी संत समागम वाहतूक सेवेत तुमचे स्वागत आहे! 🙏',
-    helpMessage: 'मी तुम्हाला {type} वाहन विनंती करण्यात मदत करण्यासाठी येथे आहे. चला सुरुवात करूया!',
+    helpMessage: 'मी तुम्हाला वाहन विनंती करण्यात मदत करण्यासाठी येथे आहे. चला सुरुवात करूया!',
     languageSelect: 'कृपया तुमची भाषा निवडा / Please select your language / कृपया अपनी भाषा चुनें',
     questions: [
       { field: 'userName', question: 'तुमचे नाव काय आहे?', invalidMsg: 'माफ करा, ते योग्य वाटत नाही. तुमचे नाव काय आहे?' },
@@ -116,21 +113,15 @@ const VALIDATION_RULES = [
 ];
 
 // Helper to get questions based on request type
-function getQuestionsForType(requestType: RequestType, lang: Language) {
+function getQuestions(lang: Language) {
   const trans = TRANSLATIONS[lang];
-  
-  if (requestType === 'indoor') {
-    return trans.questions;
-  }
-  
-  // Outdoor private vehicle questions
   return [
     trans.questions[0], // userName
     trans.questions[1], // contactNumber
     trans.questions[2], // departmentName
-    { 
-      field: 'vehicleType', 
-      question: lang === 'english' ? 'What type of vehicle? (Options: two-wheeler, car, suv, winger, innova)' 
+    {
+      field: 'vehicleType',
+      question: lang === 'english' ? 'What type of vehicle? (Options: two-wheeler, car, suv, winger, innova)'
         : lang === 'hindi' ? 'किस प्रकार का वाहन? (विकल्प: two-wheeler, car, suv, winger, innova)'
         : 'कोणत्या प्रकारचे वाहन? (पर्याय: two-wheeler, car, suv, winger, innova)',
       invalidMsg: lang === 'english' ? 'Please choose from: two-wheeler, car, suv, winger, innova'
@@ -170,7 +161,7 @@ function getQuestionsForType(requestType: RequestType, lang: Language) {
   ];
 }
 
-export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { requestType?: RequestType; autoPopup?: boolean }) {
+export function RequestChatbot({ autoPopup = false }: { autoPopup?: boolean }) {
   const [isOpen, setIsOpen] = useState(autoPopup);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -289,8 +280,8 @@ export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { 
 
   const startConversation = (selectedLang: Language) => {
     const trans = TRANSLATIONS[selectedLang];
-    const questions = getQuestionsForType(requestType, selectedLang);
-    addMessage('bot', trans.helpMessage.replace('{type}', requestType));
+    const questions = getQuestions(selectedLang);
+    addMessage('bot', trans.helpMessage);
     setTimeout(() => {
       addMessage('bot', questions[0].question);
       setConversationState({ step: 0, data: {} });
@@ -344,7 +335,7 @@ export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { 
     if (!language) return;
     
     const trans = TRANSLATIONS[language];
-    const questions = getQuestionsForType(requestType, language);
+    const questions = getQuestions(language);
     const currentQuestion = questions[conversationState.step];
     
     // Find the validation rule for this field
@@ -400,17 +391,29 @@ export function RequestChatbot({ requestType = 'indoor', autoPopup = false }: { 
       addMessage('bot', trans.submitting);
       
       try {
-        // Submit the request
-        const requestData: Omit<TransportRequest, 'id' | 'status' | 'createdAt'> = {
-          ...data,
-          source: requestType,
-          requestType: 'private',
-        };
+        // Get Data Connect instance
+        const dcInstance = getDataConnectInstance();
+        if (!dcInstance) {
+          throw new Error('Data Connect not initialized. Please refresh the page.');
+        }
+
+        // Submit the request using Data Connect
+        const result = await createTransportRequest(dcInstance, {
+          passengerName: data.userName || '',
+          department: data.departmentName || '',
+          purpose: 'Vehicle request via chatbot',
+          phoneNumber: data.contactNumber || '',
+          employeeId: '',
+          pickupLocation: data.destination || 'Not specified',
+          dropLocation: 'Samagam Grounds',
+          scheduledTime: (data.durationFrom || new Date()).toISOString(),
+          priority: 'normal',
+          numberOfPassengers: data.passengerCount || 1,
+          requestType: 'outdoor',
+          specialRequirements: `Vehicle Type: ${data.vehicleType || 'Not specified'}. Duration: ${data.durationFrom?.toLocaleDateString()} to ${data.durationTo?.toLocaleDateString()}`,
+        });
         
-        // CRITICAL: await the promise to ensure data is saved
-        const savedRequest = await addRequest(requestData);
-        
-        console.log('✅ Chatbot request successfully saved:', savedRequest);
+        console.log('✅ Chatbot request successfully saved:', result.data.transportRequest_insert);
         
         setTimeout(() => {
           addMessage('bot', trans.success);

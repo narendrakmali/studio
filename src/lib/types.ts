@@ -23,7 +23,6 @@ export type Vehicle = {
 
 export type TransportRequest = {
   id: string;
-  source: 'indoor' | 'outdoor'; // To distinguish request origin
   userName: string;
   contactNumber: string;
   departmentName: string; // This can be department or Branch/Zone
@@ -71,14 +70,11 @@ export type TransportRequest = {
   departureDate?: Date;
   departureTime?: string;
   
-  // Additional train arrival fields
+  // Additional train arrival fields (chatbot)
   zone?: string;
   unitNo?: string;
   officialName?: string;
   trainDetails?: string;
-  departureDate?: string;
-  arrivalDate?: string;
-  arrivalTime?: string;
   sevadalCount?: string;
   returnDate?: string;
   returnStation?: string;

@@ -1,78 +1,160 @@
-# Example queries for a simple movie app.
+# Queries for Studio Transport Management System
 
-# @auth() directives control who can call each operation.
-# Anyone should be able to list all movies, so the auth level is set to PUBLIC
-query ListMovies @auth(level: PUBLIC, insecureReason: "Anyone can list all movies.") {
-  movies {
+# List all transport requests (ordered by creation time)
+query ListTransportRequests 
+@auth(level: PUBLIC, insecureReason: "Dashboard needs to display all requests.") {
+  transportRequests(orderBy: {createdAt: DESC}) {
     id
-    title
+    passengerName
+    department
+    purpose
+    phoneNumber
+    employeeId
+    pickupLocation
+    dropLocation
+    scheduledTime
+    status
+    priority
+    createdAt
+    updatedAt
+    numberOfPassengers
+    specialRequirements
+    estimatedDistance
+    requestType
+    assignedVehicleId
+    assignedVehicle {
+      id
+      vehicleNumber
+      type
+      model
+      driverName
+      driverPhone
+      status
+    }
+  }
+}
+
+# Get a specific transport request by ID
+query GetTransportRequestById($id: UUID!) 
+@auth(level: PUBLIC, insecureReason: "Need to view individual requests.") {
+  transportRequest(id: $id) {
+    id
+    passengerName
+    department
+    purpose
+    phoneNumber
+    employeeId
+    pickupLocation
+    dropLocation
+    scheduledTime
+    status
+    priority
+    createdAt
+    updatedAt
+    numberOfPassengers
+    specialRequirements
+    estimatedDistance
+    requestType
+    assignedVehicleId
+    assignedVehicle {
+      id
+      vehicleNumber
+      type
+      model
+      capacity
+      driverName
+      driverPhone
+      status
+      currentLocation
+      imageUrl
+    }
+  }
+}
+
+# List all vehicles
+query ListVehicles 
+@auth(level: PUBLIC, insecureReason: "Fleet management needs to display all vehicles.") {
+  vehicles(orderBy: {registeredAt: DESC}) {
+    id
+    vehicleNumber
+    type
+    model
+    capacity
+    driverName
+    driverPhone
+    driverLicense
+    status
+    currentLocation
     imageUrl
-    genre
+    registeredAt
+    lastMaintenanceDate
   }
 }
 
-# List all users, only admins should be able to list all users, so we use NO_ACCESS
-query ListUsers @auth(level: NO_ACCESS) {
-  users {
+# Get available vehicles
+query GetAvailableVehicles 
+@auth(level: PUBLIC, insecureReason: "Dispatch needs to find available vehicles.") {
+  vehicles(where: {status: {eq: "available"}}) {
     id
-    username
-  }
-}
-
-# Logged in users can list all their reviews and movie titles associated with the review
-# Since the query uses the uid of the current authenticated user, we set auth level to USER
-query ListUserReviews @auth(level: USER) {
-  user(key: { id_expr: "auth.uid" }) {
-    id
-    username
-    # <field>_on_<foreign_key_field> makes it easy to grab info from another table
-    # Here, we use it to grab all the reviews written by the user.
-    reviews: reviews_on_user {
-      rating
-      reviewDate
-      reviewText
-      movie {
-        id
-        title
-      }
-    }
-  }
-}
-
-# Get movie by id
-query GetMovieById($id: UUID!) @auth(level: PUBLIC, insecureReason: "Anyone can get a movie by id.") {
-  movie(id: $id) {
-    id
-    title
+    vehicleNumber
+    type
+    model
+    capacity
+    driverName
+    driverPhone
+    status
+    currentLocation
     imageUrl
-    genre
-    metadata: movieMetadata_on_movie {
-      rating
-      releaseYear
-      description
-    }
-    reviews: reviews_on_movie {
-      reviewText
-      reviewDate
-      rating
-      user {
-        id
-        username
-      }
-    }
   }
 }
 
-# Search for movies, actors, and reviews
-query SearchMovie($titleInput: String, $genre: String) @auth(level: PUBLIC, insecureReason: "Anyone can search for movies.") {
-  movies(
-    where: {
-      _and: [{ genre: { eq: $genre } }, { title: { contains: $titleInput } }]
-    }
-  ) {
+# Get a specific vehicle by ID
+query GetVehicleById($id: UUID!) 
+@auth(level: PUBLIC, insecureReason: "Need to view individual vehicles.") {
+  vehicle(id: $id) {
     id
-    title
-    genre
+    vehicleNumber
+    type
+    model
+    capacity
+    driverName
+    driverPhone
+    driverLicense
+    status
+    currentLocation
     imageUrl
+    registeredAt
+    lastMaintenanceDate
+  }
+}
+
+# List all dispatches
+query ListDispatches 
+@auth(level: PUBLIC, insecureReason: "Dispatch management needs to display all dispatches.") {
+  dispatches(orderBy: {dispatchedAt: DESC}) {
+    id
+    requestId
+    vehicleId
+    dispatchedAt
+    estimatedArrival
+    actualArrival
+    completedAt
+    status
+    notes
+    dispatchedBy
+    request {
+      id
+      passengerName
+      pickupLocation
+      dropLocation
+      scheduledTime
+    }
+    vehicle {
+      id
+      vehicleNumber
+      type
+      driverName
+      driverPhone
+    }
   }
 }

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useMemo, type ReactNode } from 'react';
+import React, { useMemo, type ReactNode, useEffect } from 'react';
 import { FirebaseProvider } from '@/firebase/provider';
 import { initializeFirebase } from '@/firebase';
+import { initializeDataConnect } from '@/firebase/dataconnect';
 
 interface FirebaseClientProviderProps {
   children: ReactNode;
@@ -46,6 +47,18 @@ export function FirebaseClientProvider({ children }: FirebaseClientProviderProps
       return { firebaseApp: null, auth: null, firestore: null };
     }
   }, []); // Empty dependency array ensures this runs only once on mount
+
+  // Connect Data Connect to emulator in development - do this BEFORE any components render
+  useEffect(() => {
+    if (typeof window !== 'undefined' && firebaseServices.firebaseApp) {
+      try {
+        initializeDataConnect(firebaseServices.firebaseApp);
+        console.log('✅ Data Connect initialized in ClientProvider');
+      } catch (error) {
+        console.error('❌ Failed to initialize Data Connect:', error);
+      }
+    }
+  }, [firebaseServices.firebaseApp]);
 
   return (
     <FirebaseProvider

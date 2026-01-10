@@ -17,6 +17,8 @@
   },
   "emulators": {
     "dataconnect": {
+      "host": "0.0.0.0",
+      "port": 9399,
       "dataDir": "dataconnect/.dataconnect/pgliteData"
     }
   },

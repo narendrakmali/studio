@@ -10,241 +10,456 @@ export type DateString = string;
 
 
 
-export interface AddReviewData {
-  review_upsert: Review_Key;
+export interface AssignVehicleToRequestData {
+  transportRequest_update?: TransportRequest_Key | null;
 }
 
-export interface AddReviewVariables {
-  movieId: UUIDString;
-  rating: number;
-  reviewText: string;
+export interface AssignVehicleToRequestVariables {
+  requestId: UUIDString;
+  vehicleId: UUIDString;
 }
 
-export interface CreateMovieData {
-  movie_insert: Movie_Key;
+export interface CreateDispatchData {
+  dispatch_insert: Dispatch_Key;
 }
 
-export interface CreateMovieVariables {
-  title: string;
-  genre: string;
-  imageUrl: string;
+export interface CreateDispatchVariables {
+  requestId: UUIDString;
+  vehicleId: UUIDString;
+  estimatedArrival?: TimestampString | null;
+  notes?: string | null;
+  dispatchedBy?: string | null;
 }
 
-export interface DeleteReviewData {
-  review_delete?: Review_Key | null;
+export interface CreateTransportRequestData {
+  transportRequest_insert: TransportRequest_Key;
 }
 
-export interface DeleteReviewVariables {
-  movieId: UUIDString;
+export interface CreateTransportRequestVariables {
+  passengerName: string;
+  department: string;
+  purpose: string;
+  phoneNumber?: string | null;
+  employeeId?: string | null;
+  pickupLocation: string;
+  dropLocation: string;
+  scheduledTime: TimestampString;
+  priority?: string | null;
+  specialRequirements?: string | null;
+  numberOfPassengers?: number | null;
+  estimatedDistance?: number | null;
+  requestType?: string | null;
 }
 
-export interface GetMovieByIdData {
-  movie?: {
-    id: UUIDString;
-    title: string;
-    imageUrl: string;
-    genre?: string | null;
-    metadata?: {
-      rating?: number | null;
-      releaseYear?: number | null;
-      description?: string | null;
-    };
-      reviews: ({
-        reviewText?: string | null;
-        reviewDate: DateString;
-        rating?: number | null;
-        user: {
-          id: string;
-          username: string;
-        } & User_Key;
-      })[];
-  } & Movie_Key;
+export interface DeleteTransportRequestData {
+  transportRequest_delete?: TransportRequest_Key | null;
 }
 
-export interface GetMovieByIdVariables {
+export interface DeleteTransportRequestVariables {
   id: UUIDString;
 }
 
-export interface ListMoviesData {
-  movies: ({
-    id: UUIDString;
-    title: string;
-    imageUrl: string;
-    genre?: string | null;
-  } & Movie_Key)[];
+export interface Dispatch_Key {
+  id: UUIDString;
+  __typename?: 'Dispatch_Key';
 }
 
-export interface ListUserReviewsData {
-  user?: {
-    id: string;
-    username: string;
-    reviews: ({
-      rating?: number | null;
-      reviewDate: DateString;
-      reviewText?: string | null;
-      movie: {
+export interface GetAvailableVehiclesData {
+  vehicles: ({
+    id: UUIDString;
+    vehicleNumber: string;
+    type: string;
+    model: string;
+    capacity: number;
+    driverName: string;
+    driverPhone: string;
+    status: string;
+    currentLocation?: string | null;
+    imageUrl?: string | null;
+  } & Vehicle_Key)[];
+}
+
+export interface GetTransportRequestByIdData {
+  transportRequest?: {
+    id: UUIDString;
+    passengerName: string;
+    department: string;
+    purpose: string;
+    phoneNumber?: string | null;
+    employeeId?: string | null;
+    pickupLocation: string;
+    dropLocation: string;
+    scheduledTime: TimestampString;
+    status: string;
+    priority?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+    numberOfPassengers?: number | null;
+    specialRequirements?: string | null;
+    estimatedDistance?: number | null;
+    requestType?: string | null;
+    assignedVehicleId?: UUIDString | null;
+    assignedVehicle?: {
+      id: UUIDString;
+      vehicleNumber: string;
+      type: string;
+      model: string;
+      capacity: number;
+      driverName: string;
+      driverPhone: string;
+      status: string;
+      currentLocation?: string | null;
+      imageUrl?: string | null;
+    } & Vehicle_Key;
+  } & TransportRequest_Key;
+}
+
+export interface GetTransportRequestByIdVariables {
+  id: UUIDString;
+}
+
+export interface GetVehicleByIdData {
+  vehicle?: {
+    id: UUIDString;
+    vehicleNumber: string;
+    type: string;
+    model: string;
+    capacity: number;
+    driverName: string;
+    driverPhone: string;
+    driverLicense?: string | null;
+    status: string;
+    currentLocation?: string | null;
+    imageUrl?: string | null;
+    registeredAt: TimestampString;
+    lastMaintenanceDate?: TimestampString | null;
+  } & Vehicle_Key;
+}
+
+export interface GetVehicleByIdVariables {
+  id: UUIDString;
+}
+
+export interface ListDispatchesData {
+  dispatches: ({
+    id: UUIDString;
+    requestId: UUIDString;
+    vehicleId: UUIDString;
+    dispatchedAt: TimestampString;
+    estimatedArrival?: TimestampString | null;
+    actualArrival?: TimestampString | null;
+    completedAt?: TimestampString | null;
+    status: string;
+    notes?: string | null;
+    dispatchedBy?: string | null;
+    request: {
+      id: UUIDString;
+      passengerName: string;
+      pickupLocation: string;
+      dropLocation: string;
+      scheduledTime: TimestampString;
+    } & TransportRequest_Key;
+      vehicle: {
         id: UUIDString;
-        title: string;
-      } & Movie_Key;
-    })[];
-  } & User_Key;
+        vehicleNumber: string;
+        type: string;
+        driverName: string;
+        driverPhone: string;
+      } & Vehicle_Key;
+  } & Dispatch_Key)[];
 }
 
-export interface ListUsersData {
-  users: ({
-    id: string;
-    username: string;
-  } & User_Key)[];
-}
-
-export interface MovieMetadata_Key {
-  id: UUIDString;
-  __typename?: 'MovieMetadata_Key';
-}
-
-export interface Movie_Key {
-  id: UUIDString;
-  __typename?: 'Movie_Key';
-}
-
-export interface Review_Key {
-  userId: string;
-  movieId: UUIDString;
-  __typename?: 'Review_Key';
-}
-
-export interface SearchMovieData {
-  movies: ({
+export interface ListTransportRequestsData {
+  transportRequests: ({
     id: UUIDString;
-    title: string;
-    genre?: string | null;
-    imageUrl: string;
-  } & Movie_Key)[];
+    passengerName: string;
+    department: string;
+    purpose: string;
+    phoneNumber?: string | null;
+    employeeId?: string | null;
+    pickupLocation: string;
+    dropLocation: string;
+    scheduledTime: TimestampString;
+    status: string;
+    priority?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+    numberOfPassengers?: number | null;
+    specialRequirements?: string | null;
+    estimatedDistance?: number | null;
+    requestType?: string | null;
+    assignedVehicleId?: UUIDString | null;
+    assignedVehicle?: {
+      id: UUIDString;
+      vehicleNumber: string;
+      type: string;
+      model: string;
+      driverName: string;
+      driverPhone: string;
+      status: string;
+    } & Vehicle_Key;
+  } & TransportRequest_Key)[];
 }
 
-export interface SearchMovieVariables {
-  titleInput?: string | null;
-  genre?: string | null;
+export interface ListVehiclesData {
+  vehicles: ({
+    id: UUIDString;
+    vehicleNumber: string;
+    type: string;
+    model: string;
+    capacity: number;
+    driverName: string;
+    driverPhone: string;
+    driverLicense?: string | null;
+    status: string;
+    currentLocation?: string | null;
+    imageUrl?: string | null;
+    registeredAt: TimestampString;
+    lastMaintenanceDate?: TimestampString | null;
+  } & Vehicle_Key)[];
 }
 
-export interface UpsertUserData {
-  user_upsert: User_Key;
+export interface RegisterVehicleData {
+  vehicle_insert: Vehicle_Key;
 }
 
-export interface UpsertUserVariables {
-  username: string;
+export interface RegisterVehicleVariables {
+  vehicleNumber: string;
+  type: string;
+  model: string;
+  capacity: number;
+  driverName: string;
+  driverPhone: string;
+  driverLicense?: string | null;
+  imageUrl?: string | null;
+  currentLocation?: string | null;
 }
 
-export interface User_Key {
-  id: string;
-  __typename?: 'User_Key';
+export interface TransportRequest_Key {
+  id: UUIDString;
+  __typename?: 'TransportRequest_Key';
 }
 
-interface ListMoviesRef {
+export interface UpdateDispatchStatusData {
+  dispatch_update?: Dispatch_Key | null;
+}
+
+export interface UpdateDispatchStatusVariables {
+  id: UUIDString;
+  status: string;
+  actualArrival?: TimestampString | null;
+  completedAt?: TimestampString | null;
+}
+
+export interface UpdateTransportRequestStatusData {
+  transportRequest_update?: TransportRequest_Key | null;
+}
+
+export interface UpdateTransportRequestStatusVariables {
+  id: UUIDString;
+  status: string;
+}
+
+export interface UpdateVehicleLocationData {
+  vehicle_update?: Vehicle_Key | null;
+}
+
+export interface UpdateVehicleLocationVariables {
+  id: UUIDString;
+  currentLocation: string;
+}
+
+export interface UpdateVehicleStatusData {
+  vehicle_update?: Vehicle_Key | null;
+}
+
+export interface UpdateVehicleStatusVariables {
+  id: UUIDString;
+  status: string;
+}
+
+export interface Vehicle_Key {
+  id: UUIDString;
+  __typename?: 'Vehicle_Key';
+}
+
+interface CreateTransportRequestRef {
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListMoviesData, undefined>;
+  (vars: CreateTransportRequestVariables): MutationRef<CreateTransportRequestData, CreateTransportRequestVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<ListMoviesData, undefined>;
+  (dc: DataConnect, vars: CreateTransportRequestVariables): MutationRef<CreateTransportRequestData, CreateTransportRequestVariables>;
   operationName: string;
 }
-export const listMoviesRef: ListMoviesRef;
+export const createTransportRequestRef: CreateTransportRequestRef;
 
-export function listMovies(): QueryPromise<ListMoviesData, undefined>;
-export function listMovies(dc: DataConnect): QueryPromise<ListMoviesData, undefined>;
+export function createTransportRequest(vars: CreateTransportRequestVariables): MutationPromise<CreateTransportRequestData, CreateTransportRequestVariables>;
+export function createTransportRequest(dc: DataConnect, vars: CreateTransportRequestVariables): MutationPromise<CreateTransportRequestData, CreateTransportRequestVariables>;
 
-interface ListUsersRef {
+interface UpdateTransportRequestStatusRef {
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListUsersData, undefined>;
+  (vars: UpdateTransportRequestStatusVariables): MutationRef<UpdateTransportRequestStatusData, UpdateTransportRequestStatusVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<ListUsersData, undefined>;
+  (dc: DataConnect, vars: UpdateTransportRequestStatusVariables): MutationRef<UpdateTransportRequestStatusData, UpdateTransportRequestStatusVariables>;
   operationName: string;
 }
-export const listUsersRef: ListUsersRef;
+export const updateTransportRequestStatusRef: UpdateTransportRequestStatusRef;
 
-export function listUsers(): QueryPromise<ListUsersData, undefined>;
-export function listUsers(dc: DataConnect): QueryPromise<ListUsersData, undefined>;
+export function updateTransportRequestStatus(vars: UpdateTransportRequestStatusVariables): MutationPromise<UpdateTransportRequestStatusData, UpdateTransportRequestStatusVariables>;
+export function updateTransportRequestStatus(dc: DataConnect, vars: UpdateTransportRequestStatusVariables): MutationPromise<UpdateTransportRequestStatusData, UpdateTransportRequestStatusVariables>;
 
-interface ListUserReviewsRef {
+interface AssignVehicleToRequestRef {
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListUserReviewsData, undefined>;
+  (vars: AssignVehicleToRequestVariables): MutationRef<AssignVehicleToRequestData, AssignVehicleToRequestVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<ListUserReviewsData, undefined>;
+  (dc: DataConnect, vars: AssignVehicleToRequestVariables): MutationRef<AssignVehicleToRequestData, AssignVehicleToRequestVariables>;
   operationName: string;
 }
-export const listUserReviewsRef: ListUserReviewsRef;
+export const assignVehicleToRequestRef: AssignVehicleToRequestRef;
 
-export function listUserReviews(): QueryPromise<ListUserReviewsData, undefined>;
-export function listUserReviews(dc: DataConnect): QueryPromise<ListUserReviewsData, undefined>;
+export function assignVehicleToRequest(vars: AssignVehicleToRequestVariables): MutationPromise<AssignVehicleToRequestData, AssignVehicleToRequestVariables>;
+export function assignVehicleToRequest(dc: DataConnect, vars: AssignVehicleToRequestVariables): MutationPromise<AssignVehicleToRequestData, AssignVehicleToRequestVariables>;
 
-interface GetMovieByIdRef {
+interface RegisterVehicleRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: GetMovieByIdVariables): QueryRef<GetMovieByIdData, GetMovieByIdVariables>;
+  (vars: RegisterVehicleVariables): MutationRef<RegisterVehicleData, RegisterVehicleVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: GetMovieByIdVariables): QueryRef<GetMovieByIdData, GetMovieByIdVariables>;
+  (dc: DataConnect, vars: RegisterVehicleVariables): MutationRef<RegisterVehicleData, RegisterVehicleVariables>;
   operationName: string;
 }
-export const getMovieByIdRef: GetMovieByIdRef;
+export const registerVehicleRef: RegisterVehicleRef;
 
-export function getMovieById(vars: GetMovieByIdVariables): QueryPromise<GetMovieByIdData, GetMovieByIdVariables>;
-export function getMovieById(dc: DataConnect, vars: GetMovieByIdVariables): QueryPromise<GetMovieByIdData, GetMovieByIdVariables>;
+export function registerVehicle(vars: RegisterVehicleVariables): MutationPromise<RegisterVehicleData, RegisterVehicleVariables>;
+export function registerVehicle(dc: DataConnect, vars: RegisterVehicleVariables): MutationPromise<RegisterVehicleData, RegisterVehicleVariables>;
 
-interface SearchMovieRef {
+interface UpdateVehicleStatusRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars?: SearchMovieVariables): QueryRef<SearchMovieData, SearchMovieVariables>;
+  (vars: UpdateVehicleStatusVariables): MutationRef<UpdateVehicleStatusData, UpdateVehicleStatusVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars?: SearchMovieVariables): QueryRef<SearchMovieData, SearchMovieVariables>;
+  (dc: DataConnect, vars: UpdateVehicleStatusVariables): MutationRef<UpdateVehicleStatusData, UpdateVehicleStatusVariables>;
   operationName: string;
 }
-export const searchMovieRef: SearchMovieRef;
+export const updateVehicleStatusRef: UpdateVehicleStatusRef;
 
-export function searchMovie(vars?: SearchMovieVariables): QueryPromise<SearchMovieData, SearchMovieVariables>;
-export function searchMovie(dc: DataConnect, vars?: SearchMovieVariables): QueryPromise<SearchMovieData, SearchMovieVariables>;
+export function updateVehicleStatus(vars: UpdateVehicleStatusVariables): MutationPromise<UpdateVehicleStatusData, UpdateVehicleStatusVariables>;
+export function updateVehicleStatus(dc: DataConnect, vars: UpdateVehicleStatusVariables): MutationPromise<UpdateVehicleStatusData, UpdateVehicleStatusVariables>;
 
-interface CreateMovieRef {
+interface UpdateVehicleLocationRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateMovieVariables): MutationRef<CreateMovieData, CreateMovieVariables>;
+  (vars: UpdateVehicleLocationVariables): MutationRef<UpdateVehicleLocationData, UpdateVehicleLocationVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: CreateMovieVariables): MutationRef<CreateMovieData, CreateMovieVariables>;
+  (dc: DataConnect, vars: UpdateVehicleLocationVariables): MutationRef<UpdateVehicleLocationData, UpdateVehicleLocationVariables>;
   operationName: string;
 }
-export const createMovieRef: CreateMovieRef;
+export const updateVehicleLocationRef: UpdateVehicleLocationRef;
 
-export function createMovie(vars: CreateMovieVariables): MutationPromise<CreateMovieData, CreateMovieVariables>;
-export function createMovie(dc: DataConnect, vars: CreateMovieVariables): MutationPromise<CreateMovieData, CreateMovieVariables>;
+export function updateVehicleLocation(vars: UpdateVehicleLocationVariables): MutationPromise<UpdateVehicleLocationData, UpdateVehicleLocationVariables>;
+export function updateVehicleLocation(dc: DataConnect, vars: UpdateVehicleLocationVariables): MutationPromise<UpdateVehicleLocationData, UpdateVehicleLocationVariables>;
 
-interface UpsertUserRef {
+interface CreateDispatchRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: UpsertUserVariables): MutationRef<UpsertUserData, UpsertUserVariables>;
+  (vars: CreateDispatchVariables): MutationRef<CreateDispatchData, CreateDispatchVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: UpsertUserVariables): MutationRef<UpsertUserData, UpsertUserVariables>;
+  (dc: DataConnect, vars: CreateDispatchVariables): MutationRef<CreateDispatchData, CreateDispatchVariables>;
   operationName: string;
 }
-export const upsertUserRef: UpsertUserRef;
+export const createDispatchRef: CreateDispatchRef;
 
-export function upsertUser(vars: UpsertUserVariables): MutationPromise<UpsertUserData, UpsertUserVariables>;
-export function upsertUser(dc: DataConnect, vars: UpsertUserVariables): MutationPromise<UpsertUserData, UpsertUserVariables>;
+export function createDispatch(vars: CreateDispatchVariables): MutationPromise<CreateDispatchData, CreateDispatchVariables>;
+export function createDispatch(dc: DataConnect, vars: CreateDispatchVariables): MutationPromise<CreateDispatchData, CreateDispatchVariables>;
 
-interface AddReviewRef {
+interface UpdateDispatchStatusRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: AddReviewVariables): MutationRef<AddReviewData, AddReviewVariables>;
+  (vars: UpdateDispatchStatusVariables): MutationRef<UpdateDispatchStatusData, UpdateDispatchStatusVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: AddReviewVariables): MutationRef<AddReviewData, AddReviewVariables>;
+  (dc: DataConnect, vars: UpdateDispatchStatusVariables): MutationRef<UpdateDispatchStatusData, UpdateDispatchStatusVariables>;
   operationName: string;
 }
-export const addReviewRef: AddReviewRef;
+export const updateDispatchStatusRef: UpdateDispatchStatusRef;
 
-export function addReview(vars: AddReviewVariables): MutationPromise<AddReviewData, AddReviewVariables>;
-export function addReview(dc: DataConnect, vars: AddReviewVariables): MutationPromise<AddReviewData, AddReviewVariables>;
+export function updateDispatchStatus(vars: UpdateDispatchStatusVariables): MutationPromise<UpdateDispatchStatusData, UpdateDispatchStatusVariables>;
+export function updateDispatchStatus(dc: DataConnect, vars: UpdateDispatchStatusVariables): MutationPromise<UpdateDispatchStatusData, UpdateDispatchStatusVariables>;
 
-interface DeleteReviewRef {
+interface DeleteTransportRequestRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: DeleteReviewVariables): MutationRef<DeleteReviewData, DeleteReviewVariables>;
+  (vars: DeleteTransportRequestVariables): MutationRef<DeleteTransportRequestData, DeleteTransportRequestVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: DeleteReviewVariables): MutationRef<DeleteReviewData, DeleteReviewVariables>;
+  (dc: DataConnect, vars: DeleteTransportRequestVariables): MutationRef<DeleteTransportRequestData, DeleteTransportRequestVariables>;
   operationName: string;
 }
-export const deleteReviewRef: DeleteReviewRef;
+export const deleteTransportRequestRef: DeleteTransportRequestRef;
 
-export function deleteReview(vars: DeleteReviewVariables): MutationPromise<DeleteReviewData, DeleteReviewVariables>;
-export function deleteReview(dc: DataConnect, vars: DeleteReviewVariables): MutationPromise<DeleteReviewData, DeleteReviewVariables>;
+export function deleteTransportRequest(vars: DeleteTransportRequestVariables): MutationPromise<DeleteTransportRequestData, DeleteTransportRequestVariables>;
+export function deleteTransportRequest(dc: DataConnect, vars: DeleteTransportRequestVariables): MutationPromise<DeleteTransportRequestData, DeleteTransportRequestVariables>;
+
+interface ListTransportRequestsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListTransportRequestsData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListTransportRequestsData, undefined>;
+  operationName: string;
+}
+export const listTransportRequestsRef: ListTransportRequestsRef;
+
+export function listTransportRequests(): QueryPromise<ListTransportRequestsData, undefined>;
+export function listTransportRequests(dc: DataConnect): QueryPromise<ListTransportRequestsData, undefined>;
+
+interface GetTransportRequestByIdRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetTransportRequestByIdVariables): QueryRef<GetTransportRequestByIdData, GetTransportRequestByIdVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetTransportRequestByIdVariables): QueryRef<GetTransportRequestByIdData, GetTransportRequestByIdVariables>;
+  operationName: string;
+}
+export const getTransportRequestByIdRef: GetTransportRequestByIdRef;
+
+export function getTransportRequestById(vars: GetTransportRequestByIdVariables): QueryPromise<GetTransportRequestByIdData, GetTransportRequestByIdVariables>;
+export function getTransportRequestById(dc: DataConnect, vars: GetTransportRequestByIdVariables): QueryPromise<GetTransportRequestByIdData, GetTransportRequestByIdVariables>;
+
+interface ListVehiclesRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListVehiclesData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListVehiclesData, undefined>;
+  operationName: string;
+}
+export const listVehiclesRef: ListVehiclesRef;
+
+export function listVehicles(): QueryPromise<ListVehiclesData, undefined>;
+export function listVehicles(dc: DataConnect): QueryPromise<ListVehiclesData, undefined>;
+
+interface GetAvailableVehiclesRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<GetAvailableVehiclesData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<GetAvailableVehiclesData, undefined>;
+  operationName: string;
+}
+export const getAvailableVehiclesRef: GetAvailableVehiclesRef;
+
+export function getAvailableVehicles(): QueryPromise<GetAvailableVehiclesData, undefined>;
+export function getAvailableVehicles(dc: DataConnect): QueryPromise<GetAvailableVehiclesData, undefined>;
+
+interface GetVehicleByIdRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetVehicleByIdVariables): QueryRef<GetVehicleByIdData, GetVehicleByIdVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetVehicleByIdVariables): QueryRef<GetVehicleByIdData, GetVehicleByIdVariables>;
+  operationName: string;
+}
+export const getVehicleByIdRef: GetVehicleByIdRef;
+
+export function getVehicleById(vars: GetVehicleByIdVariables): QueryPromise<GetVehicleByIdData, GetVehicleByIdVariables>;
+export function getVehicleById(dc: DataConnect, vars: GetVehicleByIdVariables): QueryPromise<GetVehicleByIdData, GetVehicleByIdVariables>;
+
+interface ListDispatchesRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListDispatchesData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListDispatchesData, undefined>;
+  operationName: string;
+}
+export const listDispatchesRef: ListDispatchesRef;
+
+export function listDispatches(): QueryPromise<ListDispatchesData, undefined>;
+export function listDispatches(dc: DataConnect): QueryPromise<ListDispatchesData, undefined>;
 

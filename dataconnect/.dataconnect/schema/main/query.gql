@@ -1,0 +1,161 @@
+extend type Query {
+  """
+  ✨ Look up a single `Dispatch` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  dispatch(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Dispatch_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Dispatch_FirstRow
+  ): Dispatch @fdc_generated(from: "Dispatch", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `TransportRequest` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  transportRequest(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: TransportRequest_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TransportRequest_FirstRow
+  ): TransportRequest @fdc_generated(from: "TransportRequest", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Vehicle` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  vehicle(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Vehicle_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Vehicle_FirstRow
+  ): Vehicle @fdc_generated(from: "Vehicle", purpose: QUERY_SINGLE)
+  """
+  ✨ List `Dispatch` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  dispatches(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Dispatch_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Dispatch_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Dispatch_Having
+  ): [Dispatch!]! @fdc_generated(from: "Dispatch", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `TransportRequest` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  transportRequests(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: TransportRequest_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [TransportRequest_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: TransportRequest_Having
+  ): [TransportRequest!]! @fdc_generated(from: "TransportRequest", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Vehicle` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  vehicles(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Vehicle_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Vehicle_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Vehicle_Having
+  ): [Vehicle!]! @fdc_generated(from: "Vehicle", purpose: QUERY_MULTIPLE)
+}

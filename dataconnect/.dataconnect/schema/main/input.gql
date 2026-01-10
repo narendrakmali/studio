@@ -1,0 +1,1659 @@
+"""
+✨ `Dispatch_KeyOutput` returns the primary key fields of table type `Dispatch`.
+
+It has the same format as `Dispatch_Key`, but is only used as mutation return value.
+"""
+scalar Dispatch_KeyOutput
+"""
+✨ `TransportRequest_KeyOutput` returns the primary key fields of table type `TransportRequest`.
+
+It has the same format as `TransportRequest_Key`, but is only used as mutation return value.
+"""
+scalar TransportRequest_KeyOutput
+"""
+✨ `Vehicle_KeyOutput` returns the primary key fields of table type `Vehicle`.
+
+It has the same format as `Vehicle_Key`, but is only used as mutation return value.
+"""
+scalar Vehicle_KeyOutput
+"""
+✨ Generated data input type for table 'Dispatch'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Dispatch_Data {
+  """
+  ✨ Generated from Field `Dispatch`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Dispatch`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Dispatch`.`requestId` of type `UUID!`
+  """
+  requestId: UUID
+  """
+  ✨ `_expr` server value variant of `requestId` (✨ Generated from Field `Dispatch`.`requestId` of type `UUID!`)
+  """
+  requestId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Dispatch`.`vehicleId` of type `UUID!`
+  """
+  vehicleId: UUID
+  """
+  ✨ `_expr` server value variant of `vehicleId` (✨ Generated from Field `Dispatch`.`vehicleId` of type `UUID!`)
+  """
+  vehicleId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Dispatch`.`request` of type `TransportRequest!`
+  """
+  request: TransportRequest_Key
+  """
+  ✨ Generated from Field `Dispatch`.`vehicle` of type `Vehicle!`
+  """
+  vehicle: Vehicle_Key
+  """
+  ✨ Generated from Field `Dispatch`.`actualArrival` of type `Timestamp`
+  """
+  actualArrival: Timestamp
+  """
+  ✨ `_expr` server value variant of `actualArrival` (✨ Generated from Field `Dispatch`.`actualArrival` of type `Timestamp`)
+  """
+  actualArrival_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `actualArrival` (✨ Generated from Field `Dispatch`.`actualArrival` of type `Timestamp`)
+  """
+  actualArrival_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `actualArrival` (✨ Generated from Field `Dispatch`.`actualArrival` of type `Timestamp`)
+  """
+  actualArrival_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Dispatch`.`completedAt` of type `Timestamp`
+  """
+  completedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `completedAt` (✨ Generated from Field `Dispatch`.`completedAt` of type `Timestamp`)
+  """
+  completedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `completedAt` (✨ Generated from Field `Dispatch`.`completedAt` of type `Timestamp`)
+  """
+  completedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `completedAt` (✨ Generated from Field `Dispatch`.`completedAt` of type `Timestamp`)
+  """
+  completedAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedAt` of type `Timestamp!`
+  """
+  dispatchedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `dispatchedAt` (✨ Generated from Field `Dispatch`.`dispatchedAt` of type `Timestamp!`)
+  """
+  dispatchedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `dispatchedAt` (✨ Generated from Field `Dispatch`.`dispatchedAt` of type `Timestamp!`)
+  """
+  dispatchedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `dispatchedAt` (✨ Generated from Field `Dispatch`.`dispatchedAt` of type `Timestamp!`)
+  """
+  dispatchedAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedBy` of type `String`
+  """
+  dispatchedBy: String
+  """
+  ✨ `_expr` server value variant of `dispatchedBy` (✨ Generated from Field `Dispatch`.`dispatchedBy` of type `String`)
+  """
+  dispatchedBy_expr: String_Expr
+  """
+  ✨ Generated from Field `Dispatch`.`estimatedArrival` of type `Timestamp`
+  """
+  estimatedArrival: Timestamp
+  """
+  ✨ `_expr` server value variant of `estimatedArrival` (✨ Generated from Field `Dispatch`.`estimatedArrival` of type `Timestamp`)
+  """
+  estimatedArrival_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `estimatedArrival` (✨ Generated from Field `Dispatch`.`estimatedArrival` of type `Timestamp`)
+  """
+  estimatedArrival_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `estimatedArrival` (✨ Generated from Field `Dispatch`.`estimatedArrival` of type `Timestamp`)
+  """
+  estimatedArrival_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Dispatch`.`notes` of type `String`
+  """
+  notes: String
+  """
+  ✨ `_expr` server value variant of `notes` (✨ Generated from Field `Dispatch`.`notes` of type `String`)
+  """
+  notes_expr: String_Expr
+  """
+  ✨ Generated from Field `Dispatch`.`status` of type `String!`
+  """
+  status: String
+  """
+  ✨ `_expr` server value variant of `status` (✨ Generated from Field `Dispatch`.`status` of type `String!`)
+  """
+  status_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'Dispatch'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Dispatch_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Dispatch_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Dispatch_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Dispatch_Filter!]
+  """
+  ✨ Generated from Field `Dispatch`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`requestId` of type `UUID!`
+  """
+  requestId: UUID_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`vehicleId` of type `UUID!`
+  """
+  vehicleId: UUID_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`request` of type `TransportRequest!`
+  """
+  request: TransportRequest_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`vehicle` of type `Vehicle!`
+  """
+  vehicle: Vehicle_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`actualArrival` of type `Timestamp`
+  """
+  actualArrival: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`completedAt` of type `Timestamp`
+  """
+  completedAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedAt` of type `Timestamp!`
+  """
+  dispatchedAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedBy` of type `String`
+  """
+  dispatchedBy: String_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`estimatedArrival` of type `Timestamp`
+  """
+  estimatedArrival: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`notes` of type `String`
+  """
+  notes: String_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`status` of type `String!`
+  """
+  status: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'Dispatch'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Dispatch_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Dispatch_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Dispatch_Filter
+}
+"""
+✨ Generated having input type for table 'Dispatch'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Dispatch_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Dispatch_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Dispatch_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Dispatch_Having!]
+  """
+  ✨ Generated from Field `Dispatch`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`actualArrival_count` of type `Int!`
+  """
+  actualArrival_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`completedAt_count` of type `Int!`
+  """
+  completedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedAt_count` of type `Int!`
+  """
+  dispatchedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedBy_count` of type `Int!`
+  """
+  dispatchedBy_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`estimatedArrival_count` of type `Int!`
+  """
+  estimatedArrival_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`notes_count` of type `Int!`
+  """
+  notes_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`requestId_count` of type `Int!`
+  """
+  requestId_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`status_count` of type `Int!`
+  """
+  status_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`vehicleId_count` of type `Int!`
+  """
+  vehicleId_count: Int_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`actualArrival_min` of type `Timestamp`
+  """
+  actualArrival_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`completedAt_min` of type `Timestamp`
+  """
+  completedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedAt_min` of type `Timestamp`
+  """
+  dispatchedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`estimatedArrival_min` of type `Timestamp`
+  """
+  estimatedArrival_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`actualArrival_max` of type `Timestamp`
+  """
+  actualArrival_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`completedAt_max` of type `Timestamp`
+  """
+  completedAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedAt_max` of type `Timestamp`
+  """
+  dispatchedAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Dispatch`.`estimatedArrival_max` of type `Timestamp`
+  """
+  estimatedArrival_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'Dispatch'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Dispatch_Key {
+  """
+  ✨ Generated from Field `Dispatch`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Dispatch`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'Dispatch'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Dispatch_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Dispatch_Filter
+}
+"""
+✨ Generated order input type for table 'Dispatch'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Dispatch_Order {
+  """
+  ✨ Generated from Field `Dispatch`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`requestId` of type `UUID!`
+  """
+  requestId: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`vehicleId` of type `UUID!`
+  """
+  vehicleId: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`request` of type `TransportRequest!`
+  """
+  request: TransportRequest_Order
+  """
+  ✨ Generated from Field `Dispatch`.`vehicle` of type `Vehicle!`
+  """
+  vehicle: Vehicle_Order
+  """
+  ✨ Generated from Field `Dispatch`.`actualArrival` of type `Timestamp`
+  """
+  actualArrival: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`completedAt` of type `Timestamp`
+  """
+  completedAt: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedAt` of type `Timestamp!`
+  """
+  dispatchedAt: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedBy` of type `String`
+  """
+  dispatchedBy: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`estimatedArrival` of type `Timestamp`
+  """
+  estimatedArrival: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`notes` of type `String`
+  """
+  notes: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`status` of type `String!`
+  """
+  status: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`actualArrival_count` of type `Int!`
+  """
+  actualArrival_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`completedAt_count` of type `Int!`
+  """
+  completedAt_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedAt_count` of type `Int!`
+  """
+  dispatchedAt_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedBy_count` of type `Int!`
+  """
+  dispatchedBy_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`estimatedArrival_count` of type `Int!`
+  """
+  estimatedArrival_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`notes_count` of type `Int!`
+  """
+  notes_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`requestId_count` of type `Int!`
+  """
+  requestId_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`status_count` of type `Int!`
+  """
+  status_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`vehicleId_count` of type `Int!`
+  """
+  vehicleId_count: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`actualArrival_min` of type `Timestamp`
+  """
+  actualArrival_min: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`completedAt_min` of type `Timestamp`
+  """
+  completedAt_min: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedAt_min` of type `Timestamp`
+  """
+  dispatchedAt_min: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`estimatedArrival_min` of type `Timestamp`
+  """
+  estimatedArrival_min: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`actualArrival_max` of type `Timestamp`
+  """
+  actualArrival_max: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`completedAt_max` of type `Timestamp`
+  """
+  completedAt_max: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`dispatchedAt_max` of type `Timestamp`
+  """
+  dispatchedAt_max: OrderDirection
+  """
+  ✨ Generated from Field `Dispatch`.`estimatedArrival_max` of type `Timestamp`
+  """
+  estimatedArrival_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'TransportRequest'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input TransportRequest_Data {
+  """
+  ✨ Generated from Field `TransportRequest`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `TransportRequest`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`assignedVehicleId` of type `UUID`
+  """
+  assignedVehicleId: UUID
+  """
+  ✨ `_expr` server value variant of `assignedVehicleId` (✨ Generated from Field `TransportRequest`.`assignedVehicleId` of type `UUID`)
+  """
+  assignedVehicleId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`assignedVehicle` of type `Vehicle`
+  """
+  assignedVehicle: Vehicle_Key
+  """
+  ✨ Generated from Field `TransportRequest`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `TransportRequest`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `TransportRequest`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `TransportRequest`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `TransportRequest`.`department` of type `String!`
+  """
+  department: String
+  """
+  ✨ `_expr` server value variant of `department` (✨ Generated from Field `TransportRequest`.`department` of type `String!`)
+  """
+  department_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`dropLocation` of type `String!`
+  """
+  dropLocation: String
+  """
+  ✨ `_expr` server value variant of `dropLocation` (✨ Generated from Field `TransportRequest`.`dropLocation` of type `String!`)
+  """
+  dropLocation_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`employeeId` of type `String`
+  """
+  employeeId: String
+  """
+  ✨ `_expr` server value variant of `employeeId` (✨ Generated from Field `TransportRequest`.`employeeId` of type `String`)
+  """
+  employeeId_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance` of type `Float`
+  """
+  estimatedDistance: Float
+  """
+  ✨ `_expr` server value variant of `estimatedDistance` (✨ Generated from Field `TransportRequest`.`estimatedDistance` of type `Float`)
+  """
+  estimatedDistance_expr: Float_Expr
+  """
+  ✨ `_update` server value variant of `estimatedDistance` (✨ Generated from Field `TransportRequest`.`estimatedDistance` of type `Float`)
+  """
+  estimatedDistance_update: [Float_Update!]
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers` of type `Int`
+  """
+  numberOfPassengers: Int
+  """
+  ✨ `_expr` server value variant of `numberOfPassengers` (✨ Generated from Field `TransportRequest`.`numberOfPassengers` of type `Int`)
+  """
+  numberOfPassengers_expr: Int_Expr
+  """
+  ✨ `_update` server value variant of `numberOfPassengers` (✨ Generated from Field `TransportRequest`.`numberOfPassengers` of type `Int`)
+  """
+  numberOfPassengers_update: [Int_Update!]
+  """
+  ✨ Generated from Field `TransportRequest`.`passengerName` of type `String!`
+  """
+  passengerName: String
+  """
+  ✨ `_expr` server value variant of `passengerName` (✨ Generated from Field `TransportRequest`.`passengerName` of type `String!`)
+  """
+  passengerName_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`phoneNumber` of type `String`
+  """
+  phoneNumber: String
+  """
+  ✨ `_expr` server value variant of `phoneNumber` (✨ Generated from Field `TransportRequest`.`phoneNumber` of type `String`)
+  """
+  phoneNumber_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`pickupLocation` of type `String!`
+  """
+  pickupLocation: String
+  """
+  ✨ `_expr` server value variant of `pickupLocation` (✨ Generated from Field `TransportRequest`.`pickupLocation` of type `String!`)
+  """
+  pickupLocation_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`priority` of type `String`
+  """
+  priority: String
+  """
+  ✨ `_expr` server value variant of `priority` (✨ Generated from Field `TransportRequest`.`priority` of type `String`)
+  """
+  priority_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`purpose` of type `String!`
+  """
+  purpose: String
+  """
+  ✨ `_expr` server value variant of `purpose` (✨ Generated from Field `TransportRequest`.`purpose` of type `String!`)
+  """
+  purpose_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`requestType` of type `String`
+  """
+  requestType: String
+  """
+  ✨ `_expr` server value variant of `requestType` (✨ Generated from Field `TransportRequest`.`requestType` of type `String`)
+  """
+  requestType_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`scheduledTime` of type `Timestamp!`
+  """
+  scheduledTime: Timestamp
+  """
+  ✨ `_expr` server value variant of `scheduledTime` (✨ Generated from Field `TransportRequest`.`scheduledTime` of type `Timestamp!`)
+  """
+  scheduledTime_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `scheduledTime` (✨ Generated from Field `TransportRequest`.`scheduledTime` of type `Timestamp!`)
+  """
+  scheduledTime_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `scheduledTime` (✨ Generated from Field `TransportRequest`.`scheduledTime` of type `Timestamp!`)
+  """
+  scheduledTime_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `TransportRequest`.`specialRequirements` of type `String`
+  """
+  specialRequirements: String
+  """
+  ✨ `_expr` server value variant of `specialRequirements` (✨ Generated from Field `TransportRequest`.`specialRequirements` of type `String`)
+  """
+  specialRequirements_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`status` of type `String!`
+  """
+  status: String
+  """
+  ✨ `_expr` server value variant of `status` (✨ Generated from Field `TransportRequest`.`status` of type `String!`)
+  """
+  status_expr: String_Expr
+  """
+  ✨ Generated from Field `TransportRequest`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `TransportRequest`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `TransportRequest`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `TransportRequest`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!]
+}
+"""
+✨ Generated filter input type for table 'TransportRequest'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input TransportRequest_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [TransportRequest_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: TransportRequest_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [TransportRequest_Filter!]
+  """
+  ✨ Generated from Field `TransportRequest`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`assignedVehicleId` of type `UUID`
+  """
+  assignedVehicleId: UUID_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`assignedVehicle` of type `Vehicle`
+  """
+  assignedVehicle: Vehicle_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`department` of type `String!`
+  """
+  department: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`dropLocation` of type `String!`
+  """
+  dropLocation: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`employeeId` of type `String`
+  """
+  employeeId: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance` of type `Float`
+  """
+  estimatedDistance: Float_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers` of type `Int`
+  """
+  numberOfPassengers: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`passengerName` of type `String!`
+  """
+  passengerName: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`phoneNumber` of type `String`
+  """
+  phoneNumber: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`pickupLocation` of type `String!`
+  """
+  pickupLocation: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`priority` of type `String`
+  """
+  priority: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`purpose` of type `String!`
+  """
+  purpose: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`requestType` of type `String`
+  """
+  requestType: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`scheduledTime` of type `Timestamp!`
+  """
+  scheduledTime: Timestamp_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`specialRequirements` of type `String`
+  """
+  specialRequirements: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`status` of type `String!`
+  """
+  status: String_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`dispatches_on_request` of type `[Dispatch!]!`
+  """
+  dispatches_on_request: Dispatch_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'TransportRequest'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input TransportRequest_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [TransportRequest_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: TransportRequest_Filter
+}
+"""
+✨ Generated having input type for table 'TransportRequest'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input TransportRequest_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [TransportRequest_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: TransportRequest_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [TransportRequest_Having!]
+  """
+  ✨ Generated from Field `TransportRequest`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`assignedVehicleId_count` of type `Int!`
+  """
+  assignedVehicleId_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`department_count` of type `Int!`
+  """
+  department_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`dropLocation_count` of type `Int!`
+  """
+  dropLocation_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`employeeId_count` of type `Int!`
+  """
+  employeeId_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_count` of type `Int!`
+  """
+  estimatedDistance_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_count` of type `Int!`
+  """
+  numberOfPassengers_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`passengerName_count` of type `Int!`
+  """
+  passengerName_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`phoneNumber_count` of type `Int!`
+  """
+  phoneNumber_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`pickupLocation_count` of type `Int!`
+  """
+  pickupLocation_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`priority_count` of type `Int!`
+  """
+  priority_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`purpose_count` of type `Int!`
+  """
+  purpose_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`requestType_count` of type `Int!`
+  """
+  requestType_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`scheduledTime_count` of type `Int!`
+  """
+  scheduledTime_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`specialRequirements_count` of type `Int!`
+  """
+  specialRequirements_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`status_count` of type `Int!`
+  """
+  status_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_sum` of type `Float`
+  """
+  estimatedDistance_sum: Float_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_sum` of type `Int`
+  """
+  numberOfPassengers_sum: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_avg` of type `Float`
+  """
+  estimatedDistance_avg: Float_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_avg` of type `Float`
+  """
+  numberOfPassengers_avg: Float_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_min` of type `Float`
+  """
+  estimatedDistance_min: Float_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_min` of type `Int`
+  """
+  numberOfPassengers_min: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`scheduledTime_min` of type `Timestamp`
+  """
+  scheduledTime_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_max` of type `Float`
+  """
+  estimatedDistance_max: Float_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_max` of type `Int`
+  """
+  numberOfPassengers_max: Int_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`scheduledTime_max` of type `Timestamp`
+  """
+  scheduledTime_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `TransportRequest`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'TransportRequest'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input TransportRequest_Key {
+  """
+  ✨ Generated from Field `TransportRequest`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `TransportRequest`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'TransportRequest'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input TransportRequest_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: TransportRequest_Filter
+}
+"""
+✨ Generated order input type for table 'TransportRequest'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input TransportRequest_Order {
+  """
+  ✨ Generated from Field `TransportRequest`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`assignedVehicleId` of type `UUID`
+  """
+  assignedVehicleId: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`assignedVehicle` of type `Vehicle`
+  """
+  assignedVehicle: Vehicle_Order
+  """
+  ✨ Generated from Field `TransportRequest`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`department` of type `String!`
+  """
+  department: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`dropLocation` of type `String!`
+  """
+  dropLocation: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`employeeId` of type `String`
+  """
+  employeeId: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance` of type `Float`
+  """
+  estimatedDistance: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers` of type `Int`
+  """
+  numberOfPassengers: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`passengerName` of type `String!`
+  """
+  passengerName: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`phoneNumber` of type `String`
+  """
+  phoneNumber: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`pickupLocation` of type `String!`
+  """
+  pickupLocation: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`priority` of type `String`
+  """
+  priority: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`purpose` of type `String!`
+  """
+  purpose: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`requestType` of type `String`
+  """
+  requestType: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`scheduledTime` of type `Timestamp!`
+  """
+  scheduledTime: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`specialRequirements` of type `String`
+  """
+  specialRequirements: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`status` of type `String!`
+  """
+  status: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`assignedVehicleId_count` of type `Int!`
+  """
+  assignedVehicleId_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`department_count` of type `Int!`
+  """
+  department_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`dropLocation_count` of type `Int!`
+  """
+  dropLocation_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`employeeId_count` of type `Int!`
+  """
+  employeeId_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_count` of type `Int!`
+  """
+  estimatedDistance_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_count` of type `Int!`
+  """
+  numberOfPassengers_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`passengerName_count` of type `Int!`
+  """
+  passengerName_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`phoneNumber_count` of type `Int!`
+  """
+  phoneNumber_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`pickupLocation_count` of type `Int!`
+  """
+  pickupLocation_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`priority_count` of type `Int!`
+  """
+  priority_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`purpose_count` of type `Int!`
+  """
+  purpose_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`requestType_count` of type `Int!`
+  """
+  requestType_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`scheduledTime_count` of type `Int!`
+  """
+  scheduledTime_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`specialRequirements_count` of type `Int!`
+  """
+  specialRequirements_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`status_count` of type `Int!`
+  """
+  status_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_sum` of type `Float`
+  """
+  estimatedDistance_sum: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_sum` of type `Int`
+  """
+  numberOfPassengers_sum: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_avg` of type `Float`
+  """
+  estimatedDistance_avg: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_avg` of type `Float`
+  """
+  numberOfPassengers_avg: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_min` of type `Float`
+  """
+  estimatedDistance_min: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_min` of type `Int`
+  """
+  numberOfPassengers_min: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`scheduledTime_min` of type `Timestamp`
+  """
+  scheduledTime_min: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`estimatedDistance_max` of type `Float`
+  """
+  estimatedDistance_max: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`numberOfPassengers_max` of type `Int`
+  """
+  numberOfPassengers_max: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`scheduledTime_max` of type `Timestamp`
+  """
+  scheduledTime_max: OrderDirection
+  """
+  ✨ Generated from Field `TransportRequest`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Vehicle'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Vehicle_Data {
+  """
+  ✨ Generated from Field `Vehicle`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Vehicle`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Vehicle`.`capacity` of type `Int!`
+  """
+  capacity: Int
+  """
+  ✨ `_expr` server value variant of `capacity` (✨ Generated from Field `Vehicle`.`capacity` of type `Int!`)
+  """
+  capacity_expr: Int_Expr
+  """
+  ✨ `_update` server value variant of `capacity` (✨ Generated from Field `Vehicle`.`capacity` of type `Int!`)
+  """
+  capacity_update: [Int_Update!]
+  """
+  ✨ Generated from Field `Vehicle`.`currentLocation` of type `String`
+  """
+  currentLocation: String
+  """
+  ✨ `_expr` server value variant of `currentLocation` (✨ Generated from Field `Vehicle`.`currentLocation` of type `String`)
+  """
+  currentLocation_expr: String_Expr
+  """
+  ✨ Generated from Field `Vehicle`.`driverLicense` of type `String`
+  """
+  driverLicense: String
+  """
+  ✨ `_expr` server value variant of `driverLicense` (✨ Generated from Field `Vehicle`.`driverLicense` of type `String`)
+  """
+  driverLicense_expr: String_Expr
+  """
+  ✨ Generated from Field `Vehicle`.`driverName` of type `String!`
+  """
+  driverName: String
+  """
+  ✨ `_expr` server value variant of `driverName` (✨ Generated from Field `Vehicle`.`driverName` of type `String!`)
+  """
+  driverName_expr: String_Expr
+  """
+  ✨ Generated from Field `Vehicle`.`driverPhone` of type `String!`
+  """
+  driverPhone: String
+  """
+  ✨ `_expr` server value variant of `driverPhone` (✨ Generated from Field `Vehicle`.`driverPhone` of type `String!`)
+  """
+  driverPhone_expr: String_Expr
+  """
+  ✨ Generated from Field `Vehicle`.`imageUrl` of type `String`
+  """
+  imageUrl: String
+  """
+  ✨ `_expr` server value variant of `imageUrl` (✨ Generated from Field `Vehicle`.`imageUrl` of type `String`)
+  """
+  imageUrl_expr: String_Expr
+  """
+  ✨ Generated from Field `Vehicle`.`lastMaintenanceDate` of type `Timestamp`
+  """
+  lastMaintenanceDate: Timestamp
+  """
+  ✨ `_expr` server value variant of `lastMaintenanceDate` (✨ Generated from Field `Vehicle`.`lastMaintenanceDate` of type `Timestamp`)
+  """
+  lastMaintenanceDate_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `lastMaintenanceDate` (✨ Generated from Field `Vehicle`.`lastMaintenanceDate` of type `Timestamp`)
+  """
+  lastMaintenanceDate_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `lastMaintenanceDate` (✨ Generated from Field `Vehicle`.`lastMaintenanceDate` of type `Timestamp`)
+  """
+  lastMaintenanceDate_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Vehicle`.`model` of type `String!`
+  """
+  model: String
+  """
+  ✨ `_expr` server value variant of `model` (✨ Generated from Field `Vehicle`.`model` of type `String!`)
+  """
+  model_expr: String_Expr
+  """
+  ✨ Generated from Field `Vehicle`.`registeredAt` of type `Timestamp!`
+  """
+  registeredAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `registeredAt` (✨ Generated from Field `Vehicle`.`registeredAt` of type `Timestamp!`)
+  """
+  registeredAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `registeredAt` (✨ Generated from Field `Vehicle`.`registeredAt` of type `Timestamp!`)
+  """
+  registeredAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `registeredAt` (✨ Generated from Field `Vehicle`.`registeredAt` of type `Timestamp!`)
+  """
+  registeredAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Vehicle`.`status` of type `String!`
+  """
+  status: String
+  """
+  ✨ `_expr` server value variant of `status` (✨ Generated from Field `Vehicle`.`status` of type `String!`)
+  """
+  status_expr: String_Expr
+  """
+  ✨ Generated from Field `Vehicle`.`type` of type `String!`
+  """
+  type: String
+  """
+  ✨ `_expr` server value variant of `type` (✨ Generated from Field `Vehicle`.`type` of type `String!`)
+  """
+  type_expr: String_Expr
+  """
+  ✨ Generated from Field `Vehicle`.`vehicleNumber` of type `String!`
+  """
+  vehicleNumber: String
+  """
+  ✨ `_expr` server value variant of `vehicleNumber` (✨ Generated from Field `Vehicle`.`vehicleNumber` of type `String!`)
+  """
+  vehicleNumber_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'Vehicle'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Vehicle_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Vehicle_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Vehicle_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Vehicle_Filter!]
+  """
+  ✨ Generated from Field `Vehicle`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`capacity` of type `Int!`
+  """
+  capacity: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`currentLocation` of type `String`
+  """
+  currentLocation: String_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`driverLicense` of type `String`
+  """
+  driverLicense: String_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`driverName` of type `String!`
+  """
+  driverName: String_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`driverPhone` of type `String!`
+  """
+  driverPhone: String_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`imageUrl` of type `String`
+  """
+  imageUrl: String_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`lastMaintenanceDate` of type `Timestamp`
+  """
+  lastMaintenanceDate: Timestamp_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`model` of type `String!`
+  """
+  model: String_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`registeredAt` of type `Timestamp!`
+  """
+  registeredAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`status` of type `String!`
+  """
+  status: String_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`type` of type `String!`
+  """
+  type: String_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`vehicleNumber` of type `String!`
+  """
+  vehicleNumber: String_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`dispatches_on_vehicle` of type `[Dispatch!]!`
+  """
+  dispatches_on_vehicle: Dispatch_ListFilter
+  """
+  ✨ Generated from Field `Vehicle`.`transportRequests_on_assignedVehicle` of type `[TransportRequest!]!`
+  """
+  transportRequests_on_assignedVehicle: TransportRequest_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'Vehicle'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Vehicle_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Vehicle_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Vehicle_Filter
+}
+"""
+✨ Generated having input type for table 'Vehicle'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Vehicle_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Vehicle_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Vehicle_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Vehicle_Having!]
+  """
+  ✨ Generated from Field `Vehicle`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_count` of type `Int!`
+  """
+  capacity_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`currentLocation_count` of type `Int!`
+  """
+  currentLocation_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`driverLicense_count` of type `Int!`
+  """
+  driverLicense_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`driverName_count` of type `Int!`
+  """
+  driverName_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`driverPhone_count` of type `Int!`
+  """
+  driverPhone_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`imageUrl_count` of type `Int!`
+  """
+  imageUrl_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`lastMaintenanceDate_count` of type `Int!`
+  """
+  lastMaintenanceDate_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`model_count` of type `Int!`
+  """
+  model_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`registeredAt_count` of type `Int!`
+  """
+  registeredAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`status_count` of type `Int!`
+  """
+  status_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`type_count` of type `Int!`
+  """
+  type_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`vehicleNumber_count` of type `Int!`
+  """
+  vehicleNumber_count: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_sum` of type `Int`
+  """
+  capacity_sum: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_avg` of type `Float`
+  """
+  capacity_avg: Float_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_min` of type `Int`
+  """
+  capacity_min: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`lastMaintenanceDate_min` of type `Timestamp`
+  """
+  lastMaintenanceDate_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`registeredAt_min` of type `Timestamp`
+  """
+  registeredAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_max` of type `Int`
+  """
+  capacity_max: Int_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`lastMaintenanceDate_max` of type `Timestamp`
+  """
+  lastMaintenanceDate_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Vehicle`.`registeredAt_max` of type `Timestamp`
+  """
+  registeredAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'Vehicle'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Vehicle_Key {
+  """
+  ✨ Generated from Field `Vehicle`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Vehicle`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'Vehicle'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Vehicle_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Vehicle_Filter
+}
+"""
+✨ Generated order input type for table 'Vehicle'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Vehicle_Order {
+  """
+  ✨ Generated from Field `Vehicle`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`capacity` of type `Int!`
+  """
+  capacity: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`currentLocation` of type `String`
+  """
+  currentLocation: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`driverLicense` of type `String`
+  """
+  driverLicense: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`driverName` of type `String!`
+  """
+  driverName: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`driverPhone` of type `String!`
+  """
+  driverPhone: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`imageUrl` of type `String`
+  """
+  imageUrl: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`lastMaintenanceDate` of type `Timestamp`
+  """
+  lastMaintenanceDate: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`model` of type `String!`
+  """
+  model: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`registeredAt` of type `Timestamp!`
+  """
+  registeredAt: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`status` of type `String!`
+  """
+  status: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`type` of type `String!`
+  """
+  type: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`vehicleNumber` of type `String!`
+  """
+  vehicleNumber: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_count` of type `Int!`
+  """
+  capacity_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`currentLocation_count` of type `Int!`
+  """
+  currentLocation_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`driverLicense_count` of type `Int!`
+  """
+  driverLicense_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`driverName_count` of type `Int!`
+  """
+  driverName_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`driverPhone_count` of type `Int!`
+  """
+  driverPhone_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`imageUrl_count` of type `Int!`
+  """
+  imageUrl_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`lastMaintenanceDate_count` of type `Int!`
+  """
+  lastMaintenanceDate_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`model_count` of type `Int!`
+  """
+  model_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`registeredAt_count` of type `Int!`
+  """
+  registeredAt_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`status_count` of type `Int!`
+  """
+  status_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`type_count` of type `Int!`
+  """
+  type_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`vehicleNumber_count` of type `Int!`
+  """
+  vehicleNumber_count: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_sum` of type `Int`
+  """
+  capacity_sum: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_avg` of type `Float`
+  """
+  capacity_avg: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_min` of type `Int`
+  """
+  capacity_min: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`lastMaintenanceDate_min` of type `Timestamp`
+  """
+  lastMaintenanceDate_min: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`registeredAt_min` of type `Timestamp`
+  """
+  registeredAt_min: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`capacity_max` of type `Int`
+  """
+  capacity_max: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`lastMaintenanceDate_max` of type `Timestamp`
+  """
+  lastMaintenanceDate_max: OrderDirection
+  """
+  ✨ Generated from Field `Vehicle`.`registeredAt_max` of type `Timestamp`
+  """
+  registeredAt_max: OrderDirection
+}

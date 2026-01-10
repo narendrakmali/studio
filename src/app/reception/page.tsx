@@ -33,13 +33,8 @@ function ReceptionPageContent() {
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    let firestore = null;
-    try {
-      const fb = useFirebase();
-      firestore = fb.firestore;
-    } catch (e) {
-      // Firebase not available during prerender
-    }
+    const fb = useFirebase();
+    const firestore = fb.firestore;
 
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);

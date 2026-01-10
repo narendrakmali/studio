@@ -1,0 +1,663 @@
+extend type Dispatch {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Dispatch", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Dispatch` table.
+  """
+  _count: Int! @fdc_generated(from: "Dispatch.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `actualArrival` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  actualArrival_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.actualArrival", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `completedAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  completedAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.completedAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `dispatchedAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  dispatchedAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.dispatchedAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `dispatchedBy` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  dispatchedBy_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.dispatchedBy", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `estimatedArrival` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  estimatedArrival_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.estimatedArrival", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `notes` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  notes_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.notes", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `requestId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  requestId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.requestId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `status` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  status_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.status", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Dispatch` table where the `vehicleId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  vehicleId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch.vehicleId", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `actualArrival` field in the `Dispatch` table.
+  """
+  actualArrival_min: Timestamp @fdc_generated(from: "Dispatch.actualArrival", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `completedAt` field in the `Dispatch` table.
+  """
+  completedAt_min: Timestamp @fdc_generated(from: "Dispatch.completedAt", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `dispatchedAt` field in the `Dispatch` table.
+  """
+  dispatchedAt_min: Timestamp @fdc_generated(from: "Dispatch.dispatchedAt", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `estimatedArrival` field in the `Dispatch` table.
+  """
+  estimatedArrival_min: Timestamp @fdc_generated(from: "Dispatch.estimatedArrival", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `actualArrival` field in the `Dispatch` table.
+  """
+  actualArrival_max: Timestamp @fdc_generated(from: "Dispatch.actualArrival", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `completedAt` field in the `Dispatch` table.
+  """
+  completedAt_max: Timestamp @fdc_generated(from: "Dispatch.completedAt", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `dispatchedAt` field in the `Dispatch` table.
+  """
+  dispatchedAt_max: Timestamp @fdc_generated(from: "Dispatch.dispatchedAt", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `estimatedArrival` field in the `Dispatch` table.
+  """
+  estimatedArrival_max: Timestamp @fdc_generated(from: "Dispatch.estimatedArrival", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "Dispatch.id", purpose: GLOBAL_ID)
+}
+extend type TransportRequest {
+  """
+  ✨ List `Dispatch` objects in a one-to-many relationship (where `Dispatch`.`request` is this object).
+  """
+  dispatches_on_request(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Dispatch_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Dispatch_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Dispatch_Having
+  ): [Dispatch!]! @fdc_generated(from: "Dispatch.request", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "TransportRequest", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table.
+  """
+  _count: Int! @fdc_generated(from: "TransportRequest.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `assignedVehicleId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  assignedVehicleId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.assignedVehicleId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `department` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  department_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.department", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `dropLocation` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  dropLocation_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.dropLocation", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `employeeId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  employeeId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.employeeId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `estimatedDistance` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  estimatedDistance_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.estimatedDistance", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `numberOfPassengers` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  numberOfPassengers_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.numberOfPassengers", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `passengerName` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  passengerName_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.passengerName", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `phoneNumber` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  phoneNumber_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.phoneNumber", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `pickupLocation` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  pickupLocation_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.pickupLocation", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `priority` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  priority_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.priority", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `purpose` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  purpose_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.purpose", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `requestType` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  requestType_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.requestType", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `scheduledTime` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  scheduledTime_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.scheduledTime", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `specialRequirements` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  specialRequirements_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.specialRequirements", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `status` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  status_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.status", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransportRequest` table where the `updatedAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  updatedAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest.updatedAt", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `estimatedDistance` field in the `TransportRequest` table.
+  """
+  estimatedDistance_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "TransportRequest.estimatedDistance", purpose: QUERY_SUM)
+  """
+  ✨ Sum the `numberOfPassengers` field in the `TransportRequest` table.
+  """
+  numberOfPassengers_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "TransportRequest.numberOfPassengers", purpose: QUERY_SUM)
+  """
+  ✨ Average the `estimatedDistance` field in the `TransportRequest` table.
+  """
+  estimatedDistance_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "TransportRequest.estimatedDistance", purpose: QUERY_AVG)
+  """
+  ✨ Average the `numberOfPassengers` field in the `TransportRequest` table.
+  """
+  numberOfPassengers_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "TransportRequest.numberOfPassengers", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `createdAt` field in the `TransportRequest` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "TransportRequest.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `estimatedDistance` field in the `TransportRequest` table.
+  """
+  estimatedDistance_min: Float @fdc_generated(from: "TransportRequest.estimatedDistance", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `numberOfPassengers` field in the `TransportRequest` table.
+  """
+  numberOfPassengers_min: Int @fdc_generated(from: "TransportRequest.numberOfPassengers", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `scheduledTime` field in the `TransportRequest` table.
+  """
+  scheduledTime_min: Timestamp @fdc_generated(from: "TransportRequest.scheduledTime", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `updatedAt` field in the `TransportRequest` table.
+  """
+  updatedAt_min: Timestamp @fdc_generated(from: "TransportRequest.updatedAt", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `TransportRequest` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "TransportRequest.createdAt", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `estimatedDistance` field in the `TransportRequest` table.
+  """
+  estimatedDistance_max: Float @fdc_generated(from: "TransportRequest.estimatedDistance", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `numberOfPassengers` field in the `TransportRequest` table.
+  """
+  numberOfPassengers_max: Int @fdc_generated(from: "TransportRequest.numberOfPassengers", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `scheduledTime` field in the `TransportRequest` table.
+  """
+  scheduledTime_max: Timestamp @fdc_generated(from: "TransportRequest.scheduledTime", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `updatedAt` field in the `TransportRequest` table.
+  """
+  updatedAt_max: Timestamp @fdc_generated(from: "TransportRequest.updatedAt", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "TransportRequest.id", purpose: GLOBAL_ID)
+}
+extend type Vehicle {
+  """
+  ✨ List `Dispatch` objects in a one-to-many relationship (where `Dispatch`.`vehicle` is this object).
+  """
+  dispatches_on_vehicle(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Dispatch_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Dispatch_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Dispatch_Having
+  ): [Dispatch!]! @fdc_generated(from: "Dispatch.vehicle", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `TransportRequest` objects in a one-to-many relationship (where `TransportRequest`.`assignedVehicle` is this object).
+  """
+  transportRequests_on_assignedVehicle(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: TransportRequest_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [TransportRequest_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: TransportRequest_Having
+  ): [TransportRequest!]! @fdc_generated(from: "TransportRequest.assignedVehicle", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Vehicle", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Vehicle` table.
+  """
+  _count: Int! @fdc_generated(from: "Vehicle.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `capacity` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  capacity_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.capacity", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `currentLocation` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  currentLocation_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.currentLocation", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `driverLicense` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  driverLicense_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.driverLicense", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `driverName` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  driverName_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.driverName", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `driverPhone` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  driverPhone_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.driverPhone", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `imageUrl` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  imageUrl_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.imageUrl", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `lastMaintenanceDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  lastMaintenanceDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.lastMaintenanceDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `model` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  model_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.model", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `registeredAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  registeredAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.registeredAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `status` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  status_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.status", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `type` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  type_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.type", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Vehicle` table where the `vehicleNumber` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  vehicleNumber_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle.vehicleNumber", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `capacity` field in the `Vehicle` table.
+  """
+  capacity_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "Vehicle.capacity", purpose: QUERY_SUM)
+  """
+  ✨ Average the `capacity` field in the `Vehicle` table.
+  """
+  capacity_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Vehicle.capacity", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `capacity` field in the `Vehicle` table.
+  """
+  capacity_min: Int @fdc_generated(from: "Vehicle.capacity", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `lastMaintenanceDate` field in the `Vehicle` table.
+  """
+  lastMaintenanceDate_min: Timestamp @fdc_generated(from: "Vehicle.lastMaintenanceDate", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `registeredAt` field in the `Vehicle` table.
+  """
+  registeredAt_min: Timestamp @fdc_generated(from: "Vehicle.registeredAt", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `capacity` field in the `Vehicle` table.
+  """
+  capacity_max: Int @fdc_generated(from: "Vehicle.capacity", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `lastMaintenanceDate` field in the `Vehicle` table.
+  """
+  lastMaintenanceDate_max: Timestamp @fdc_generated(from: "Vehicle.lastMaintenanceDate", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `registeredAt` field in the `Vehicle` table.
+  """
+  registeredAt_max: Timestamp @fdc_generated(from: "Vehicle.registeredAt", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "Vehicle.id", purpose: GLOBAL_ID)
+}

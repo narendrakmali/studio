@@ -1,0 +1,338 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `Dispatch` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  dispatch_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Dispatch_Data!
+  ): Dispatch_KeyOutput! @fdc_generated(from: "Dispatch", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `TransportRequest` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  transportRequest_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: TransportRequest_Data!
+  ): TransportRequest_KeyOutput! @fdc_generated(from: "TransportRequest", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Vehicle` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  vehicle_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Vehicle_Data!
+  ): Vehicle_KeyOutput! @fdc_generated(from: "Vehicle", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `Dispatch` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  dispatch_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Dispatch_Data!]!
+  ): [Dispatch_KeyOutput!]! @fdc_generated(from: "Dispatch", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `TransportRequest` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  transportRequest_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [TransportRequest_Data!]!
+  ): [TransportRequest_KeyOutput!]! @fdc_generated(from: "TransportRequest", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Vehicle` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  vehicle_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Vehicle_Data!]!
+  ): [Vehicle_KeyOutput!]! @fdc_generated(from: "Vehicle", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `Dispatch` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Dispatch`.
+  """
+  dispatch_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Dispatch_Data!
+  ): Dispatch_KeyOutput! @fdc_generated(from: "Dispatch", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `TransportRequest` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `TransportRequest`.
+  """
+  transportRequest_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: TransportRequest_Data!
+  ): TransportRequest_KeyOutput! @fdc_generated(from: "TransportRequest", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Vehicle` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Vehicle`.
+  """
+  vehicle_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Vehicle_Data!
+  ): Vehicle_KeyOutput! @fdc_generated(from: "Vehicle", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `Dispatch` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Dispatch`.
+  """
+  dispatch_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Dispatch_Data!]!
+  ): [Dispatch_KeyOutput!]! @fdc_generated(from: "Dispatch", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `TransportRequest` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `TransportRequest`.
+  """
+  transportRequest_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [TransportRequest_Data!]!
+  ): [TransportRequest_KeyOutput!]! @fdc_generated(from: "TransportRequest", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Vehicle` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Vehicle`.
+  """
+  vehicle_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Vehicle_Data!]!
+  ): [Vehicle_KeyOutput!]! @fdc_generated(from: "Vehicle", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `Dispatch` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Dispatch` or `null` if not found.
+  """
+  dispatch_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Dispatch_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Dispatch_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Dispatch_Data!
+  ): Dispatch_KeyOutput @fdc_generated(from: "Dispatch", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `TransportRequest` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `TransportRequest` or `null` if not found.
+  """
+  transportRequest_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: TransportRequest_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TransportRequest_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: TransportRequest_Data!
+  ): TransportRequest_KeyOutput @fdc_generated(from: "TransportRequest", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Vehicle` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Vehicle` or `null` if not found.
+  """
+  vehicle_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Vehicle_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Vehicle_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Vehicle_Data!
+  ): Vehicle_KeyOutput @fdc_generated(from: "Vehicle", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `Dispatch` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  dispatch_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Dispatch_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Dispatch_Data!
+  ): Int! @fdc_generated(from: "Dispatch", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `TransportRequest` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  transportRequest_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: TransportRequest_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: TransportRequest_Data!
+  ): Int! @fdc_generated(from: "TransportRequest", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Vehicle` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  vehicle_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Vehicle_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Vehicle_Data!
+  ): Int! @fdc_generated(from: "Vehicle", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `Dispatch` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  dispatch_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Dispatch_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Dispatch_FirstRow
+  ): Dispatch_KeyOutput @fdc_generated(from: "Dispatch", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `TransportRequest` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  transportRequest_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: TransportRequest_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TransportRequest_FirstRow
+  ): TransportRequest_KeyOutput @fdc_generated(from: "TransportRequest", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Vehicle` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  vehicle_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Vehicle_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Vehicle_FirstRow
+  ): Vehicle_KeyOutput @fdc_generated(from: "Vehicle", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `Dispatch` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  dispatch_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Dispatch_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Dispatch", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `TransportRequest` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  transportRequest_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: TransportRequest_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "TransportRequest", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Vehicle` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  vehicle_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Vehicle_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Vehicle", purpose: DELETE_MULTIPLE)
+}

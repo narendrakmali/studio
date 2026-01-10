@@ -2,12 +2,11 @@
 import { firebaseConfig } from '@/firebase/config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
 
 type Sdks = {
   firebaseApp: FirebaseApp | null;
   auth: ReturnType<typeof getAuth> | null;
-  firestore: ReturnType<typeof getFirestore> | null;
+  firestore: any;
 };
 
 function createStubSdks(): Sdks {
@@ -50,18 +49,24 @@ export function getSdks(firebaseApp: FirebaseApp | null) {
   if (!firebaseApp) {
     return { firebaseApp: null, auth: null, firestore: null };
   }
+  
+  let firestoreInstance = null;
+  try {
+    const { getFirestore } = require('firebase/firestore');
+    firestoreInstance = getFirestore(firebaseApp);
+  } catch (e) {
+    // Firestore not available
+  }
+  
   return {
     firebaseApp,
     auth: getAuth(firebaseApp),
-    firestore: getFirestore(firebaseApp),
+    firestore: firestoreInstance,
   };
 }
 
 export * from './provider';
 export * from './client-provider';
-export * from './firestore/use-collection';
-export * from './firestore/use-doc';
-export * from './non-blocking-updates';
 export * from './non-blocking-login';
 export * from './errors';
 export * from './error-emitter';

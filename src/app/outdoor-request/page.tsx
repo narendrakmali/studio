@@ -34,7 +34,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { addRequest, setFirestoreDb } from "@/lib/data";
+import { createTransportRequest } from '@dataconnect/generated';
+import { getDataConnectInstance } from '@/firebase/dataconnect';
 import { useToast } from "@/hooks/use-toast";
 import { RequestChatbot } from "@/components/request-chatbot";
 import { useFirebase } from "@/firebase/provider";
@@ -112,7 +113,14 @@ const requestFormSchema = z.discriminatedUnion("requestType", [
             path: ["busBookingReceipt"],
         });
     }
-    if (data.requestType !== 'train' && data.durationTo < data.durationFrom) {
+    if (data.requestType === 'private' && data.durationTo < data.durationFrom) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Departure date cannot be before arrival date.",
+            path: ["durationTo"],
+        });
+    }
+    if (data.requestType === 'bus' && data.durationTo < data.durationFrom) {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Departure date cannot be before arrival date.",
@@ -143,36 +151,7 @@ export default function OutdoorRequestPage() {
       userName: "",
       contactNumber: "",
       departmentName: "",
-      passengerCount: 1,
-      registrationNumber: "",
-      driverName: "",
-      driverContact: "",
-      vehicleType: undefined,
-      busType: undefined,
-      busQuantity: 1,
-      busRoute: "",
-      busCoordinatorName: "",
-      busCoordinatorContact: "",
-      trainTeamLeaderName: "",
-      trainTeamLeaderContact: "",
-      trainNumber: "",
-      trainDevoteeCount: 1,
-      pickupRequired: false,
-      returnTrainNumber: "",
-      busBookingReceipt: undefined,
-      durationFrom: undefined,
-      durationTo: undefined,
-      trainArrivalDate: undefined,
-      returnTrainDepartureDate: undefined,
-      // Airport fields
-      airportName: undefined,
-      flightNumber: "",
-      arrivalDate: undefined,
-      arrivalTime: "",
-      returnFlightNumber: "",
-      departureDate: undefined,
-      departureTime: "",
-    },
+    } as any,
   });
 
   async function onSubmit(data: z.infer<typeof requestFormSchema>) {
@@ -182,8 +161,61 @@ export default function OutdoorRequestPage() {
       console.log('📝 Form data to submit:', data);
       console.log('📝 Form data type:', data.requestType);
       
+      let scheduledTime: Date;
+      let pickupLocation: string;
+      let dropLocation: string;
+      let numberOfPassengers: number;
+      let specialRequirements: string;
+      
+      // Handle different request types
+      if (data.requestType === 'private') {
+        scheduledTime = data.durationFrom;
+        pickupLocation = 'Private Vehicle';
+        dropLocation = 'Samagam Grounds';
+        numberOfPassengers = data.passengerCount;
+        specialRequirements = `Private Vehicle - ${data.vehicleType}. Registration: ${data.registrationNumber}. Driver: ${data.driverName} (${data.driverContact}). Duration: ${data.durationFrom.toLocaleDateString()} to ${data.durationTo.toLocaleDateString()}`;
+      } else if (data.requestType === 'bus') {
+        scheduledTime = data.durationFrom;
+        pickupLocation = data.busRoute;
+        dropLocation = 'Samagam Grounds';
+        numberOfPassengers = data.busQuantity * 40; // Approximate
+        specialRequirements = `Bus - ${data.busType}. Quantity: ${data.busQuantity}. Route: ${data.busRoute}. Coordinator: ${data.busCoordinatorName} (${data.busCoordinatorContact}). Duration: ${data.durationFrom.toLocaleDateString()} to ${data.durationTo.toLocaleDateString()}`;
+      } else if (data.requestType === 'train') {
+        scheduledTime = data.trainArrivalDate;
+        pickupLocation = `Train ${data.trainNumber}`;
+        dropLocation = 'Samagam Grounds';
+        numberOfPassengers = data.trainDevoteeCount;
+        specialRequirements = `Train - ${data.trainNumber}. Team Leader: ${data.trainTeamLeaderName} (${data.trainTeamLeaderContact}). Arrival: ${data.trainArrivalDate.toLocaleDateString()}. Pickup Required: ${data.pickupRequired ? 'Yes' : 'No'}${data.returnTrainNumber ? `. Return: ${data.returnTrainNumber} on ${data.returnTrainDepartureDate?.toLocaleDateString()}` : ''}`;
+      } else { // airport
+        scheduledTime = data.arrivalDate;
+        pickupLocation = `${data.airportName === 'pune' ? 'Pune' : 'Kolhapur'} Airport - Flight ${data.flightNumber}`;
+        dropLocation = 'Samagam Grounds';
+        numberOfPassengers = data.passengerCount;
+        specialRequirements = `Airport - ${data.airportName}. Flight: ${data.flightNumber}. Arrival: ${data.arrivalDate.toLocaleDateString()} at ${data.arrivalTime}. Pickup Required: ${data.pickupRequired ? 'Yes' : 'No'}${data.returnFlightNumber ? `. Return: ${data.returnFlightNumber} on ${data.departureDate?.toLocaleDateString()} at ${data.departureTime}` : ''}`;
+      }
+      
+      // Get Data Connect instance
+      const dcInstance = getDataConnectInstance();
+      if (!dcInstance) {
+        throw new Error('Data Connect not initialized. Please refresh the page.');
+      }
+      
       // CRITICAL: await the promise to ensure data is saved
-      const newRequest = await addRequest({ ...data, source: 'outdoor' });
+      const result = await createTransportRequest(dcInstance, {
+        passengerName: data.userName,
+        department: data.departmentName,
+        purpose: `Outdoor Request - ${data.requestType}`,
+        phoneNumber: data.contactNumber,
+        employeeId: '',
+        pickupLocation,
+        dropLocation,
+        scheduledTime: scheduledTime.toISOString(),
+        priority: 'normal',
+        numberOfPassengers,
+        requestType: 'outdoor',
+        specialRequirements,
+      });
+      const newRequest = result.data.transportRequest_insert;
       
       console.log("✅ Request successfully saved to Firestore:", newRequest);
       
@@ -464,7 +496,7 @@ export default function OutdoorRequestPage() {
                 </CardDescription>
             </CardHeader>
             <CardFooter>
-                <Button className="w-full btn-submit" onClick={() => { setIsSuccess(false); form.reset({ requestType: activeTab as any, source: 'outdoor' }); }}>
+                <Button className="w-full btn-submit" onClick={() => { setIsSuccess(false); form.reset({ requestType: activeTab as any }); }}>
                 Submit Another Request
                 </Button>
             </CardFooter>

@@ -12,26 +12,28 @@ For each operation, there is a wrapper hook that can be used to call the operati
 
 Here are all of the hooks that get generated:
 ```ts
-import { useListMovies, useListUsers, useListUserReviews, useGetMovieById, useSearchMovie, useCreateMovie, useUpsertUser, useAddReview, useDeleteReview } from '@dataconnect/generated/react';
+import { useCreateTransportRequest, useUpdateTransportRequestStatus, useAssignVehicleToRequest, useRegisterVehicle, useUpdateVehicleStatus, useUpdateVehicleLocation, useCreateDispatch, useUpdateDispatchStatus, useDeleteTransportRequest, useListTransportRequests } from '@dataconnect/generated/react';
 // The types of these hooks are available in react/index.d.ts
 
-const { data, isPending, isSuccess, isError, error } = useListMovies();
+const { data, isPending, isSuccess, isError, error } = useCreateTransportRequest(createTransportRequestVars);
 
-const { data, isPending, isSuccess, isError, error } = useListUsers();
+const { data, isPending, isSuccess, isError, error } = useUpdateTransportRequestStatus(updateTransportRequestStatusVars);
 
-const { data, isPending, isSuccess, isError, error } = useListUserReviews();
+const { data, isPending, isSuccess, isError, error } = useAssignVehicleToRequest(assignVehicleToRequestVars);
 
-const { data, isPending, isSuccess, isError, error } = useGetMovieById(getMovieByIdVars);
+const { data, isPending, isSuccess, isError, error } = useRegisterVehicle(registerVehicleVars);
 
-const { data, isPending, isSuccess, isError, error } = useSearchMovie(searchMovieVars);
+const { data, isPending, isSuccess, isError, error } = useUpdateVehicleStatus(updateVehicleStatusVars);
 
-const { data, isPending, isSuccess, isError, error } = useCreateMovie(createMovieVars);
+const { data, isPending, isSuccess, isError, error } = useUpdateVehicleLocation(updateVehicleLocationVars);
 
-const { data, isPending, isSuccess, isError, error } = useUpsertUser(upsertUserVars);
+const { data, isPending, isSuccess, isError, error } = useCreateDispatch(createDispatchVars);
 
-const { data, isPending, isSuccess, isError, error } = useAddReview(addReviewVars);
+const { data, isPending, isSuccess, isError, error } = useUpdateDispatchStatus(updateDispatchStatusVars);
 
-const { data, isPending, isSuccess, isError, error } = useDeleteReview(deleteReviewVars);
+const { data, isPending, isSuccess, isError, error } = useDeleteTransportRequest(deleteTransportRequestVars);
+
+const { data, isPending, isSuccess, isError, error } = useListTransportRequests();
 
 ```
 
@@ -70,35 +72,38 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { listMovies, listUsers, listUserReviews, getMovieById, searchMovie, createMovie, upsertUser, addReview, deleteReview } from '@dataconnect/generated';
+import { createTransportRequest, updateTransportRequestStatus, assignVehicleToRequest, registerVehicle, updateVehicleStatus, updateVehicleLocation, createDispatch, updateDispatchStatus, deleteTransportRequest, listTransportRequests } from '@dataconnect/generated';
 
 
-// Operation ListMovies: 
-const { data } = await ListMovies(dataConnect);
+// Operation CreateTransportRequest:  For variables, look at type CreateTransportRequestVars in ../index.d.ts
+const { data } = await CreateTransportRequest(dataConnect, createTransportRequestVars);
 
-// Operation ListUsers: 
-const { data } = await ListUsers(dataConnect);
+// Operation UpdateTransportRequestStatus:  For variables, look at type UpdateTransportRequestStatusVars in ../index.d.ts
+const { data } = await UpdateTransportRequestStatus(dataConnect, updateTransportRequestStatusVars);
 
-// Operation ListUserReviews: 
-const { data } = await ListUserReviews(dataConnect);
+// Operation AssignVehicleToRequest:  For variables, look at type AssignVehicleToRequestVars in ../index.d.ts
+const { data } = await AssignVehicleToRequest(dataConnect, assignVehicleToRequestVars);
 
-// Operation GetMovieById:  For variables, look at type GetMovieByIdVars in ../index.d.ts
-const { data } = await GetMovieById(dataConnect, getMovieByIdVars);
+// Operation RegisterVehicle:  For variables, look at type RegisterVehicleVars in ../index.d.ts
+const { data } = await RegisterVehicle(dataConnect, registerVehicleVars);
 
-// Operation SearchMovie:  For variables, look at type SearchMovieVars in ../index.d.ts
-const { data } = await SearchMovie(dataConnect, searchMovieVars);
+// Operation UpdateVehicleStatus:  For variables, look at type UpdateVehicleStatusVars in ../index.d.ts
+const { data } = await UpdateVehicleStatus(dataConnect, updateVehicleStatusVars);
 
-// Operation CreateMovie:  For variables, look at type CreateMovieVars in ../index.d.ts
-const { data } = await CreateMovie(dataConnect, createMovieVars);
+// Operation UpdateVehicleLocation:  For variables, look at type UpdateVehicleLocationVars in ../index.d.ts
+const { data } = await UpdateVehicleLocation(dataConnect, updateVehicleLocationVars);
 
-// Operation UpsertUser:  For variables, look at type UpsertUserVars in ../index.d.ts
-const { data } = await UpsertUser(dataConnect, upsertUserVars);
+// Operation CreateDispatch:  For variables, look at type CreateDispatchVars in ../index.d.ts
+const { data } = await CreateDispatch(dataConnect, createDispatchVars);
 
-// Operation AddReview:  For variables, look at type AddReviewVars in ../index.d.ts
-const { data } = await AddReview(dataConnect, addReviewVars);
+// Operation UpdateDispatchStatus:  For variables, look at type UpdateDispatchStatusVars in ../index.d.ts
+const { data } = await UpdateDispatchStatus(dataConnect, updateDispatchStatusVars);
 
-// Operation DeleteReview:  For variables, look at type DeleteReviewVars in ../index.d.ts
-const { data } = await DeleteReview(dataConnect, deleteReviewVars);
+// Operation DeleteTransportRequest:  For variables, look at type DeleteTransportRequestVars in ../index.d.ts
+const { data } = await DeleteTransportRequest(dataConnect, deleteTransportRequestVars);
+
+// Operation ListTransportRequests: 
+const { data } = await ListTransportRequests(dataConnect);
 
 
 ```

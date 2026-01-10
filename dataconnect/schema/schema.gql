@@ -1,52 +1,79 @@
-# Example schema for simple movie review app
+# Schema for Studio Transport Management System
 
-# User table is keyed by Firebase Auth UID.
-type User @table {
-  # `@default(expr: "auth.uid")` sets it to Firebase Auth UID during insert and upsert.
-  id: String! @default(expr: "auth.uid")
-  username: String! @col(dataType: "varchar(50)")
-  # The `user: User!` field in the Review table generates the following one-to-many query field.
-  #  reviews_on_user: [Review!]!
-  # The `Review` join table the following many-to-many query field.
-  #  movies_via_Review: [Movie!]!
+# Transport Request table
+type TransportRequest @table {
+  id: UUID! @default(expr: "uuidV4()")
+  passengerName: String!
+  department: String!
+  purpose: String!
+  
+  # Contact information
+  phoneNumber: String
+  employeeId: String
+  
+  # Journey details
+  pickupLocation: String!
+  dropLocation: String!
+  scheduledTime: Timestamp!
+  
+  # Request metadata
+  status: String! @default(value: "pending") # pending, assigned, in_progress, completed, cancelled
+  priority: String @default(value: "normal") # low, normal, high, urgent
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+  
+  # Relations - reference to vehicle
+  assignedVehicleId: UUID
+  assignedVehicle: Vehicle @ref(fields: "assignedVehicleId")
+  
+  # Additional fields
+  specialRequirements: String
+  numberOfPassengers: Int @default(value: 1)
+  estimatedDistance: Float
+  requestType: String # indoor, outdoor
 }
 
-# Movie is keyed by a randomly generated UUID.
-type Movie @table {
-  # If you do not pass a 'key' to `@table`, Data Connect automatically adds the following 'id' column.
-  # Feel free to uncomment and customize it.
-  #  id: UUID! @default(expr: "uuidV4()")
-  title: String!
-  imageUrl: String!
-  genre: String
+# Vehicle table
+type Vehicle @table {
+  id: UUID! @default(expr: "uuidV4()")
+  vehicleNumber: String! @unique
+  type: String! # car, van, bus, ambulance, etc.
+  model: String!
+  capacity: Int!
+  
+  # Driver information
+  driverName: String!
+  driverPhone: String!
+  driverLicense: String
+  
+  # Vehicle status
+  status: String! @default(value: "available") # available, in_use, maintenance, offline
+  currentLocation: String
+  
+  # Metadata
+  imageUrl: String
+  registeredAt: Timestamp! @default(expr: "request.time")
+  lastMaintenanceDate: Timestamp
 }
 
-# MovieMetadata is a metadata attached to a Movie.
-# Movie <-> MovieMetadata is a one-to-one relationship
-type MovieMetadata @table {
-  # @unique ensures each Movie can only one MovieMetadata.
-  movie: Movie! @unique
-  # The movie field adds the following foreign key field. Feel free to uncomment and customize it.
-  #  movieId: UUID!
-  rating: Float
-  releaseYear: Int
-  description: String
-}
-
-# Reviews is a join table between User and Movie.
-# It has a composite primary keys `userUid` and `movieId`.
-# A user can leave reviews for many movies. A movie can have reviews from many users.
-# User  <-> Review is a one-to-many relationship
-# Movie <-> Review is a one-to-many relationship
-# Movie <-> User is a many-to-many relationship
-type Review @table(name: "Reviews", key: ["movie", "user"]) {
-  user: User!
-  # The user field adds the following foreign key field. Feel free to uncomment and customize it.
-  #  userUid: String!
-  movie: Movie!
-  # The movie field adds the following foreign key field. Feel free to uncomment and customize it.
-  #  movieId: UUID!
-  rating: Int
-  reviewText: String
-  reviewDate: Date! @default(expr: "request.time")
+# Dispatch table - for tracking vehicle assignments
+type Dispatch @table {
+  id: UUID! @default(expr: "uuidV4()")
+  
+  # Request and vehicle references (non-nullable foreign keys)
+  requestId: UUID!
+  request: TransportRequest! @ref(fields: "requestId")
+  vehicleId: UUID!
+  vehicle: Vehicle! @ref(fields: "vehicleId")
+  
+  # Dispatch details
+  dispatchedAt: Timestamp! @default(expr: "request.time")
+  estimatedArrival: Timestamp
+  actualArrival: Timestamp
+  completedAt: Timestamp
+  
+  # Status tracking
+  status: String! @default(value: "dispatched") # dispatched, en_route, arrived, completed, cancelled
+  notes: String
+  dispatchedBy: String # user who created the dispatch
 }

@@ -1,0 +1,68 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  🔧 FIX: DataConnectError "Failed to fetch"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROBLEM:
+  Console shows: DataConnectError: Failed to fetch: {}
+
+SOLUTION:
+  Start the Firebase Data Connect emulator!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 QUICK FIX (3 COMMANDS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Terminal 1 - Start Firebase Emulator:
+   $ firebase emulators:start --only dataconnect
+
+2. Terminal 2 - Start Next.js:
+   $ npm run dev
+
+3. Test in browser:
+   → http://localhost:9002/api-example
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ VERIFY IT WORKED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Should return status: "connected"
+$ curl http://localhost:9002/api/test-connection | jq .status
+
+# Create a test request
+$ curl -X POST http://localhost:9002/api/requests \
+  -H "Content-Type: application/json" \
+  -d '{
+    "passengerName": "Test",
+    "department": "Eng",
+    "purpose": "Test",
+    "pickupLocation": "A",
+    "dropLocation": "B",
+    "scheduledTime": "2026-01-10T15:00:00Z"
+  }'
+
+# View all requests
+$ curl http://localhost:9002/api/requests
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 USEFUL URLS (when running)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Application:       http://localhost:9002
+Example Page:      http://localhost:9002/api-example
+Test Connection:   http://localhost:9002/api/test-connection
+Emulator UI:       http://localhost:4000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Full Details:      DATACONNECT_FIX_SUMMARY.md
+Setup Guide:       DATACONNECT_SETUP.md
+API Usage:         API_CONNECTION_GUIDE.md
+Quick Ref:         API_QUICK_REFERENCE.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

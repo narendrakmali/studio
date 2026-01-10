@@ -31,13 +31,13 @@ function Calendar({
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
-        table: "w-full border-collapse",
-        head_row: "flex w-full",
+        table: "w-full border-collapse space-y-1",
+        head_row: "flex w-full justify-between",
         head_cell:
-          "text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem]",
-        row: "flex w-full mt-2",
+          "text-muted-foreground rounded-md w-full flex-1 font-normal text-[0.8rem] text-center",
+        row: "flex w-full mt-2 justify-between",
         cell: cn(
-          "flex-1 h-9 text-center text-sm p-0 relative",
+          "h-10 w-full flex-1 text-center text-sm p-0 relative",
           "[&:has([aria-selected].day-range-end)]:rounded-r-md",
           "[&:has([aria-selected].day-outside)]:bg-accent/50",
           "[&:has([aria-selected])]:bg-accent",
@@ -47,7 +47,7 @@ function Calendar({
         ),
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-9 w-full p-0 font-normal aria-selected:opacity-100"
+          "h-10 w-full p-0 font-normal aria-selected:opacity-100"
         ),
         day_range_end: "day-range-end",
         day_selected:
@@ -62,12 +62,10 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
-        ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("h-4 w-4", className)} {...props} />
-        ),
+        Chevron: ({ orientation, ...props }) => {
+          const Icon = orientation === 'left' ? ChevronLeft : ChevronRight;
+          return <Icon className="h-4 w-4" {...props} />;
+        },
       }}
       {...props}
     />

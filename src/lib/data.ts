@@ -3,92 +3,62 @@
 
 import type { Vehicle, TransportRequest, Dispatch } from '@/lib/types';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { collection, addDoc, query, orderBy, onSnapshot, Query, Unsubscribe, Firestore } from 'firebase/firestore';
 
 export const vehicles: Vehicle[] = [];
 
-// In-memory cache for requests (will be synced with Firestore)
+// In-memory cache for requests (will be synced with Data Connect)
 let cachedRequests: TransportRequest[] = [];
-let unsubscribe: Unsubscribe | null = null;
-let firestoreDb: Firestore | null = null;
 
 export const requests = cachedRequests;
 
 /**
- * Initialize Firestore database instance (called from a hook)
+ * NOTE: Data Connect replaces Firestore entirely.
+ * Use the generated SDK from @dataconnect/generated for all database operations.
+ * 
+ * Example usage:
+ * import { listTransportRequests, createTransportRequest } from '@dataconnect/generated';
+ * 
+ * // Create a request
+ * await createTransportRequest({
+ *   passengerName: "John Doe",
+ *   department: "Engineering",
+ *   // ... other fields
+ * });
+ * 
+ * // List requests
+ * const { data } = await listTransportRequests();
+ * 
+ * For real-time updates, use Data Connect live queries or polling.
  */
-export function setFirestoreDb(db: Firestore | null) {
-  firestoreDb = db;
-}
 
 /**
- * Initialize real-time listener for requests from Firestore
- * Should be called once when Firestore is available
- */
-export function initializeRequestsListener() {
-  if (!firestoreDb || unsubscribe) return; // Already initialized or Firestore unavailable
-  
-  try {
-    const requestsRef = collection(firestoreDb, 'transportRequests');
-    const q = query(requestsRef, orderBy('createdAt', 'desc'));
-    
-    unsubscribe = onSnapshot(q, (snapshot) => {
-      cachedRequests = snapshot.docs.map(doc => ({
-        ...doc.data() as TransportRequest,
-        id: doc.id,
-        createdAt: doc.data().createdAt?.toDate?.() || new Date(doc.data().createdAt),
-      }));
-      // Update the exported requests array reference
-      Object.assign(requests, cachedRequests);
-    });
-  } catch (error) {
-    console.warn('Failed to initialize requests listener:', error);
-  }
-}
-
-/**
- * Stop listening to Firestore updates
- */
-export function stopRequestsListener() {
-  if (unsubscribe) {
-    unsubscribe();
-    unsubscribe = null;
-  }
-}
-
-/**
- * Add a new transport request to Firestore
+ * Add a new transport request using Data Connect
+ * This is a wrapper function - actual implementation should use the generated SDK
  */
 export async function addRequest(
   req: Omit<TransportRequest, 'id' | 'status' | 'createdAt'>
 ): Promise<TransportRequest> {
-  if (!firestoreDb) {
-    console.error('❌ CRITICAL: Firestore is not initialized! Request will be lost:', req);
-    throw new Error('Firestore is not initialized. Please refresh the page and try again.');
-  }
-
-  try {
-    console.log('📝 Attempting to save request to Firestore:', req);
-    const requestsRef = collection(firestoreDb, 'transportRequests');
-    const docRef = await addDoc(requestsRef, {
-      ...req,
-      status: 'pending',
-      createdAt: new Date(),
-    });
-
-    const newRequest: TransportRequest = {
-      ...req,
-      id: docRef.id,
-      status: 'pending',
-      createdAt: new Date(),
-    };
-
-    console.log('✅ Request successfully saved with ID:', docRef.id);
-    return newRequest;
-  } catch (error) {
-    console.error('❌ Error adding request to Firestore:', error);
-    throw error;
-  }
+  // This function should be implemented using the Data Connect SDK after generation
+  // Example:
+  // import { createTransportRequest } from '@dataconnect/generated';
+  // const result = await createTransportRequest({
+  //   passengerName: req.passengerName,
+  //   department: req.department,
+  //   ... other fields
+  // });
+  
+  console.warn('⚠️ addRequest: Please use Data Connect SDK directly instead of this wrapper');
+  throw new Error('Please regenerate Data Connect SDK and use createTransportRequest mutation directly');
 }
 
 export const dispatches: Dispatch[] = [];
+
+// Placeholder functions for backward compatibility
+export function initializeRequestsListener() {
+  console.warn('⚠️ initializeRequestsListener: Use Data Connect SDK directly');
+}
+
+export function stopRequestsListener() {
+  console.warn('⚠️ stopRequestsListener: Use Data Connect SDK directly');
+}
+
